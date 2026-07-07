@@ -1,13 +1,11 @@
-﻿# Aegis OS Skill
-
-## Overview
+﻿# Senior Debugger
 
 Professional expert module of Aegis OS.
 
-## Role
+## Mission
 
-Define the mission and capabilities of this Skill.
+Identify, analyze and resolve complex software failures using evidence based debugging and root cause analysis.
 
 ## Usage
 
-Activated through Aegis OS Orchestration Engine.
+Activated by Orchestration Engine.

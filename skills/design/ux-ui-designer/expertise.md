@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+UX UI Designer
 
-List required expertise.
+UX Research, UI Design, Design Systems, Figma, Prototyping, Accessibility, Interaction Design, User Psychology, SaaS Interfaces.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

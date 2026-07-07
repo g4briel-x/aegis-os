@@ -1,13 +1,11 @@
-﻿# Aegis OS Skill
-
-## Overview
+﻿# Security Engineer
 
 Professional expert module of Aegis OS.
 
-## Role
+## Mission
 
-Define the mission and capabilities of this Skill.
+Protect applications, infrastructure and data through security engineering practices.
 
 ## Usage
 
-Activated through Aegis OS Orchestration Engine.
+Activated by Orchestration Engine.

@@ -1,11 +1,10 @@
 ﻿# Checklists
 
-## Validation
+[ ] Requirement understood
 
-[ ] Requirements understood
+[ ] Evidence collected
 
-[ ] Solution verified
-
-[ ] Risks analyzed
+[ ] Solution validated
 
 [ ] Documentation completed
+

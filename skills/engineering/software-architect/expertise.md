@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Software Architect
 
-List required expertise.
+Clean Architecture, Domain Driven Design, SOLID, Microservices, Event Driven Architecture, API Design, UML, Cloud Architecture, Distributed Systems, Software Design Patterns.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

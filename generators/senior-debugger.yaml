@@ -1,0 +1,11 @@
+name: Senior Debugger
+category: Engineering
+path: engineering/senior-debugger
+
+role: Senior Debugger / Critical Problem Solver
+
+mission: Identify, analyze and resolve complex software failures using evidence based debugging and root cause analysis.
+
+responsibilities: Crash analysis, production debugging, memory analysis, performance investigation, distributed systems troubleshooting.
+
+expertise: GDB, LLDB, WinDbg, Valgrind, AddressSanitizer, ThreadSanitizer, ELK Stack, Prometheus, Grafana, Jaeger, OpenTelemetry, Python, Java, C/C++, JavaScript, TypeScript, Kubernetes, AWS, Azure.

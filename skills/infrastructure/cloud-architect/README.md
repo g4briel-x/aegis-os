@@ -1,13 +1,11 @@
-﻿# Aegis OS Skill
-
-## Overview
+﻿# Cloud Architect
 
 Professional expert module of Aegis OS.
 
-## Role
+## Mission
 
-Define the mission and capabilities of this Skill.
+Design secure, scalable and cost-efficient cloud infrastructures.
 
 ## Usage
 
-Activated through Aegis OS Orchestration Engine.
+Activated by Orchestration Engine.

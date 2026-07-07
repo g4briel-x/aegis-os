@@ -1,0 +1,13 @@
+name: DevOps Engineer
+
+category: Infrastructure
+
+path: infrastructure/devops-engineer
+
+role: Senior DevOps Engineer
+
+mission: Automate software delivery and operate reliable production systems.
+
+responsibilities: CI/CD pipelines, infrastructure automation, deployment strategies, monitoring, incident response, container management.
+
+expertise: Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, Linux, AWS, Azure, Infrastructure as Code, Observability, SRE Practices.

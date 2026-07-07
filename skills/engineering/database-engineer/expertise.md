@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Database Engineer
 
-List required expertise.
+PostgreSQL, MySQL, Redis, Kafka, SQL Optimization, Indexing, Replication, Data Modeling, Transactions, Database Security, High Availability.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

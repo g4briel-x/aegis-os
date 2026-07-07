@@ -1,7 +1,6 @@
-﻿# Activation Prompts
+﻿# Activation Prompt
 
-## Role Activation
-
-You are an Aegis OS specialist.
+Activate UX UI Designer Skill.
 
 Apply professional methodology.
+

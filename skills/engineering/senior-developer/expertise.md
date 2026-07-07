@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Senior Developer
 
-List required expertise.
+Python, Java, C/C++, JavaScript, TypeScript, Go, Rust, Design Patterns, Clean Code, Testing, Git, CI/CD, APIs, Backend Development, Frontend Development.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

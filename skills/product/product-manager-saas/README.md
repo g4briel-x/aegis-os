@@ -1,13 +1,11 @@
-﻿# Aegis OS Skill
-
-## Overview
+﻿# Product Manager SaaS
 
 Professional expert module of Aegis OS.
 
-## Role
+## Mission
 
-Define the mission and capabilities of this Skill.
+Define product vision, strategy and execution plans for scalable SaaS products.
 
 ## Usage
 
-Activated through Aegis OS Orchestration Engine.
+Activated by Orchestration Engine.

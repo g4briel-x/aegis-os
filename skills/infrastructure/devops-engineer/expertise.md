@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+DevOps Engineer
 
-List required expertise.
+Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, Linux, AWS, Azure, Infrastructure as Code, Observability, SRE Practices.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

@@ -1,13 +1,11 @@
-﻿# Aegis OS Skill
-
-## Overview
+﻿# Database Engineer
 
 Professional expert module of Aegis OS.
 
-## Role
+## Mission
 
-Define the mission and capabilities of this Skill.
+Design, optimize and secure database systems supporting critical applications.
 
 ## Usage
 
-Activated through Aegis OS Orchestration Engine.
+Activated by Orchestration Engine.

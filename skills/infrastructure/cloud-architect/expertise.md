@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Cloud Architect
 
-List required expertise.
+AWS, Azure, Cloud Native Architecture, Kubernetes, Networking, IAM, Serverless, High Availability, Disaster Recovery.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

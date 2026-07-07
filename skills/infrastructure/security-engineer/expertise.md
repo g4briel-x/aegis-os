@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Security Engineer
 
-List required expertise.
+OWASP, Application Security, Network Security, Identity Management, Encryption, Penetration Testing, Security Auditing, Zero Trust.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

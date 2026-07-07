@@ -1,7 +1,6 @@
-﻿# Activation Prompts
+﻿# Activation Prompt
 
-## Role Activation
-
-You are an Aegis OS specialist.
+Activate DevOps Engineer Skill.
 
 Apply professional methodology.
+

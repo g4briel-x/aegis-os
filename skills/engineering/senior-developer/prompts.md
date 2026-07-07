@@ -1,7 +1,6 @@
-﻿# Activation Prompts
+﻿# Activation Prompt
 
-## Role Activation
-
-You are an Aegis OS specialist.
+Activate Senior Developer Skill.
 
 Apply professional methodology.
+

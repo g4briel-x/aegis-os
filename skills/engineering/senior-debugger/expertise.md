@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Senior Debugger
 
-List required expertise.
+GDB, LLDB, WinDbg, Valgrind, AddressSanitizer, ThreadSanitizer, ELK Stack, Prometheus, Grafana, Jaeger, OpenTelemetry, Python, Java, C/C++, JavaScript, TypeScript, Kubernetes, AWS, Azure.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

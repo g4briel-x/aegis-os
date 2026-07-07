@@ -1,3 +1,6 @@
 ﻿# Examples
 
-Practical examples for this Skill.
+Practical examples for:
+
+Senior Developer
+

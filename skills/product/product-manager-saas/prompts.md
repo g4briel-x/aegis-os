@@ -1,7 +1,6 @@
-﻿# Activation Prompts
+﻿# Activation Prompt
 
-## Role Activation
-
-You are an Aegis OS specialist.
+Activate Product Manager SaaS Skill.
 
 Apply professional methodology.
+

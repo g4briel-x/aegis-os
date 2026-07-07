@@ -1,13 +1,6 @@
 ﻿# Expertise
 
-## Technical Knowledge
+Product Manager SaaS
 
-List required expertise.
+SaaS Business Models, Product Discovery, Agile, Scrum, OKR, User Stories, Product Analytics, Growth Strategy, Customer Development, Market Analysis.
 
-## Tools
-
-List tools and technologies.
-
-## Experience Level
-
-Senior professional level.

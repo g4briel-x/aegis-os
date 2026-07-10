@@ -1,0 +1,49 @@
+## FILE: `playbooks/engineering/review-pull-request/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.review-pull-request
+  name: Review Pull Request
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: code-review
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for reviewing pull requests for correctness, security, tests, maintainability and merge readiness.
+  trigger: A code change is submitted for review, approval or merge readiness assessment.
+  inputs:
+    - pull_request_description
+    - linked_requirement
+    - changed_files
+    - code_diff
+    - test_results
+    - ci_status
+    - migration_notes
+    - security_notes
+    - deployment_notes
+  outputs:
+    - pr_review_summary
+    - review_findings
+    - risk_notes
+    - test_review
+    - security_findings
+    - architecture_findings
+    - merge_readiness_decision
+    - follow_up_actions
+  related_skills:
+    - engineering.senior-developer
+    - engineering.software-architect
+    - engineering.senior-debugger
+    - engineering.database-engineer
+    - security.security-engineer
+    - infrastructure.devops-engineer
+  tags:
+    - pull-request
+    - code-review
+    - merge-readiness
+    - testing
+    - security
+    - architecture
+    - quality
+```

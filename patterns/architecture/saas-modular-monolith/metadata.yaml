@@ -1,0 +1,55 @@
+## FILE: `patterns/architecture/saas-modular-monolith/metadata.yaml`
+
+```yaml
+pattern:
+  id: architecture.saas-modular-monolith
+  name: SaaS Modular Monolith
+  version: 0.1.0
+  status: draft
+  domain: architecture
+  category: saas-architecture
+  maturity: usable
+  owner: aegis-os
+  description: Architecture pattern for building SaaS products as one deployable application with strong internal module boundaries.
+  problem: Early SaaS teams need maintainable architecture without premature microservices complexity.
+  context:
+    - MVP or early SaaS product
+    - small or medium engineering team
+    - evolving domain boundaries
+    - need for fast deployment
+    - controlled operational complexity
+  recommended_when:
+    - product-market fit is still being validated
+    - deployment simplicity matters
+    - team wants clear module ownership
+    - future service extraction may be needed
+  avoid_when:
+    - independent scaling is already mandatory
+    - service boundaries are stable and proven
+    - compliance requires hard runtime isolation
+    - multiple teams need separate deployment lifecycles
+  outputs:
+    - module_map
+    - boundary_rules
+    - data_ownership_model
+    - internal_interface_model
+    - extraction_readiness_notes
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - infrastructure.devops-engineer
+  related_playbooks:
+    - engineering.design-saas-architecture
+    - engineering.design-saas-data-model
+    - engineering.create-api-contract
+    - infrastructure.deploy-saas-application
+  tags:
+    - saas
+    - architecture
+    - modular-monolith
+    - mvp
+    - maintainability
+    - scalability
+    - boundaries
+```

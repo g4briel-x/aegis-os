@@ -1,0 +1,49 @@
+## FILE: `skills/infrastructure/cloud-architect/metadata.yaml`
+
+```yaml
+skill:
+  id: infrastructure.cloud-architect
+  name: Cloud Architect
+  version: 0.2.0
+  status: premium-draft
+  domain: infrastructure
+  category: cloud-architecture
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for designing, reviewing and improving secure, scalable, resilient and cost-aware cloud architectures.
+  inputs:
+    - user_request
+    - product_context
+    - workload_context
+    - cloud_provider
+    - security_requirements
+    - scalability_requirements
+    - budget_constraints
+    - operational_constraints
+  outputs:
+    - cloud_architecture
+    - deployment_topology
+    - network_design
+    - iam_model
+    - reliability_plan
+    - cost_review
+    - disaster_recovery_plan
+    - observability_plan
+    - risk_analysis
+  dependencies:
+    - shared.security.owasp
+    - shared.operations.observability
+    - shared.performance
+    - docs.12-operations.capacity_management_model
+    - docs.13-security.security_architecture
+  tags:
+    - cloud
+    - architecture
+    - infrastructure
+    - scalability
+    - reliability
+    - security
+    - cost-optimization
+    - disaster-recovery
+    - observability
+```

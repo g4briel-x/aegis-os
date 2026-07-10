@@ -1,0 +1,51 @@
+## FILE: `playbooks/engineering/write-test-plan/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.write-test-plan
+  name: Write Test Plan
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: testing-quality-assurance
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for creating executable test plans from PRDs, user stories, bug fixes, API contracts and release scope.
+  trigger: A feature, release, bug fix, API, workflow or PRD needs validation before merge or deployment.
+  inputs:
+    - prd
+    - user_stories
+    - acceptance_criteria
+    - feature_scope
+    - bug_report
+    - implementation_notes
+    - ux_flow
+    - api_contract
+    - permission_model
+    - release_plan
+  outputs:
+    - test_plan
+    - test_scope
+    - test_strategy
+    - functional_test_cases
+    - edge_case_test_cases
+    - regression_test_cases
+    - permission_test_cases
+    - test_data_requirements
+    - release_validation_checklist
+  related_skills:
+    - engineering.senior-developer
+    - engineering.senior-debugger
+    - product.business-analyst
+    - product.product-manager-saas
+    - security.security-engineer
+    - management.technical-project-manager
+  tags:
+    - testing
+    - qa
+    - test-plan
+    - acceptance-criteria
+    - regression
+    - validation
+    - release-readiness
+```

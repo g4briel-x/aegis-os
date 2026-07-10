@@ -1,0 +1,45 @@
+## FILE: `skills/design/ux-ui-designer-saas/metadata.yaml`
+
+```yaml
+skill:
+  id: design.ux-ui-designer-saas
+  name: UX/UI Designer SaaS
+  version: 0.2.0
+  status: premium-draft
+  domain: design
+  category: saas-ux-ui-design
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for SaaS UX/UI design, user flows, wireframes, dashboards, onboarding, usability and accessibility.
+  inputs:
+    - user_request
+    - product_context
+    - target_users
+    - user_flows
+    - feature_requirements
+    - brand_constraints
+    - technical_constraints
+  outputs:
+    - ux_audit
+    - user_flow
+    - information_architecture
+    - wireframe_specification
+    - screen_specification
+    - design_system_guidance
+    - usability_review
+    - accessibility_review
+  dependencies:
+    - docs.03-specifications.quality_model
+    - docs.17-adoption.user_personas
+    - shared.glossary
+  tags:
+    - ux
+    - ui
+    - saas
+    - dashboard
+    - onboarding
+    - wireframes
+    - usability
+    - accessibility
+    - design-system
+```

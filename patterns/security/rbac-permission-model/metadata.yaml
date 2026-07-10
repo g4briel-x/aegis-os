@@ -1,0 +1,58 @@
+## FILE: `patterns/security/rbac-permission-model/metadata.yaml`
+
+```yaml
+pattern:
+  id: security.rbac-permission-model
+  name: RBAC Permission Model
+  version: 0.1.0
+  status: draft
+  domain: security
+  category: access-control
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for defining roles, permissions, resources, scopes, enforcement points and tests in SaaS products.
+  problem: SaaS products need explicit authorization rules to prevent over-permissioning, inconsistent checks and cross-tenant data exposure.
+  context:
+    - multiple user roles
+    - organization or workspace accounts
+    - protected resources
+    - tenant isolation
+    - private files or sensitive data
+    - admin actions
+  recommended_when:
+    - roles and permissions are needed
+    - API endpoints require authorization
+    - users belong to organizations or workspaces
+    - sensitive or customer-owned data is stored
+    - permission tests must be written
+  avoid_when:
+    - the product is a simple single-user tool
+    - authorization is fully managed by an external platform
+    - access rules are temporary prototype logic
+  outputs:
+    - role_catalog
+    - permission_catalog
+    - resource_scope_model
+    - policy_matrix
+    - enforcement_point_map
+    - permission_test_matrix
+  related_skills:
+    - security.security-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+  related_playbooks:
+    - security.design-auth-rbac
+    - security.review-api-security
+    - security.harden-production-saas
+    - engineering.create-api-contract
+    - engineering.design-saas-data-model
+  tags:
+    - rbac
+    - authorization
+    - permissions
+    - access-control
+    - tenant-isolation
+    - security
+    - saas
+```

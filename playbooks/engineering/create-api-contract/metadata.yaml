@@ -1,0 +1,53 @@
+## FILE: `playbooks/engineering/create-api-contract/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.create-api-contract
+  name: Create API Contract
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: api-design
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for designing implementation-ready SaaS API contracts with endpoints, schemas, errors, permissions, pagination and compatibility.
+  trigger: A SaaS feature, integration, workflow or frontend screen requires defined API behavior.
+  inputs:
+    - prd
+    - ux_flow
+    - user_story
+    - data_model
+    - permission_model
+    - frontend_requirements
+    - integration_requirements
+    - existing_api_standards
+    - authentication_model
+    - error_model
+  outputs:
+    - api_contract
+    - endpoint_list
+    - request_schema
+    - response_schema
+    - error_schema
+    - authorization_notes
+    - pagination_filtering_rules
+    - versioning_notes
+    - compatibility_notes
+    - implementation_handoff
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - security.security-engineer
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+  tags:
+    - api
+    - contract
+    - rest
+    - backend
+    - frontend
+    - schema
+    - authorization
+    - integration
+```

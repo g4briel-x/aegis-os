@@ -1,0 +1,47 @@
+## FILE: `playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml`
+
+```yaml
+playbook:
+  id: infrastructure.fix-failing-ci-pipeline
+  name: Fix Failing CI Pipeline
+  version: 0.1.0
+  status: premium-draft
+  domain: infrastructure
+  category: ci-cd-troubleshooting
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for diagnosing, fixing and preventing failing CI pipeline checks.
+  trigger: A CI workflow, job, step, build, test, lint or deployment check fails.
+  inputs:
+    - ci_provider
+    - repository
+    - branch
+    - pull_request
+    - workflow_name
+    - failed_job
+    - failed_step
+    - error_logs
+    - recent_changes
+    - ci_configuration
+  outputs:
+    - ci_failure_diagnosis
+    - root_cause_summary
+    - fix_recommendation
+    - verification_steps
+    - prevention_actions
+    - merge_readiness_note
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - engineering.senior-developer
+    - security.security-engineer
+  tags:
+    - ci
+    - cd
+    - pipeline
+    - github-actions
+    - build
+    - tests
+    - deployment
+    - troubleshooting
+```

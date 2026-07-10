@@ -1,0 +1,49 @@
+## FILE: `playbooks/product/create-prd/metadata.yaml`
+
+```yaml
+playbook:
+  id: product.create-prd
+  name: Create PRD
+  version: 0.1.0
+  status: premium-draft
+  domain: product
+  category: product-requirements
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for creating product requirements documents with clear scope, user stories, requirements, acceptance criteria and metrics.
+  trigger: A product idea, feature or business need requires implementation-ready product requirements.
+  inputs:
+    - product_context
+    - feature_idea
+    - business_objective
+    - target_users
+    - user_problem
+    - constraints
+    - stakeholder_request
+    - technical_notes
+  outputs:
+    - product_requirements_document
+    - problem_statement
+    - goals
+    - non_goals
+    - user_stories
+    - functional_requirements
+    - non_functional_requirements
+    - acceptance_criteria
+    - risks
+    - open_questions
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+    - management.technical-project-manager
+  tags:
+    - prd
+    - product-requirements
+    - user-stories
+    - acceptance-criteria
+    - product
+    - saas
+    - specification
+```

@@ -1,0 +1,53 @@
+## FILE: `playbooks/security/harden-production-saas/metadata.yaml`
+
+```yaml
+playbook:
+  id: security.harden-production-saas
+  name: Harden Production SaaS
+  version: 0.1.0
+  status: premium-draft
+  domain: security
+  category: production-hardening
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for hardening SaaS production environments across access control, tenant isolation, secrets, APIs, monitoring, backups and recovery.
+  trigger: A SaaS system is preparing for production, already running in production, or undergoing a security-sensitive release.
+  inputs:
+    - production_architecture
+    - deployment_environment
+    - auth_rbac_model
+    - api_contract
+    - tenant_model
+    - data_model
+    - environment_variables
+    - secrets_inventory
+    - dependency_list
+    - monitoring_setup
+    - backup_policy
+  outputs:
+    - production_hardening_report
+    - security_baseline_checklist
+    - access_control_findings
+    - tenant_isolation_findings
+    - secrets_configuration_findings
+    - api_exposure_findings
+    - monitoring_audit_findings
+    - backup_recovery_findings
+    - remediation_plan
+    - readiness_decision
+  related_skills:
+    - security.security-engineer
+    - infrastructure.devops-engineer
+    - infrastructure.cloud-architect
+    - engineering.software-architect
+    - engineering.senior-developer
+  tags:
+    - security
+    - hardening
+    - production
+    - saas
+    - tenant-isolation
+    - secrets
+    - api-security
+    - monitoring
+```

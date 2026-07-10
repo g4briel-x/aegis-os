@@ -1,0 +1,45 @@
+## FILE: `skills/engineering/database-engineer/metadata.yaml`
+
+```yaml
+skill:
+  id: engineering.database-engineer
+  name: Database Engineer
+  version: 0.2.0
+  status: premium-draft
+  domain: engineering
+  category: database-engineering
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for designing, reviewing, optimizing and maintaining relational database systems.
+  inputs:
+    - user_request
+    - database_engine
+    - schema_context
+    - query_context
+    - business_requirements
+    - performance_constraints
+  outputs:
+    - schema_design
+    - sql_query
+    - optimized_query
+    - indexing_plan
+    - migration_plan
+    - integrity_review
+    - performance_review
+  dependencies:
+    - shared.software-engineering.clean-code
+    - shared.software-engineering.testing
+    - shared.security.owasp
+    - shared.operations.observability
+    - shared.performance
+  tags:
+    - database
+    - sql
+    - postgresql
+    - mysql
+    - data-modeling
+    - indexing
+    - query-optimization
+    - migrations
+    
+    ```

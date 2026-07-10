@@ -1,0 +1,52 @@
+## FILE: `playbooks/engineering/design-saas-data-model/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.design-saas-data-model
+  name: Design SaaS Data Model
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: data-modeling
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for designing SaaS entities, relationships, tenant boundaries, constraints, lifecycle states and migration-ready data models.
+  trigger: A SaaS product, feature, PRD or workflow needs database structure before implementation.
+  inputs:
+    - product_concept
+    - prd
+    - ux_flow
+    - user_roles
+    - business_objects
+    - workflows
+    - permission_model
+    - reporting_needs
+    - security_requirements
+    - existing_schema
+  outputs:
+    - entity_list
+    - relationship_map
+    - tenant_model
+    - field_definitions
+    - lifecycle_state_model
+    - constraint_list
+    - index_candidates
+    - data_sensitivity_notes
+    - migration_plan
+    - open_data_questions
+  related_skills:
+    - engineering.database-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - security.security-engineer
+    - product.business-analyst
+  tags:
+    - database
+    - data-model
+    - saas
+    - schema
+    - entities
+    - relationships
+    - multi-tenancy
+    - migration
+```

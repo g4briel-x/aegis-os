@@ -1,0 +1,48 @@
+## FILE: `playbooks/product/define-saas-mvp/metadata.yaml`
+
+```yaml
+playbook:
+  id: product.define-saas-mvp
+  name: Define SaaS MVP
+  version: 0.1.0
+  status: premium-draft
+  domain: product
+  category: saas-product-definition
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for defining a focused, realistic and testable SaaS MVP.
+  trigger: A SaaS idea or product concept needs to be reduced into a clear first version.
+  inputs:
+    - product_idea
+    - target_customer
+    - user_problem
+    - business_goal
+    - feature_list
+    - market_context
+    - technical_constraints
+  outputs:
+    - mvp_definition
+    - problem_statement
+    - value_proposition
+    - must_have_features
+    - excluded_features
+    - success_metrics
+    - launch_risks
+    - first_roadmap
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+    - management.technical-project-manager
+  tags:
+    - saas
+    - mvp
+    - product
+    - roadmap
+    - prioritization
+    - startup
+    - discovery
+```
+
+# ---

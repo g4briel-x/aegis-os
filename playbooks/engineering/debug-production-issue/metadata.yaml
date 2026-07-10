@@ -1,0 +1,44 @@
+## FILE: `playbooks/engineering/debug-production-issue/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.debug-production-issue
+  name: Debug Production Issue
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: debugging-incident-response
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for diagnosing, mitigating and resolving production issues.
+  trigger: A production service is failing, degraded or producing unexpected behavior.
+  inputs:
+    - incident_summary
+    - affected_service
+    - user_reports
+    - logs
+    - metrics
+    - traces
+    - recent_changes
+    - deployment_context
+  outputs:
+    - impact_summary
+    - diagnosis
+    - root_cause_analysis
+    - mitigation_plan
+    - verification_steps
+    - prevention_actions
+  related_skills:
+    - engineering.senior-debugger
+    - infrastructure.devops-engineer
+    - security.security-engineer
+    - management.technical-project-manager
+  tags:
+    - production
+    - debugging
+    - incident
+    - logs
+    - rollback
+    - recovery
+    - root-cause-analysis
+```

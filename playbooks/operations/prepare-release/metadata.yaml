@@ -1,0 +1,48 @@
+## FILE: `playbooks/operations/prepare-release/metadata.yaml`
+
+```yaml
+playbook:
+  id: operations.prepare-release
+  name: Prepare Release
+  version: 0.1.0
+  status: premium-draft
+  domain: operations
+  category: release-readiness
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for preparing, validating, communicating and approving a software release.
+  trigger: A software change, feature, fix or migration is ready to be released.
+  inputs:
+    - release_scope
+    - change_list
+    - affected_services
+    - test_results
+    - acceptance_criteria
+    - deployment_target
+    - migration_plan
+    - rollback_plan
+    - security_notes
+  outputs:
+    - release_readiness_summary
+    - deployment_plan
+    - rollback_plan
+    - risk_register
+    - communication_plan
+    - monitoring_plan
+    - go_no_go_decision
+  related_skills:
+    - management.technical-project-manager
+    - infrastructure.devops-engineer
+    - engineering.senior-developer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - product.product-manager-saas
+  tags:
+    - release
+    - deployment
+    - readiness
+    - rollback
+    - validation
+    - operations
+    - communication
+```

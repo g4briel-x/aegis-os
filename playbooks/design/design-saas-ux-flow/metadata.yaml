@@ -1,0 +1,48 @@
+## FILE: `playbooks/design/design-saas-ux-flow/metadata.yaml`
+
+```yaml
+playbook:
+  id: design.design-saas-ux-flow
+  name: Design SaaS UX Flow
+  version: 0.1.0
+  status: premium-draft
+  domain: design
+  category: saas-ux-flow-design
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for converting SaaS requirements into clear user flows, screen sequences, states and handoff-ready UX documentation.
+  trigger: A SaaS feature, PRD or workflow needs to be converted into a screen-by-screen user experience.
+  inputs:
+    - prd
+    - user_stories
+    - target_personas
+    - feature_scope
+    - user_goal
+    - roles_permissions
+    - data_requirements
+    - technical_constraints
+  outputs:
+    - ux_flow_summary
+    - user_journey
+    - screen_inventory
+    - flow_description
+    - screen_states
+    - edge_cases
+    - permission_behavior
+    - ux_handoff_checklist
+  related_skills:
+    - design.ux-ui-designer-saas
+    - product.product-manager-saas
+    - product.business-analyst
+    - engineering.software-architect
+    - engineering.senior-developer
+  tags:
+    - ux
+    - ui
+    - saas
+    - user-flow
+    - wireframe
+    - product-design
+    - screen-states
+    - handoff
+```

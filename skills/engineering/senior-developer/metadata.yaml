@@ -1,0 +1,43 @@
+## FILE: `skills/engineering/senior-developer/metadata.yaml`
+
+```yaml
+skill:
+  id: engineering.senior-developer
+  name: Senior Developer
+  version: 0.2.0
+  status: premium-draft
+  domain: engineering
+  category: software-development
+  maturity: usable
+  owner: aegis-os
+  description: Expert software development Skill for producing, reviewing, debugging and improving production-grade software.
+  inputs:
+    - user_request
+    - project_context
+    - code_context
+    - technical_constraints
+    - error_messages
+  outputs:
+    - implementation_plan
+    - source_code
+    - review_notes
+    - debugging_report
+    - architecture_recommendation
+    - test_plan
+  dependencies:
+    - shared.software-engineering.clean-code
+    - shared.software-engineering.solid
+    - shared.software-engineering.clean-architecture
+    - shared.software-engineering.testing
+    - shared.security.owasp
+    - shared.operations.observability
+  tags:
+    - senior-developer
+    - software-engineering
+    - coding
+    - debugging
+    - architecture
+    - database
+    - api
+    - code-review
+```

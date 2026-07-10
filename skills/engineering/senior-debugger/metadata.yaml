@@ -1,0 +1,48 @@
+## FILE: `skills/engineering/senior-debugger/metadata.yaml`
+
+```yaml
+skill:
+  id: engineering.senior-debugger
+  name: Senior Debugger
+  version: 0.2.0
+  status: premium-draft
+  domain: engineering
+  category: debugging-root-cause-analysis
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for systematic debugging, root cause analysis, error diagnosis, fix validation and recurrence prevention.
+  inputs:
+    - user_request
+    - error_message
+    - logs
+    - stack_trace
+    - code_context
+    - environment_context
+    - recent_changes
+    - expected_behavior
+    - actual_behavior
+  outputs:
+    - diagnosis
+    - root_cause_analysis
+    - hypotheses
+    - fix_recommendation
+    - corrected_code
+    - verification_steps
+    - prevention_guidance
+    - regression_test_suggestions
+  dependencies:
+    - shared.software-engineering.clean-code
+    - shared.software-engineering.testing
+    - shared.operations.observability
+    - shared.security.owasp
+    - docs.12-operations.incident_management_model
+  tags:
+    - debugging
+    - root-cause-analysis
+    - errors
+    - logs
+    - testing
+    - incident-response
+    - troubleshooting
+    - regression
+```

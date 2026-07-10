@@ -1,276 +1,110 @@
-﻿# Senior Debugger Workflows
+## FILE: `skills/engineering/senior-debugger/workflows.md`
 
-## Overview
+# Senior Debugger — Workflows
 
-The Senior Debugger follows structured investigation workflows designed to transform unknown failures into verified solutions.
-
-Every workflow prioritizes evidence collection, controlled experimentation and knowledge preservation.
-
----
-
-# Workflow 1: Production Incident Investigation
-
-## Objective
-
-Restore system stability while identifying the underlying cause.
+Version: 0.2.0  
+Status: Premium Draft
 
 ---
 
-## Phase 1: Incident Classification
+# 1. General Debugging Workflow
 
-Collect:
+Use this workflow for any bug or unexpected behavior.
 
-- Error description
-- Time of occurrence
-- Affected components
-- User impact
-- Business impact
-- Recent changes
-
-Output:
-
-Incident profile.
-
----
-
-## Phase 2: Evidence Collection
-
-Gather:
-
-- Application logs
-- Infrastructure logs
-- Metrics
-- Distributed traces
-- Database activity
-- Deployment history
-- Configuration changes
-
-Rule:
-
-No hypothesis without evidence.
+```text
+1. Capture the symptom
+2. Capture expected versus actual behavior
+3. Identify environment and recent changes
+4. Gather evidence from code, logs or errors
+5. Build hypotheses
+6. Test or rank hypotheses
+7. Identify root cause
+8. Propose fix
+9. Verify fix
+10. Recommend prevention
+```
 
 ---
 
-## Phase 3: Impact Analysis
+# 2. Error Message Workflow
 
-Determine:
+Use this workflow when the user provides an error message.
 
-- Scope of failure
-- Number of affected users
-- Duration
-- Critical functionality impacted
-
-Classify:
-
-- Critical
-- High
-- Medium
-- Low
-
----
-
-## Phase 4: Root Cause Investigation
-
-Apply:
-
-- Five Whys
-- Fault Tree Analysis
-- Timeline reconstruction
-- Code inspection
-- Environment comparison
-
-Goal:
-
-Find the first abnormal condition that created the failure.
+```text
+1. Read the exact error
+2. Identify error type
+3. Locate failing component
+4. Identify likely cause
+5. Match cause to code or configuration
+6. Provide correction
+7. Provide verification steps
+8. Explain prevention
+```
 
 ---
 
-## Phase 5: Solution Validation
+# 3. Stack Trace Workflow
 
-Before deployment:
+Use this workflow when a stack trace is available.
 
-Validate:
-
-- Fix correctness
-- Regression risks
-- Performance impact
-- Security impact
-
----
-
-## Phase 6: Post Incident Improvement
-
-Produce:
-
-- RCA document
-- Prevention actions
-- Monitoring improvements
-- Engineering recommendations
+```text
+1. Identify the top-level failure
+2. Locate the first relevant application frame
+3. Trace the call path
+4. Identify invalid input, state or dependency
+5. Recommend targeted fix
+6. Validate against expected behavior
+```
 
 ---
 
-# Workflow 2: Debugging a Software Defect
+# 4. Failing Test Workflow
 
-## Objective
+Use this workflow when tests fail.
 
-Identify and eliminate a software defect.
-
----
-
-## Step 1: Reproduce
-
-Define:
-
-- Expected behavior
-- Actual behavior
-- Reproduction steps
-- Environment conditions
+```text
+1. Identify failing test
+2. Read assertion failure
+3. Compare expected and actual values
+4. Check setup and fixtures
+5. Check recent code changes
+6. Identify whether test or implementation is wrong
+7. Provide fix
+8. Suggest regression coverage
+```
 
 ---
 
-## Step 2: Isolate
+# 5. Production Incident Debugging Workflow
 
-Reduce the problem:
+Use this workflow when the issue affects live users.
 
-- component;
-- function;
-- dependency;
-- input data;
-- execution path.
-
----
-
-## Step 3: Analyze Execution
-
-Inspect:
-
-- stack traces;
-- variables;
-- memory state;
-- thread state;
-- network communication.
+```text
+1. Assess impact
+2. Identify affected services
+3. Check recent deployments or configuration changes
+4. Review logs and metrics
+5. Contain impact if needed
+6. Identify likely root cause
+7. Recommend safe mitigation
+8. Define permanent fix and prevention
+```
 
 ---
 
-## Step 4: Identify Root Cause
+# 6. 4-Pass Debugging Validation Workflow
 
-Classify:
+Every debugging output must be reviewed using this workflow:
 
-- Logic error
-- Design issue
-- Data issue
-- Integration failure
-- Infrastructure problem
-
----
-
-## Step 5: Implement Correction
-
-Requirements:
-
-- minimal change;
-- clear rationale;
-- tests added;
-- documentation updated.
+```text
+Pass 1 — Symptom, error and context review
+Pass 2 — Hypothesis and root cause review
+Pass 3 — Fix safety, side effect and regression review
+Pass 4 — Verification, prevention and communication review
+```
 
 ---
 
-# Workflow 3: Performance Investigation
+# 7. Final Principle
 
-## Objective
-
-Identify and remove system bottlenecks.
-
----
-
-## Step 1: Establish Baseline
-
-Measure:
-
-- response time;
-- throughput;
-- CPU;
-- memory;
-- database latency.
-
----
-
-## Step 2: Locate Bottleneck
-
-Analyze:
-
-- profiling data;
-- traces;
-- metrics;
-- resource usage.
-
----
-
-## Step 3: Optimize
-
-Possible actions:
-
-- algorithm improvement;
-- caching;
-- query optimization;
-- concurrency improvement;
-- architecture change.
-
----
-
-## Step 4: Validate
-
-Compare:
-
-Before:
-
-- baseline metrics.
-
-After:
-
-- improved metrics.
-
----
-
-# Workflow 4: Memory Leak Investigation
-
-## Detection
-
-Indicators:
-
-- increasing memory usage;
-- crashes after long execution;
-- degraded performance.
-
----
-
-## Investigation
-
-Tools:
-
-- Valgrind
-- AddressSanitizer
-- heap profiling
-- runtime analysis
-
----
-
-## Resolution
-
-Actions:
-
-- release resources;
-- fix ownership issues;
-- improve lifecycle management.
-
----
-
-# Workflow 5: Debugging Rules
-
-The Senior Debugger always:
-
-- reproduces before modifying;
-- measures before optimizing;
-- investigates before concluding;
-- documents before closing;
-- prevents recurrence.
+> Debugging workflow is complete only when the fix is verified and recurrence risk is reduced.

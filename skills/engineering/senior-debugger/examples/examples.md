@@ -1,239 +1,112 @@
-﻿# Senior Debugger Examples
+## FILE: `skills/engineering/senior-debugger/examples/examples.md`
 
-## Overview
+# Senior Debugger — Examples
 
-This document provides practical examples of how the Senior Debugger Skill operates inside Aegis OS.
-
-The examples demonstrate investigation methods, reasoning patterns and expected deliverables.
-
----
-
-# Example 1: API Response Time Degradation
-
-## Situation
-
-An e-commerce API response time increased from 200ms to 5 seconds.
-
-Users report slow checkout operations.
+Version: 0.2.0  
+Status: Premium Draft
 
 ---
 
-## Initial Symptoms
+# 1. Example — React Infinite Render
 
-Observed:
+## User Request
 
-- increased latency;
-- timeout errors;
-- customer complaints.
+My React component keeps re-rendering infinitely.
 
----
+## Expected Skill Behavior
 
-## Investigation
+The Skill should:
 
-Collected evidence:
+- ask for or inspect the component;
+- look for state updates inside render or effects;
+- review dependency arrays;
+- identify loop cause;
+- provide corrected code;
+- suggest verification steps.
 
-- API latency metrics;
-- database query times;
-- application traces;
-- recent deployments.
+## Expected Output Structure
 
-Findings:
-API Request
-↓
-Order Service
-↓
-Database Query
-↓
-Slow Query Detected
-
+```text
+Facts
+Likely cause
+Corrected code
+Verification steps
+Prevention notes
+```
 
 ---
 
-## Root Cause
+# 2. Example — Node.js API 500 Error
 
-A new database query introduced during a deployment was missing an optimization index.
+## User Request
 
-The API was not the source of the problem.
+My Node.js API returns 500 when creating a user.
 
-The database execution plan was responsible.
+## Expected Skill Behavior
 
----
+The Skill should:
 
-## Resolution
-
-Actions:
-
-- Add missing index.
-- Optimize query.
-- Add performance test.
-- Monitor query latency.
+- ask for logs or stack trace if missing;
+- inspect validation and database insert logic;
+- consider duplicate keys or missing required fields;
+- provide targeted fix;
+- recommend better error handling.
 
 ---
 
-## Prevention
+# 3. Example — SQL Query Wrong Results
 
-Implemented:
+## User Request
 
-- database migration review;
-- query performance checks;
-- production monitoring alerts.
+My SQL query returns duplicate customers.
 
----
+## Expected Skill Behavior
 
-# Example 2: Memory Leak in Backend Service
+The Skill should:
 
-## Situation
-
-A service crashes every 72 hours.
-
-Restarting the service temporarily resolves the issue.
+- inspect joins;
+- detect one-to-many relationship expansion;
+- recommend grouping, distinct or corrected join logic;
+- explain the real cause.
 
 ---
 
-## Symptoms
+# 4. Example — Failing CI Pipeline
 
-Observed:
+## User Request
 
-- increasing memory usage;
-- degraded response time;
-- container restart.
+The build works locally but fails in GitHub Actions.
 
----
+## Expected Skill Behavior
 
-## Investigation
+The Skill should:
 
-Tools:
-
-- memory profiler;
-- heap analysis;
-- application metrics.
-
-Finding:
-
-Objects created during requests were never released.
+- compare local and CI environments;
+- inspect dependency versions;
+- check environment variables;
+- identify missing files or path differences;
+- recommend reproducible fix.
 
 ---
 
-## Root Cause
+# 5. Example — Production Regression
 
-A resource lifecycle problem caused continuous memory growth.
+## User Request
 
----
+After deployment, users cannot log in.
 
-## Resolution
+## Expected Skill Behavior
 
-Actions:
+The Skill should:
 
-- Fix object cleanup.
-- Add resource management pattern.
-- Add memory monitoring.
-
----
-
-# Example 3: Race Condition
-
-## Situation
-
-A payment system occasionally creates duplicate transactions.
+- assess impact;
+- check recent auth changes;
+- check environment variables and session configuration;
+- propose rollback or hotfix;
+- define permanent prevention.
 
 ---
 
-## Investigation
+# 6. Final Principle
 
-Evidence:
-
-- application logs;
-- thread analysis;
-- transaction history.
-
-Finding:
-
-Two processes modified the same state simultaneously.
-
----
-
-## Root Cause
-
-Missing synchronization mechanism.
-
----
-
-## Resolution
-
-Actions:
-
-- Introduce transaction locking.
-- Add concurrency tests.
-- Review critical sections.
-
----
-
-# Example 4: Production Deployment Failure
-
-## Situation
-
-A new release causes application startup failure.
-
----
-
-## Investigation Process
-
-Reviewed:
-
-- deployment logs;
-- configuration changes;
-- environment variables;
-- dependency versions.
-
----
-
-## Root Cause
-
-A required environment variable was missing in production.
-
----
-
-## Resolution
-
-Actions:
-
-- Correct deployment configuration.
-- Add configuration validation.
-- Improve deployment checklist.
-
----
-
-# Expected Senior Debugger Output
-
-Every investigation should produce:
-
-## Technical Summary
-
-What happened?
-
-## Evidence
-
-What proves it?
-
-## Root Cause
-
-Why did it happen?
-
-## Solution
-
-How is it fixed?
-
-## Prevention
-
-How do we avoid recurrence?
-
----
-
-# Final Principle
-
-A Senior Debugger does not hunt errors.
-
-A Senior Debugger builds understanding.
-
-Every failure becomes a source of engineering improvement.
-
+> Examples prove that the Skill can move from failure symptoms to verified correction.

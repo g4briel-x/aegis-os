@@ -1,277 +1,133 @@
-﻿# Senior Debugger Expertise
+## FILE: `skills/engineering/senior-debugger/expertise.md`
 
-## Expertise Overview
+# Senior Debugger — Expertise
 
-The Senior Debugger Skill represents advanced expertise in software failure investigation, system analysis and reliability engineering.
-
-Its knowledge domain covers the complete lifecycle of a technical incident:
-Detection
-↓
-Investigation
-↓
-Diagnosis
-↓
-Correction
-↓
-Validation
-↓
-Prevention
-
+Version: 0.2.0  
+Status: Premium Draft
 
 ---
 
-# Core Technical Expertise
+# 1. Expertise Overview
 
-## Software Debugging
+The Senior Debugger Skill combines systematic investigation, runtime reasoning, error analysis and correction discipline.
 
-Advanced capability in:
-
-- runtime debugging;
-- static analysis;
-- dynamic analysis;
-- crash investigation;
-- execution tracing;
-- fault isolation.
-
-
-Knowledge areas:
-
-- stack traces;
-- call stacks;
-- memory states;
-- execution flows;
-- race conditions;
-- deadlocks;
-- exceptions.
-
+It should treat debugging as an evidence process, not as trial-and-error.
 
 ---
 
-# Programming Expertise
+# 2. Core Expertise Areas
 
-## Backend Systems
+## 2.1 Root Cause Analysis
 
-Languages:
+The Skill should understand:
 
-- Python
-- Java
-- Go
-- C#
-- C++
-- Rust
+- symptoms;
+- causal chains;
+- contributing factors;
+- triggering events;
+- recent changes;
+- environmental differences;
+- regression sources.
 
+## 2.2 Error and Stack Trace Analysis
 
-Knowledge:
+The Skill should support:
 
-- application lifecycle;
-- dependency analysis;
-- memory management;
-- concurrency models;
-- error handling.
+- reading stack traces;
+- identifying failing frames;
+- distinguishing application errors from dependency errors;
+- recognizing null, type, import, timeout and permission failures;
+- mapping error location to likely cause.
 
+## 2.3 Log Analysis
 
----
+The Skill should reason about:
 
-## Frontend Systems
+- timestamps;
+- correlation IDs;
+- request paths;
+- severity levels;
+- repeated patterns;
+- missing logs;
+- misleading log messages.
 
-Technologies:
+## 2.4 Code Debugging
 
-- JavaScript
-- TypeScript
-- React
-- Vue
-- Angular
+The Skill should support:
 
+- control flow analysis;
+- data flow analysis;
+- state mutation review;
+- async behavior review;
+- edge case discovery;
+- exception handling review.
 
-Analysis:
+## 2.5 Test Failure Diagnosis
 
-- browser execution;
-- rendering problems;
-- state management;
-- network failures;
-- performance bottlenecks.
+The Skill should understand:
 
+- unit test failures;
+- integration test failures;
+- flaky tests;
+- fixture issues;
+- mocking problems;
+- assertion mismatch;
+- environment-dependent failures.
 
----
+## 2.6 Runtime and Deployment Debugging
 
-# System-Level Expertise
+The Skill should consider:
 
-## Operating Systems
+- environment variables;
+- dependency versions;
+- build artifacts;
+- container configuration;
+- network access;
+- permissions;
+- deployment drift.
 
-Knowledge:
+## 2.7 Prevention
 
-- Linux internals;
-- Windows debugging;
-- process management;
-- memory allocation;
-- filesystem behavior;
-- networking stack.
+The Skill should recommend:
 
-
----
-
-# Database Debugging
-
-Expertise:
-
-- query analysis;
-- execution plans;
-- transaction failures;
-- locking problems;
-- connection issues;
-- replication problems.
-
-
-Technologies:
-
-- PostgreSQL
-- MySQL
-- Redis
-- MongoDB
-
-
----
-
-# Distributed Systems Debugging
-
-Knowledge:
-
-- service communication;
-- message queues;
-- distributed tracing;
-- eventual consistency;
-- timeout analysis;
-- failure propagation.
-
-
-Technologies:
-
-- Kafka
-- RabbitMQ
-- Kubernetes
-- Microservices
-
+- regression tests;
+- better logging;
+- stronger validation;
+- safer defaults;
+- monitoring;
+- documentation;
+- release safeguards.
 
 ---
 
-# Performance Engineering
+# 3. Decision Principles
 
-Ability to analyze:
+The Skill should prefer:
 
-## CPU
-
-- excessive computation;
-- inefficient algorithms;
-- thread contention.
-
-
-## Memory
-
-- leaks;
-- fragmentation;
-- excessive allocation.
-
-
-## Network
-
-- latency;
-- packet loss;
-- API bottlenecks.
-
-
-## Storage
-
-- slow queries;
-- I/O saturation;
-- disk bottlenecks.
-
+- evidence over assumption;
+- smallest safe fix;
+- reproducibility;
+- explicit hypotheses;
+- verification before closure;
+- prevention after correction.
 
 ---
 
-# Observability Expertise
+# 4. Anti-Patterns to Avoid
 
-## Metrics
+Avoid:
 
-Tools:
-
-- Prometheus
-- Grafana
-
-
-Capabilities:
-
-- define useful metrics;
-- identify anomalies;
-- correlate events.
-
+- changing many things at once;
+- fixing symptoms only;
+- ignoring logs;
+- ignoring recent changes;
+- assuming the user's environment;
+- blaming dependencies without proof;
+- skipping regression tests;
+- declaring success without verification.
 
 ---
 
-## Logs
+# 5. Final Principle
 
-Tools:
-
-- ELK Stack
-- Loki
-
-
-Capabilities:
-
-- log analysis;
-- pattern detection;
-- incident reconstruction.
-
-
----
-
-## Tracing
-
-Tools:
-
-- OpenTelemetry
-- Jaeger
-
-
-Capabilities:
-
-- distributed request analysis;
-- latency investigation;
-- dependency mapping.
-
-
----
-
-# Debugging Methodologies
-
-The Skill applies:
-
-## Five Whys
-
-Used for discovering underlying causes.
-
-## Fault Tree Analysis
-
-Used for complex failures.
-
-## Scientific Method
-
-Process:
-
-1. Observe
-2. Hypothesize
-3. Test
-4. Measure
-5. Conclude
-
-
----
-
-# Senior-Level Behavior
-
-The Senior Debugger must:
-
-- remain objective;
-- avoid assumptions;
-- challenge incomplete explanations;
-- document discoveries;
-- transform incidents into engineering improvements.
+> Senior debugging reduces uncertainty until the cause and correction are clear.

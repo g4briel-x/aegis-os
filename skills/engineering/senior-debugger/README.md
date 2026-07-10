@@ -1,111 +1,87 @@
-﻿# Senior Debugger Skill
+## FILE: `skills/engineering/senior-debugger/README.md`
 
-## Overview
+# Senior Debugger Skill
 
-The Senior Debugger Skill is an expert-level engineering capability dedicated to diagnosing, analyzing and resolving complex software failures.
-
-This Skill operates as a critical problem-solving module inside Aegis OS. Its mission is not only to fix errors but to identify the underlying causes, prevent recurrence and improve system reliability.
-
----
-
-## Role
-
-Senior Debugger acts as:
-
-- Production incident investigator
-- Root Cause Analysis specialist
-- Performance analysis expert
-- Failure pattern analyst
-- Reliability improvement advisor
+Version: 0.2.0  
+Status: Premium Draft  
+Domain: Engineering  
+Category: Debugging and Root Cause Analysis
 
 ---
 
-## Mission
+# 1. Purpose
 
-Transform unclear technical failures into:
+The Senior Debugger Skill provides expert-level support for diagnosing, isolating, correcting and preventing software defects.
 
-- measurable evidence;
-- identified root causes;
-- validated solutions;
-- preventive improvements.
-
-The Skill prioritizes investigation over assumptions.
+This Skill is designed to handle bugs, errors, regressions, crashes, broken workflows, failing tests, deployment failures and unexpected system behavior.
 
 ---
 
-## Core Philosophy
+# 2. Expert Profile
 
-A Senior Debugger follows:
+This Skill behaves like a senior debugger with strong production experience in:
 
-> "Do not fix symptoms. Understand the system that created them."
-
-Every incident is treated as a source of engineering knowledge.
-
----
-
-## Responsibilities
-
-### Incident Investigation
-
-- Analyze production failures.
-- Collect technical evidence.
-- Reproduce issues when possible.
-- Identify failure boundaries.
-
-### Root Cause Analysis
-
-- Separate symptoms from causes.
-- Build causal chains.
-- Validate hypotheses.
-- Document conclusions.
-
-### Performance Analysis
-
-- Detect bottlenecks.
-- Analyze resource consumption.
-- Optimize execution paths.
-
-### Reliability Improvement
-
-- Recommend preventive actions.
-- Improve observability.
-- Strengthen engineering practices.
+- root cause analysis;
+- systematic debugging;
+- log interpretation;
+- error tracing;
+- regression analysis;
+- runtime behavior analysis;
+- failing test diagnosis;
+- backend and frontend debugging;
+- database issue diagnosis;
+- deployment and configuration debugging;
+- prevention and hardening.
 
 ---
 
-## Operating Context
+# 3. Scope
 
-The Senior Debugger works across:
+This Skill can help with:
 
-- Backend systems
-- Distributed architectures
-- APIs
-- Databases
-- Cloud infrastructure
-- Embedded systems
-- Mobile applications
-- Frontend applications
-
----
-
-## Expected Deliverables
-
-A completed debugging mission produces:
-
-- Incident report
-- Root Cause Analysis (RCA)
-- Technical diagnosis
-- Fix recommendation
-- Validation strategy
-- Prevention plan
+- debugging code;
+- analyzing errors;
+- investigating failing tests;
+- diagnosing production incidents;
+- isolating root causes;
+- proposing fixes;
+- validating fixes;
+- preventing recurrence;
+- writing debugging checklists;
+- improving observability.
 
 ---
 
-## Quality Standard
+# 4. Quality Rule
 
-A solution is accepted only when:
+Debugging outputs must be reviewed using a 4-pass validation:
 
-- The root cause is understood.
-- The correction is validated.
-- Regression risks are evaluated.
-- Documentation is updated.
+```text
+Pass 1 — Symptom, error and context review
+Pass 2 — Hypothesis and root cause review
+Pass 3 — Fix safety, side effect and regression review
+Pass 4 — Verification, prevention and communication review
+```
+
+If uncertainty remains, the Skill must state what is known, what is assumed and what evidence is needed next.
+
+---
+
+# 5. Files
+
+```text
+README.md
+SKILL.md
+metadata.yaml
+expertise.md
+workflows.md
+checklists.md
+prompts.md
+examples/examples.md
+```
+
+---
+
+# 6. Final Principle
+
+> The Senior Debugger Skill must move from symptom to evidence, from evidence to root cause, and from root cause to verified correction.

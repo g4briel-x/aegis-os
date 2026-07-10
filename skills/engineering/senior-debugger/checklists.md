@@ -1,198 +1,95 @@
-﻿# Senior Debugger Checklists
+## FILE: `skills/engineering/senior-debugger/checklists.md`
 
-## Overview
+# Senior Debugger — Checklists
 
-These checklists ensure that debugging activities follow a rigorous and repeatable process.
-
-A debugging task is considered complete only when investigation, correction and prevention requirements are satisfied.
-
----
-
-# Incident Investigation Checklist
-
-## Initial Assessment
-
-[ ] Incident description collected
-
-[ ] Affected systems identified
-
-[ ] User impact evaluated
-
-[ ] Business impact evaluated
-
-[ ] Severity level assigned
-
+Version: 0.2.0  
+Status: Premium Draft
 
 ---
 
-# Evidence Collection Checklist
+# 1. Debugging Intake Checklist
 
-## Logs
-
-[ ] Application logs collected
-
-[ ] Infrastructure logs collected
-
-[ ] Error patterns identified
-
-[ ] Relevant timestamps correlated
-
-
-## Metrics
-
-[ ] CPU usage analyzed
-
-[ ] Memory usage analyzed
-
-[ ] Network metrics analyzed
-
-[ ] Database metrics analyzed
-
-
-## Traces
-
-[ ] Distributed traces reviewed
-
-[ ] Slow operations identified
-
-[ ] Service dependencies mapped
-
+```text
+[ ] Symptom captured
+[ ] Expected behavior captured
+[ ] Actual behavior captured
+[ ] Error message captured
+[ ] Environment identified
+[ ] Recent changes identified
+[ ] Reproduction path identified if available
+[ ] Impact understood
+```
 
 ---
 
-# Root Cause Analysis Checklist
+# 2. Root Cause Checklist
 
-## Problem Understanding
-
-[ ] Symptom clearly defined
-
-[ ] Expected behavior documented
-
-[ ] Actual behavior documented
-
-[ ] Reproduction conditions identified
-
-
-## Investigation
-
-[ ] Multiple hypotheses considered
-
-[ ] Hypotheses validated with evidence
-
-[ ] Root cause separated from symptoms
-
-[ ] Contributing factors identified
-
+```text
+[ ] Evidence reviewed
+[ ] Hypotheses listed
+[ ] Most likely cause identified
+[ ] Alternative causes considered
+[ ] Symptom separated from root cause
+[ ] Contributing factors documented
+[ ] Unknowns stated
+```
 
 ---
 
-# Code Debugging Checklist
+# 3. Fix Checklist
 
-## Before Modification
-
-[ ] Issue reproduced
-
-[ ] Relevant code identified
-
-[ ] Execution flow understood
-
-[ ] Dependencies analyzed
-
-
-## During Fix
-
-[ ] Minimal change applied
-
-[ ] Code quality maintained
-
-[ ] Tests created or updated
-
-[ ] Side effects evaluated
-
-
-## After Fix
-
-[ ] Fix validated
-
-[ ] Regression tests passed
-
-[ ] Performance impact checked
-
-[ ] Documentation updated
-
+```text
+[ ] Fix targets root cause
+[ ] Fix is minimal where possible
+[ ] Side effects considered
+[ ] Security impact considered
+[ ] Data impact considered
+[ ] Regression risk considered
+[ ] Rollback considered where relevant
+```
 
 ---
 
-# Performance Debugging Checklist
+# 4. Verification Checklist
 
-[ ] Performance baseline established
-
-[ ] Bottleneck identified
-
-[ ] Profiling performed
-
-[ ] Optimization hypothesis created
-
-[ ] Improvement measured
-
+```text
+[ ] Verification steps defined
+[ ] Expected result defined
+[ ] Regression test suggested
+[ ] Logs or monitoring considered
+[ ] User-facing behavior confirmed
+[ ] Edge cases considered
+```
 
 ---
 
-# Production Deployment Checklist
+# 5. Production Incident Checklist
 
-Before deployment:
-
-[ ] Solution reviewed
-
-[ ] Rollback plan prepared
-
-[ ] Monitoring configured
-
-[ ] Risk assessment completed
-
-
-After deployment:
-
-[ ] Metrics monitored
-
-[ ] Errors checked
-
-[ ] User impact verified
-
-[ ] Incident closed
-
+```text
+[ ] Impact assessed
+[ ] Affected services identified
+[ ] Recent deploys reviewed
+[ ] Logs reviewed
+[ ] Metrics reviewed
+[ ] Mitigation considered
+[ ] Escalation path considered
+[ ] Prevention action defined
+```
 
 ---
 
-# RCA Quality Checklist
+# 6. 4-Pass Validation Checklist
 
-A Root Cause Analysis document must contain:
-
-[ ] Incident summary
-
-[ ] Timeline
-
-[ ] Technical cause
-
-[ ] Contributing factors
-
-[ ] Resolution
-
-[ ] Prevention actions
-
-[ ] Lessons learned
-
+```text
+[ ] Pass 1 completed — symptom, error and context
+[ ] Pass 2 completed — hypothesis and root cause
+[ ] Pass 3 completed — fix safety and regression
+[ ] Pass 4 completed — verification and prevention
+[ ] Weaknesses corrected or documented
+```
 
 ---
 
-# Final Validation
+# 7. Final Principle
 
-The debugging mission is complete when:
-
-[ ] Root cause is proven
-
-[ ] Solution is validated
-
-[ ] Knowledge is documented
-
-[ ] Future recurrence risk is reduced
+> Debugging checklists protect the process from premature conclusions.

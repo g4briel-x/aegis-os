@@ -1,0 +1,50 @@
+## FILE: `playbooks/engineering/implement-feature-from-prd/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.implement-feature-from-prd
+  name: Implement Feature From PRD
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: feature-implementation
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for converting a PRD into technical tasks, code implementation, tests, validation and release handoff.
+  trigger: A PRD or product requirement is ready for engineering implementation.
+  inputs:
+    - prd
+    - user_stories
+    - acceptance_criteria
+    - ux_flow
+    - architecture_notes
+    - data_model
+    - api_requirements
+    - security_requirements
+    - code_context
+  outputs:
+    - implementation_plan
+    - technical_task_breakdown
+    - affected_components
+    - api_data_change_summary
+    - test_plan
+    - validation_checklist
+    - pull_request_plan
+    - release_handoff_notes
+  related_skills:
+    - engineering.senior-developer
+    - engineering.software-architect
+    - engineering.database-engineer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - management.technical-project-manager
+  tags:
+    - implementation
+    - prd
+    - engineering
+    - feature
+    - code
+    - testing
+    - pull-request
+    - release
+```

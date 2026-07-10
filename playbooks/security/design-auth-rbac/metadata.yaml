@@ -1,0 +1,51 @@
+## FILE: `playbooks/security/design-auth-rbac/metadata.yaml`
+
+```yaml
+playbook:
+  id: security.design-auth-rbac
+  name: Design Auth RBAC
+  version: 0.1.0
+  status: premium-draft
+  domain: security
+  category: authentication-authorization
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for designing authentication, roles, permissions, tenant boundaries, object-level authorization and permission tests.
+  trigger: A SaaS application, feature, API or workflow requires defined identity, roles, permissions or access-control rules.
+  inputs:
+    - product_requirements
+    - user_roles
+    - user_journeys
+    - data_model
+    - tenant_model
+    - api_contract
+    - sensitive_data_list
+    - admin_workflows
+    - audit_requirements
+    - security_constraints
+  outputs:
+    - authentication_model
+    - role_catalog
+    - permission_matrix
+    - resource_ownership_model
+    - tenant_isolation_rules
+    - api_authorization_rules
+    - audit_event_list
+    - permission_test_matrix
+    - security_review_notes
+  related_skills:
+    - security.security-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - product.business-analyst
+  tags:
+    - auth
+    - rbac
+    - permissions
+    - authorization
+    - authentication
+    - tenant-isolation
+    - security
+    - access-control
+```

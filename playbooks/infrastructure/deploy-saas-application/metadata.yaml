@@ -1,0 +1,50 @@
+## FILE: `playbooks/infrastructure/deploy-saas-application/metadata.yaml`
+
+```yaml
+playbook:
+  id: infrastructure.deploy-saas-application
+  name: Deploy SaaS Application
+  version: 0.1.0
+  status: premium-draft
+  domain: infrastructure
+  category: saas-deployment
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for safely deploying SaaS applications with environment, secrets, migration, smoke test, monitoring and rollback checks.
+  trigger: A SaaS application, feature, fix or infrastructure change is ready to deploy.
+  inputs:
+    - release_scope
+    - target_environment
+    - build_artifact
+    - commit_sha
+    - ci_status
+    - deployment_plan
+    - environment_variables
+    - secrets_requirements
+    - migration_plan
+    - rollback_plan
+  outputs:
+    - deployment_readiness_summary
+    - environment_checklist
+    - deployment_execution_log
+    - smoke_test_result
+    - monitoring_result
+    - rollback_decision
+    - post_deployment_confirmation
+  related_skills:
+    - infrastructure.devops-engineer
+    - infrastructure.cloud-architect
+    - engineering.senior-debugger
+    - engineering.senior-developer
+    - security.security-engineer
+    - management.technical-project-manager
+  tags:
+    - deployment
+    - saas
+    - production
+    - staging
+    - rollback
+    - smoke-test
+    - monitoring
+    - infrastructure
+```

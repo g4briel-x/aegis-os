@@ -1,0 +1,49 @@
+## FILE: `playbooks/security/respond-to-security-incident/metadata.yaml`
+
+```yaml
+playbook:
+  id: security.respond-to-security-incident
+  name: Respond to Security Incident
+  version: 0.1.0
+  status: premium-draft
+  domain: security
+  category: security-incident-response
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for classifying, containing, investigating and recovering from suspected or confirmed security incidents.
+  trigger: A security alert, report or anomaly indicates possible compromise, abuse, unauthorized access or data exposure.
+  inputs:
+    - incident_summary
+    - alert_details
+    - affected_system
+    - logs
+    - audit_trails
+    - user_reports
+    - affected_accounts
+    - exposed_secret_context
+    - infrastructure_events
+  outputs:
+    - incident_classification
+    - impact_assessment
+    - containment_plan
+    - evidence_record
+    - investigation_summary
+    - recovery_plan
+    - prevention_actions
+    - post_incident_review
+  related_skills:
+    - security.security-engineer
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - infrastructure.cloud-architect
+    - management.technical-project-manager
+  tags:
+    - security
+    - incident-response
+    - compromise
+    - secrets
+    - access-control
+    - containment
+    - recovery
+    - audit
+```

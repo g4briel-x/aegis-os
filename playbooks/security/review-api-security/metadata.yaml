@@ -1,0 +1,47 @@
+## FILE: `playbooks/security/review-api-security/metadata.yaml`
+
+```yaml
+playbook:
+  id: security.review-api-security
+  name: Review API Security
+  version: 0.1.0
+  status: premium-draft
+  domain: security
+  category: api-security-review
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for reviewing API endpoints, authorization, validation, data exposure, abuse controls and auditability.
+  trigger: An API is being created, changed, exposed, audited or suspected of creating security risk.
+  inputs:
+    - api_endpoints
+    - http_methods
+    - request_schema
+    - response_schema
+    - authentication_model
+    - authorization_rules
+    - user_roles
+    - data_model
+    - error_responses
+    - rate_limits
+  outputs:
+    - api_security_review
+    - risk_list
+    - authorization_matrix
+    - mitigation_plan
+    - verification_checklist
+    - residual_risk_notes
+  related_skills:
+    - security.security-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - infrastructure.devops-engineer
+  tags:
+    - api-security
+    - authentication
+    - authorization
+    - validation
+    - rate-limiting
+    - data-exposure
+    - audit
+    - owasp
+```

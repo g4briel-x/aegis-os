@@ -1,0 +1,46 @@
+## FILE: `skills/management/technical-project-manager/metadata.yaml`
+
+```yaml
+skill:
+  id: management.technical-project-manager
+  name: Technical Project Manager
+  version: 0.2.0
+  status: premium-draft
+  domain: management
+  category: technical-project-management
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for technical project planning, milestone tracking, risk management, stakeholder communication and delivery coordination.
+  inputs:
+    - user_request
+    - project_context
+    - product_scope
+    - technical_scope
+    - timeline_constraints
+    - team_context
+    - risks
+    - dependencies
+  outputs:
+    - project_plan
+    - milestone_plan
+    - delivery_roadmap
+    - risk_register
+    - dependency_map
+    - status_report
+    - action_tracker
+    - stakeholder_update
+  dependencies:
+    - docs.12-operations.operational_review_model
+    - docs.15-roadmap.milestone_model
+    - docs.15-roadmap.delivery_plan
+    - docs.15-roadmap.dependency_roadmap
+    - shared.glossary
+  tags:
+    - project-management
+    - technical-delivery
+    - milestones
+    - risk-management
+    - dependency-management
+    - status-reporting
+    - release-planning
+    - stakeholder-management

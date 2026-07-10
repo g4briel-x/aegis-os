@@ -1,0 +1,51 @@
+## FILE: `playbooks/product/define-pricing-strategy/metadata.yaml`
+
+```yaml
+playbook:
+  id: product.define-pricing-strategy
+  name: Define Pricing Strategy
+  version: 0.1.0
+  status: premium-draft
+  domain: product
+  category: saas-pricing
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for defining SaaS pricing, packaging, tiers, pricing metrics, validation assumptions and launch recommendations.
+  trigger: A SaaS product, MVP or feature set needs pricing before launch, sales, fundraising or monetization validation.
+  inputs:
+    - product_concept
+    - target_customers
+    - use_cases
+    - feature_list
+    - customer_pain_points
+    - value_proposition
+    - competitor_pricing
+    - cost_structure
+    - market_positioning
+    - sales_motion
+  outputs:
+    - pricing_strategy
+    - customer_segment_map
+    - value_driver_map
+    - pricing_metric_recommendation
+    - tier_structure
+    - packaging_model
+    - freemium_trial_decision
+    - pricing_experiment_plan
+    - launch_pricing_recommendation
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - management.technical-project-manager
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+  tags:
+    - pricing
+    - saas
+    - monetization
+    - packaging
+    - tiers
+    - revenue
+    - go-to-market
+    - validation
+```

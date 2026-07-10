@@ -1,0 +1,56 @@
+## FILE: `playbooks/product/prepare-saas-launch/metadata.yaml`
+
+```yaml
+playbook:
+  id: product.prepare-saas-launch
+  name: Prepare SaaS Launch
+  version: 0.1.0
+  status: premium-draft
+  domain: product
+  category: saas-launch
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for preparing SaaS launches across product readiness, positioning, onboarding, support, analytics, risk and post-launch learning.
+  trigger: A SaaS MVP, beta, pilot, public release or major product feature is approaching launch.
+  inputs:
+    - product_scope
+    - mvp_definition
+    - prd
+    - launch_goals
+    - target_customers
+    - pricing_strategy
+    - onboarding_flow
+    - release_plan
+    - support_plan
+    - analytics_plan
+    - launch_channels
+    - risk_register
+  outputs:
+    - launch_readiness_plan
+    - launch_goal_statement
+    - target_audience_summary
+    - product_readiness_checklist
+    - positioning_messaging_notes
+    - onboarding_readiness_checklist
+    - support_readiness_checklist
+    - launch_risk_register
+    - launch_execution_checklist
+    - post_launch_learning_plan
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+    - management.technical-project-manager
+    - engineering.senior-developer
+    - infrastructure.devops-engineer
+    - security.security-engineer
+  tags:
+    - launch
+    - saas
+    - mvp
+    - beta
+    - onboarding
+    - positioning
+    - analytics
+    - release-readiness
+```

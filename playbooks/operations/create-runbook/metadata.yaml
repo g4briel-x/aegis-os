@@ -1,0 +1,53 @@
+## FILE: `playbooks/operations/create-runbook/metadata.yaml`
+
+```yaml
+playbook:
+  id: operations.create-runbook
+  name: Create Runbook
+  version: 0.1.0
+  status: premium-draft
+  domain: operations
+  category: runbook-authoring
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for creating operational runbooks with triggers, prerequisites, steps, commands, rollback, escalation and verification.
+  trigger: A production, support, deployment, incident or maintenance process needs a repeatable operational procedure.
+  inputs:
+    - process_name
+    - trigger_scenario
+    - affected_systems
+    - prerequisites
+    - required_permissions
+    - commands
+    - dashboards
+    - logs
+    - failure_modes
+    - rollback_steps
+    - escalation_contacts
+  outputs:
+    - operational_runbook
+    - trigger_definition
+    - prerequisite_checklist
+    - procedure_steps
+    - command_reference
+    - decision_points
+    - rollback_section
+    - escalation_path
+    - verification_checklist
+    - maintenance_owner
+  related_skills:
+    - infrastructure.devops-engineer
+    - management.technical-project-manager
+    - engineering.senior-debugger
+    - security.security-engineer
+    - engineering.senior-developer
+  tags:
+    - runbook
+    - operations
+    - incident-response
+    - deployment
+    - support
+    - rollback
+    - verification
+    - documentation
+```

@@ -1,0 +1,44 @@
+## FILE: `skills/engineering/software-architect/metadata.yaml`
+
+```yaml
+skill:
+  id: engineering.software-architect
+  name: Software Architect
+  version: 0.2.0
+  status: premium-draft
+  domain: engineering
+  category: software-architecture
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for designing, reviewing and documenting software architecture decisions.
+  inputs:
+    - user_request
+    - business_requirements
+    - technical_constraints
+    - project_context
+    - existing_architecture
+    - scale_requirements
+  outputs:
+    - architecture_recommendation
+    - component_model
+    - tradeoff_analysis
+    - risk_register
+    - architecture_decision_record
+    - implementation_roadmap
+  dependencies:
+    - shared.software-engineering.clean-architecture
+    - shared.software-engineering.solid
+    - shared.software-engineering.ddd
+    - shared.security.owasp
+    - shared.operations.observability
+    - shared.performance
+  tags:
+    - architecture
+    - system-design
+    - software-design
+    - scalability
+    - api-design
+    - cloud
+    - saas
+    - technical-decisions
+```

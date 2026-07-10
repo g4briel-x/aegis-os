@@ -1,0 +1,50 @@
+## FILE: `playbooks/engineering/optimize-database-performance/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.optimize-database-performance
+  name: Optimize Database Performance
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: database-performance
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for diagnosing and improving slow queries, indexes, schema issues, locks, connection pressure and database performance regressions.
+  trigger: A database-backed workflow, API endpoint, report or job is slow, unstable or resource-intensive.
+  inputs:
+    - slow_query
+    - affected_endpoint
+    - execution_plan
+    - schema
+    - indexes
+    - database_engine
+    - table_sizes
+    - logs
+    - metrics
+    - recent_migrations
+  outputs:
+    - performance_diagnosis
+    - query_analysis
+    - execution_plan_notes
+    - index_recommendation
+    - optimization_plan
+    - verification_steps
+    - monitoring_recommendations
+    - prevention_actions
+  related_skills:
+    - engineering.database-engineer
+    - engineering.senior-debugger
+    - engineering.software-architect
+    - infrastructure.devops-engineer
+    - infrastructure.cloud-architect
+  tags:
+    - database
+    - performance
+    - sql
+    - postgresql
+    - mysql
+    - indexes
+    - query-optimization
+    - observability
+```

@@ -1,0 +1,51 @@
+## FILE: `playbooks/management/plan-saas-mvp-delivery/metadata.yaml`
+
+```yaml
+playbook:
+  id: management.plan-saas-mvp-delivery
+  name: Plan SaaS MVP Delivery
+  version: 0.1.0
+  status: premium-draft
+  domain: management
+  category: saas-delivery-planning
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for converting SaaS MVP scope, PRD, UX flow and architecture into an executable delivery plan.
+  trigger: A SaaS MVP has enough product and technical definition to begin coordinated delivery planning.
+  inputs:
+    - mvp_definition
+    - prd
+    - ux_flow
+    - architecture_plan
+    - feature_list
+    - technical_constraints
+    - team_capacity
+    - target_launch_date
+    - risk_register
+  outputs:
+    - delivery_plan
+    - workstream_map
+    - milestone_roadmap
+    - prioritized_backlog
+    - dependency_map
+    - ownership_matrix
+    - delivery_risk_register
+    - release_readiness_plan
+  related_skills:
+    - management.technical-project-manager
+    - product.product-manager-saas
+    - engineering.software-architect
+    - engineering.senior-developer
+    - design.ux-ui-designer-saas
+    - infrastructure.devops-engineer
+    - security.security-engineer
+  tags:
+    - delivery
+    - saas
+    - mvp
+    - roadmap
+    - milestones
+    - backlog
+    - dependencies
+    - launch
+```

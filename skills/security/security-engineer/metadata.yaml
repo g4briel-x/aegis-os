@@ -1,0 +1,48 @@
+## FILE: `skills/security/security-engineer/metadata.yaml`
+
+```yaml
+skill:
+  id: security.security-engineer
+  name: Security Engineer
+  version: 0.2.0
+  status: premium-draft
+  domain: security
+  category: security-engineering
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for application security, threat modeling, access control, secure coding, vulnerability review and incident readiness.
+  inputs:
+    - user_request
+    - system_context
+    - architecture_context
+    - code_context
+    - api_context
+    - authentication_context
+    - vulnerability_context
+    - operational_constraints
+  outputs:
+    - threat_model
+    - security_review
+    - vulnerability_analysis
+    - mitigation_plan
+    - access_control_recommendation
+    - secure_coding_guidance
+    - incident_response_plan
+    - security_checklist
+  dependencies:
+    - shared.security.owasp
+    - docs.13-security.threat_model
+    - docs.13-security.security_architecture
+    - docs.13-security.secrets_management_model
+    - docs.13-security.security_incident_response
+  tags:
+    - security
+    - application-security
+    - threat-modeling
+    - owasp
+    - authentication
+    - authorization
+    - secrets
+    - vulnerability-management
+    - incident-response
+```

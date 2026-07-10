@@ -1,0 +1,45 @@
+## FILE: `skills/product/business-analyst/metadata.yaml`
+
+```yaml
+skill:
+  id: product.business-analyst
+  name: Business Analyst
+  version: 0.2.0
+  status: premium-draft
+  domain: product
+  category: business-analysis
+  maturity: usable
+  owner: aegis-os
+  description: Expert Skill for requirements gathering, stakeholder analysis, process modeling, user stories and acceptance criteria.
+  inputs:
+    - user_request
+    - business_context
+    - stakeholder_needs
+    - process_context
+    - product_context
+    - constraints
+    - existing_requirements
+  outputs:
+    - business_requirements
+    - functional_requirements
+    - non_functional_requirements
+    - user_stories
+    - acceptance_criteria
+    - process_map
+    - gap_analysis
+    - risk_analysis
+  dependencies:
+    - docs.03-specifications.quality_model
+    - docs.15-roadmap.feature_prioritization_model
+    - shared.glossary
+  tags:
+    - business-analysis
+    - requirements
+    - user-stories
+    - acceptance-criteria
+    - process-modeling
+    - stakeholder-analysis
+    - gap-analysis
+    - product
+```
+

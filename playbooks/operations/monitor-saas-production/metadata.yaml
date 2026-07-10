@@ -1,0 +1,48 @@
+## FILE: `playbooks/operations/monitor-saas-production/metadata.yaml`
+
+```yaml
+playbook:
+  id: operations.monitor-saas-production
+  name: Monitor SaaS Production
+  version: 0.1.0
+  status: premium-draft
+  domain: operations
+  category: production-monitoring
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for monitoring production health, detecting anomalies, reviewing alerts and escalating operational risks.
+  trigger: A live SaaS application requires production health review or post-deployment monitoring.
+  inputs:
+    - production_environment
+    - monitoring_dashboard
+    - logs
+    - metrics
+    - traces
+    - deployment_history
+    - alert_rules
+    - critical_user_flows
+    - support_reports
+  outputs:
+    - production_health_summary
+    - signal_review
+    - alert_review
+    - anomaly_findings
+    - escalation_decision
+    - follow_up_actions
+    - monitoring_improvement_recommendations
+  related_skills:
+    - infrastructure.devops-engineer
+    - infrastructure.cloud-architect
+    - engineering.senior-debugger
+    - security.security-engineer
+    - management.technical-project-manager
+  tags:
+    - production
+    - monitoring
+    - observability
+    - alerts
+    - logs
+    - metrics
+    - latency
+    - operations
+```

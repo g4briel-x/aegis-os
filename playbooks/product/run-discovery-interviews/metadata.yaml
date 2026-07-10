@@ -1,0 +1,44 @@
+## FILE: `playbooks/product/run-discovery-interviews/metadata.yaml`
+
+```yaml
+playbook:
+  id: product.run-discovery-interviews
+  name: Run Discovery Interviews
+  version: 0.1.0
+  status: premium-draft
+  domain: product
+  category: product-discovery
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for preparing, conducting and synthesizing customer discovery interviews.
+  trigger: A product idea, market segment or feature needs qualitative validation.
+  inputs:
+    - product_idea
+    - target_customer_hypothesis
+    - problem_hypothesis
+    - business_objective
+    - assumptions
+    - participant_list
+    - existing_feedback
+  outputs:
+    - discovery_objective
+    - interview_script
+    - interview_notes
+    - insight_summary
+    - assumption_validation
+    - pain_ranking
+    - product_decision_recommendation
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+    - management.technical-project-manager
+  tags:
+    - discovery
+    - interviews
+    - customer-research
+    - saas
+    - validation
+    - product
+    - mvp
+```

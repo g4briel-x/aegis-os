@@ -1,0 +1,54 @@
+## FILE: `playbooks/engineering/design-saas-architecture/metadata.yaml`
+
+```yaml
+playbook:
+  id: engineering.design-saas-architecture
+  name: Design SaaS Architecture
+  version: 0.1.0
+  status: premium-draft
+  domain: engineering
+  category: saas-architecture
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for designing scalable, secure and maintainable SaaS architecture from product requirements.
+  trigger: A SaaS product, MVP, platform or feature needs an implementation-ready technical architecture.
+  inputs:
+    - product_concept
+    - prd
+    - mvp_scope
+    - user_roles
+    - ux_flow
+    - functional_requirements
+    - non_functional_requirements
+    - data_requirements
+    - security_constraints
+    - expected_scale
+  outputs:
+    - architecture_summary
+    - system_context
+    - component_map
+    - data_model_outline
+    - api_model
+    - auth_model
+    - infrastructure_plan
+    - security_notes
+    - observability_plan
+    - implementation_sequence
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - infrastructure.cloud-architect
+    - infrastructure.devops-engineer
+    - security.security-engineer
+    - product.product-manager-saas
+  tags:
+    - saas
+    - architecture
+    - system-design
+    - api
+    - database
+    - infrastructure
+    - security
+    - scalability
+```

@@ -1,0 +1,52 @@
+## FILE: `playbooks/business/create-go-to-market-plan/metadata.yaml`
+
+```yaml
+playbook:
+  id: business.create-go-to-market-plan
+  name: Create Go-To-Market Plan
+  version: 0.1.0
+  status: premium-draft
+  domain: business
+  category: go-to-market
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for defining SaaS go-to-market strategy, customer segment, positioning, channels, sales motion, launch campaign and metrics.
+  trigger: A SaaS product, MVP, feature, beta or pilot needs a customer acquisition and launch execution plan.
+  inputs:
+    - product_concept
+    - target_customers
+    - customer_pain_points
+    - pricing_strategy
+    - launch_plan
+    - competitive_references
+    - positioning_notes
+    - sales_assumptions
+    - marketing_assets
+    - success_metrics
+  outputs:
+    - go_to_market_plan
+    - target_segment_priority
+    - positioning_statement
+    - offer_summary
+    - channel_strategy
+    - sales_motion
+    - launch_campaign_plan
+    - funnel_metric_plan
+    - gtm_risk_register
+    - execution_roadmap
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - management.technical-project-manager
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+  tags:
+    - gtm
+    - go-to-market
+    - launch
+    - acquisition
+    - sales
+    - marketing
+    - saas
+    - growth
+```

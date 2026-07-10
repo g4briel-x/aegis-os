@@ -1,0 +1,49 @@
+## FILE: `playbooks/operations/run-postmortem-review/metadata.yaml`
+
+```yaml
+playbook:
+  id: operations.run-postmortem-review
+  name: Run Postmortem Review
+  version: 0.1.0
+  status: premium-draft
+  domain: operations
+  category: post-incident-review
+  maturity: usable
+  owner: aegis-os
+  description: Structured procedure for reviewing incidents, reconstructing timelines, identifying root cause and assigning prevention actions.
+  trigger: An incident, outage, failed deployment, degraded workflow or security event has been resolved or contained.
+  inputs:
+    - incident_summary
+    - severity
+    - affected_services
+    - affected_users
+    - timeline
+    - logs
+    - alerts
+    - deployment_history
+    - mitigation_actions
+    - recovery_notes
+  outputs:
+    - postmortem_report
+    - incident_timeline
+    - impact_summary
+    - root_cause_analysis
+    - contributing_factors
+    - response_review
+    - prevention_action_plan
+    - follow_up_tracker
+  related_skills:
+    - management.technical-project-manager
+    - engineering.senior-debugger
+    - infrastructure.devops-engineer
+    - security.security-engineer
+    - product.business-analyst
+  tags:
+    - postmortem
+    - incident-review
+    - root-cause-analysis
+    - operations
+    - reliability
+    - prevention
+    - follow-up
+```

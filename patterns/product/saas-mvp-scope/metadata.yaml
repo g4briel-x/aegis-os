@@ -1,0 +1,62 @@
+## FILE: `patterns/product/saas-mvp-scope/metadata.yaml`
+
+```yaml
+pattern:
+  id: product.saas-mvp-scope
+  name: SaaS MVP Scope
+  version: 0.1.0
+  status: draft
+  domain: product
+  category: mvp-definition
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for defining focused SaaS MVP scope around one segment, one workflow, one activation moment and measurable learning.
+  problem: SaaS MVPs often become too broad, slow and unclear because teams include too many features, users and assumptions.
+  context:
+    - new SaaS product
+    - MVP planning
+    - beta launch
+    - paid pilot
+    - product validation
+    - early roadmap prioritization
+  recommended_when:
+    - product scope is too broad
+    - team needs fast validation
+    - target segment must be selected
+    - first release needs clear boundaries
+    - launch speed matters
+  avoid_when:
+    - product is mature
+    - enterprise contract fixes scope
+    - compliance baseline requires larger release
+    - work is technical migration rather than product validation
+  outputs:
+    - mvp_scope
+    - target_segment
+    - core_workflow
+    - activation_moment
+    - feature_inclusion_list
+    - non_scope_list
+    - success_metrics
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+    - management.technical-project-manager
+  related_playbooks:
+    - product.define-saas-mvp
+    - product.run-discovery-interviews
+    - product.create-prd
+    - management.plan-saas-mvp-delivery
+    - product.prepare-saas-launch
+    - business.create-go-to-market-plan
+  tags:
+    - saas
+    - mvp
+    - scope
+    - product
+    - prioritization
+    - validation
+    - launch
+```

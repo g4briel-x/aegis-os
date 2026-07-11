@@ -1,0 +1,60 @@
+## FILE: `patterns/operations/feature-flag-rollout/metadata.yaml`
+
+```yaml
+pattern:
+  id: operations.feature-flag-rollout
+  name: Feature Flag Rollout
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: release-management
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for controlled SaaS feature activation, staged rollout, monitoring, rollback and cleanup.
+  problem: Direct feature releases expose all users at once and make rollback harder.
+  context:
+    - SaaS feature release
+    - beta rollout
+    - high-risk product change
+    - staged activation
+    - production monitoring
+    - rollback requirement
+  recommended_when:
+    - feature has meaningful user impact
+    - rollout should be gradual
+    - beta users must be targeted
+    - activation must be reversible
+    - product learning requires controlled exposure
+  avoid_when:
+    - change is trivial
+    - no owner exists for cleanup
+    - flag will become permanent hidden logic
+    - flag could bypass critical security rules
+  outputs:
+    - flag_definition
+    - rollout_plan
+    - targeting_rules
+    - monitoring_plan
+    - rollback_plan
+    - cleanup_plan
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-developer
+    - engineering.software-architect
+    - security.security-engineer
+    - product.product-manager-saas
+  related_playbooks:
+    - operations.prepare-release
+    - infrastructure.deploy-saas-application
+    - operations.monitor-saas-production
+    - product.prepare-saas-launch
+    - engineering.write-test-plan
+  tags:
+    - feature-flags
+    - rollout
+    - release
+    - deployment
+    - monitoring
+    - rollback
+    - saas
+```

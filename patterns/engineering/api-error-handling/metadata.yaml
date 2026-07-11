@@ -1,0 +1,55 @@
+## FILE: `patterns/engineering/api-error-handling/metadata.yaml`
+
+```yaml
+pattern:
+  id: engineering.api-error-handling
+  name: API Error Handling
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: api-design
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for standardized, safe and actionable API error responses.
+  problem: APIs fail inconsistently when error formats, status codes, validation details and security rules are not standardized.
+  context:
+    - REST or HTTP API
+    - frontend client
+    - external integration
+    - authentication and authorization
+    - validation-heavy workflows
+    - production observability
+  recommended_when:
+    - API clients need predictable error handling
+    - frontend needs field-level validation errors
+    - support needs request correlation
+    - security-sensitive errors must be safe
+  avoid_when:
+    - a throwaway prototype has no external users
+    - error behavior is fully managed by a platform
+  outputs:
+    - error_envelope
+    - error_code_catalog
+    - http_status_mapping
+    - validation_error_format
+    - logging_correlation_model
+    - api_error_test_cases
+  related_skills:
+    - engineering.senior-developer
+    - engineering.software-architect
+    - security.security-engineer
+    - engineering.senior-debugger
+  related_playbooks:
+    - engineering.create-api-contract
+    - security.review-api-security
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+  tags:
+    - api
+    - errors
+    - rest
+    - validation
+    - security
+    - observability
+    - frontend
+```

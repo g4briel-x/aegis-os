@@ -1,0 +1,65 @@
+## FILE: `patterns/security/audit-logging-traceability/metadata.yaml`
+
+```yaml
+pattern:
+  id: security.audit-logging-traceability
+  name: Audit Logging Traceability
+  version: 0.1.0
+  status: draft
+  domain: security
+  category: audit-and-traceability
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for recording security-relevant and business-critical actions in SaaS systems.
+  problem: SaaS teams need reliable evidence of sensitive actions, permission changes, file access, admin activity and tenant-scoped operations.
+  context:
+    - multi-tenant SaaS
+    - RBAC permissions
+    - admin actions
+    - support access
+    - file access
+    - billing changes
+    - security settings
+    - incident response
+  recommended_when:
+    - customer data is stored
+    - sensitive actions must be traceable
+    - enterprise customers require auditability
+    - incident response needs evidence
+    - admin accountability matters
+  avoid_when:
+    - event is low-value noise
+    - logging would expose secrets
+    - no retention or access policy exists
+  outputs:
+    - audit_event_model
+    - audit_action_catalog
+    - metadata_safety_rules
+    - audit_access_policy
+    - retention_policy
+    - audit_test_cases
+  related_skills:
+    - security.security-engineer
+    - engineering.senior-debugger
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - infrastructure.devops-engineer
+  related_playbooks:
+    - security.harden-production-saas
+    - security.respond-to-security-incident
+    - security.review-api-security
+    - operations.monitor-saas-production
+    - operations.create-runbook
+  related_patterns:
+    - security.tenant-data-isolation
+    - security.rbac-permission-model
+    - engineering.api-error-handling
+  tags:
+    - audit
+    - logging
+    - traceability
+    - security
+    - compliance
+    - incident-response
+    - saas
+```

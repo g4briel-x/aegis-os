@@ -1,0 +1,68 @@
+## FILE: `patterns/engineering/database-migration-safety/metadata.yaml`
+
+```yaml
+pattern:
+  id: engineering.database-migration-safety
+  name: Database Migration Safety
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: database-operations
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for planning, reviewing, deploying and validating safe database migrations in SaaS systems.
+  problem: Database migrations can cause downtime, data loss, tenant leakage or release failures when compatibility, rollback and validation are not planned.
+  context:
+    - production database
+    - SaaS application
+    - tenant-scoped data
+    - schema evolution
+    - data backfill
+    - index or constraint change
+    - release deployment
+  recommended_when:
+    - production schema changes
+    - customer data is modified
+    - migration affects critical workflows
+    - tables are large
+    - rollback or recovery must be planned
+    - deployment compatibility matters
+  avoid_when:
+    - local-only disposable database
+    - throwaway prototype data
+    - non-persistent analysis query
+  outputs:
+    - migration_plan
+    - risk_classification
+    - compatibility_strategy
+    - validation_queries
+    - rollback_or_recovery_plan
+    - monitoring_plan
+    - approval_record
+  related_skills:
+    - engineering.database-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - infrastructure.devops-engineer
+    - security.security-engineer
+  related_playbooks:
+    - engineering.design-saas-data-model
+    - operations.prepare-release
+    - infrastructure.deploy-saas-application
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+    - operations.create-runbook
+  related_patterns:
+    - security.tenant-data-isolation
+    - operations.production-observability-baseline
+    - engineering.background-job-processing
+  tags:
+    - database
+    - migration
+    - schema
+    - rollback
+    - backfill
+    - production
+    - saas
+    - safety
+```

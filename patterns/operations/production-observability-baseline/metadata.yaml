@@ -1,0 +1,67 @@
+## FILE: `patterns/operations/production-observability-baseline/metadata.yaml`
+
+```yaml
+pattern:
+  id: operations.production-observability-baseline
+  name: Production Observability Baseline
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: observability
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for defining the minimum logs, metrics, traces, dashboards, alerts and health checks needed for SaaS production operations.
+  problem: SaaS teams need production visibility before incidents, support escalations and reliability failures occur.
+  context:
+    - production SaaS
+    - API services
+    - background jobs
+    - database dependencies
+    - customer workflows
+    - release monitoring
+    - incident response
+  recommended_when:
+    - product is moving to production
+    - incidents are hard to diagnose
+    - customer workflows need monitoring
+    - support needs request correlation
+    - reliability matters
+  avoid_when:
+    - product is only a local prototype
+    - no real users exist
+    - managed platform already provides complete observability
+  outputs:
+    - observability_baseline
+    - structured_log_schema
+    - metric_catalog
+    - dashboard_map
+    - alert_rules
+    - health_check_model
+    - incident_evidence_model
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - engineering.software-architect
+    - security.security-engineer
+    - management.technical-project-manager
+  related_playbooks:
+    - operations.monitor-saas-production
+    - operations.create-runbook
+    - operations.prepare-release
+    - operations.run-postmortem-review
+    - infrastructure.deploy-saas-application
+    - engineering.debug-production-issue
+  related_patterns:
+    - engineering.api-error-handling
+    - security.audit-logging-traceability
+    - operations.feature-flag-rollout
+  tags:
+    - observability
+    - monitoring
+    - logging
+    - metrics
+    - alerts
+    - production
+    - reliability
+    - saas
+```

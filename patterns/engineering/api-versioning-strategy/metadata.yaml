@@ -1,0 +1,66 @@
+## FILE: `patterns/engineering/api-versioning-strategy/metadata.yaml`
+
+```yaml
+pattern:
+  id: engineering.api-versioning-strategy
+  name: API Versioning Strategy
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: api-design
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for evolving SaaS APIs with explicit versioning, compatibility, deprecation, migration and contract testing.
+  problem: APIs need to evolve without unexpectedly breaking frontend, mobile, partner, internal or enterprise clients.
+  context:
+    - REST API
+    - public API
+    - partner integration
+    - mobile client
+    - separately deployed frontend
+    - SaaS platform
+    - API contract evolution
+  recommended_when:
+    - clients depend on stable API behavior
+    - breaking changes are possible
+    - external integrations exist
+    - API documentation must stay reliable
+    - multiple versions may need support
+  avoid_when:
+    - API is a local prototype
+    - all clients are deployed atomically with backend
+    - no external contract exists
+  outputs:
+    - versioning_strategy
+    - compatibility_rules
+    - breaking_change_policy
+    - deprecation_policy
+    - migration_guide
+    - contract_test_plan
+    - api_changelog
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - product.product-manager-saas
+  related_playbooks:
+    - engineering.create-api-contract
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+    - operations.prepare-release
+    - product.prepare-saas-launch
+  related_patterns:
+    - engineering.api-error-handling
+    - engineering.database-migration-safety
+    - operations.feature-flag-rollout
+    - operations.production-observability-baseline
+  tags:
+    - api
+    - versioning
+    - compatibility
+    - deprecation
+    - contracts
+    - migration
+    - saas
+```

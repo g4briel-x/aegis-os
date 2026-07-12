@@ -1,0 +1,69 @@
+## FILE: `patterns/engineering/background-job-processing/metadata.yaml`
+
+```yaml
+pattern:
+  id: engineering.background-job-processing
+  name: Background Job Processing
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: asynchronous-processing
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for safe asynchronous job processing with payload rules, tenant scope, idempotency, retries, observability and dead-letter handling.
+  problem: Long-running, retryable or external-service-dependent operations should not block user requests or fail silently.
+  context:
+    - SaaS application
+    - background workers
+    - job queues
+    - file processing
+    - notifications
+    - external integrations
+    - AI tasks
+    - scheduled tasks
+  recommended_when:
+    - work is slow or blocking
+    - retries are needed
+    - external services are involved
+    - delayed execution is acceptable
+    - operational visibility is required
+  avoid_when:
+    - action must complete synchronously
+    - eventual consistency is unacceptable
+    - no retry or failure plan exists
+    - no observability exists for jobs
+  outputs:
+    - job_model
+    - payload_schema
+    - retry_policy
+    - idempotency_strategy
+    - dead_letter_policy
+    - observability_metrics
+    - job_test_cases
+  related_skills:
+    - engineering.senior-developer
+    - engineering.software-architect
+    - engineering.senior-debugger
+    - infrastructure.devops-engineer
+    - security.security-engineer
+  related_playbooks:
+    - engineering.debug-production-issue
+    - operations.monitor-saas-production
+    - operations.create-runbook
+    - infrastructure.deploy-saas-application
+    - engineering.write-test-plan
+  related_patterns:
+    - operations.production-observability-baseline
+    - security.tenant-data-isolation
+    - security.audit-logging-traceability
+    - operations.feature-flag-rollout
+  tags:
+    - background-jobs
+    - queues
+    - async
+    - retries
+    - idempotency
+    - workers
+    - observability
+    - saas
+```

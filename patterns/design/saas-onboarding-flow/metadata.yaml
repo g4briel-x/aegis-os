@@ -1,0 +1,66 @@
+## FILE: `patterns/design/saas-onboarding-flow/metadata.yaml`
+
+```yaml
+pattern:
+  id: design.saas-onboarding-flow
+  name: SaaS Onboarding Flow
+  version: 0.1.0
+  status: draft
+  domain: design
+  category: saas-ux
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for designing SaaS onboarding flows that guide users from signup to first meaningful value.
+  problem: SaaS products lose users when onboarding is unclear, too long, disconnected from value or not measured.
+  context:
+    - SaaS product
+    - signup flow
+    - workspace setup
+    - project creation
+    - activation metric
+    - first user workflow
+    - MVP launch
+  recommended_when:
+    - users abandon after signup
+    - activation moment is unclear
+    - first workflow needs guidance
+    - role-based setup is needed
+    - onboarding success must be measured
+  avoid_when:
+    - prototype has no real users
+    - onboarding is fully manual
+    - first workflow is already obvious
+    - onboarding screens delay value unnecessarily
+  outputs:
+    - onboarding_flow_map
+    - activation_definition
+    - setup_question_model
+    - empty_state_guidance
+    - progress_model
+    - onboarding_metrics
+    - onboarding_test_cases
+  related_skills:
+    - design.ux-ui-designer-saas
+    - product.product-manager-saas
+    - product.business-analyst
+    - engineering.senior-developer
+    - management.technical-project-manager
+  related_playbooks:
+    - design.design-saas-ux-flow
+    - product.define-saas-mvp
+    - product.create-prd
+    - product.prepare-saas-launch
+    - business.create-go-to-market-plan
+  related_patterns:
+    - product.saas-mvp-scope
+    - operations.feature-flag-rollout
+    - operations.production-observability-baseline
+  tags:
+    - onboarding
+    - ux
+    - activation
+    - saas
+    - product
+    - retention
+    - mvp
+```

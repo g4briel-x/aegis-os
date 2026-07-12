@@ -1,0 +1,58 @@
+## FILE: `patterns/security/tenant-data-isolation/metadata.yaml`
+
+```yaml
+pattern:
+  id: security.tenant-data-isolation
+  name: Tenant Data Isolation
+  version: 0.1.0
+  status: draft
+  domain: security
+  category: multi-tenant-saas-security
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for enforcing tenant boundaries across data models, APIs, queries, files, jobs and audit logs.
+  problem: Multi-tenant SaaS products risk cross-tenant data exposure when tenant boundaries are not enforced consistently.
+  context:
+    - multi-tenant SaaS
+    - organization or workspace accounts
+    - customer-owned records
+    - private files
+    - tenant-scoped APIs
+    - background jobs with tenant data
+  recommended_when:
+    - multiple customers share one application
+    - tenant data is stored in shared database tables
+    - users belong to organizations or workspaces
+    - private resources require access checks
+    - enterprise security readiness matters
+  avoid_when:
+    - product is strictly single-tenant
+    - customers have fully separated infrastructure
+    - all data is public
+  outputs:
+    - tenant_model
+    - scoped_resource_map
+    - query_safety_rules
+    - file_access_rules
+    - background_job_scope_rules
+    - cross_tenant_test_matrix
+  related_skills:
+    - security.security-engineer
+    - engineering.software-architect
+    - engineering.database-engineer
+    - engineering.senior-developer
+  related_playbooks:
+    - security.design-auth-rbac
+    - security.harden-production-saas
+    - security.review-api-security
+    - engineering.design-saas-data-model
+    - engineering.create-api-contract
+  tags:
+    - tenant-isolation
+    - multi-tenancy
+    - security
+    - saas
+    - authorization
+    - data-boundaries
+    - privacy
+```

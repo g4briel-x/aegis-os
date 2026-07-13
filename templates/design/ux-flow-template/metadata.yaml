@@ -1,0 +1,64 @@
+## FILE: `templates/design/ux-flow-template/metadata.yaml`
+
+```yaml
+template:
+  id: design.ux-flow-template
+  name: UX Flow Template
+  version: 0.1.0
+  status: draft
+  domain: design
+  category: saas-ux
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting SaaS user flows, screens, states, actions, permissions, analytics and edge cases.
+  purpose: Produce a UX flow document that aligns product, design, engineering and QA before implementation.
+  inputs:
+    - flow_name
+    - primary_user
+    - user_goal
+    - entry_points
+    - flow_steps
+    - screens
+    - states
+    - permissions
+    - success_metrics
+  variables:
+    - flow_name
+    - product_area
+    - owner
+    - primary_user
+    - user_goal
+    - entry_point_1
+    - screen_1
+    - user_action_1
+    - system_response_1
+    - success_metric
+  outputs:
+    - ux_flow_document
+  related_skills:
+    - design.ux-ui-designer-saas
+    - product.product-manager-saas
+    - product.business-analyst
+    - engineering.senior-developer
+    - management.technical-project-manager
+  related_playbooks:
+    - design.design-saas-ux-flow
+    - product.create-prd
+    - product.define-saas-mvp
+    - engineering.implement-feature-from-prd
+    - engineering.write-test-plan
+  related_patterns:
+    - design.saas-onboarding-flow
+    - product.saas-mvp-scope
+    - security.rbac-permission-model
+    - operations.production-observability-baseline
+  tags:
+    - ux
+    - user-flow
+    - saas
+    - design
+    - onboarding
+    - screens
+    - states
+    - product
+```

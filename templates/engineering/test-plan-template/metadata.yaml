@@ -1,0 +1,62 @@
+## FILE: `templates/engineering/test-plan-template/metadata.yaml`
+
+```yaml
+template:
+  id: engineering.test-plan-template
+  name: Test Plan Template
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: quality-assurance
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for planning functional, API, security, regression, performance and release tests.
+  purpose: Produce a clear test plan that maps requirements to test cases, environments, data, risks and release confidence.
+  inputs:
+    - change_name
+    - requirements
+    - acceptance_criteria
+    - api_contract
+    - test_environment
+    - test_data
+    - risks
+  variables:
+    - change_name
+    - product_area
+    - owner
+    - test_owner
+    - summary
+    - in_scope_item_1
+    - test_environment
+    - functional_test_cases
+    - security_test_cases
+    - exit_criteria
+  outputs:
+    - test_plan_document
+  related_skills:
+    - engineering.senior-developer
+    - engineering.senior-debugger
+    - engineering.software-architect
+    - security.security-engineer
+    - management.technical-project-manager
+  related_playbooks:
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+    - engineering.implement-feature-from-prd
+    - engineering.create-api-contract
+    - operations.prepare-release
+  related_patterns:
+    - engineering.api-error-handling
+    - security.rbac-permission-model
+    - security.tenant-data-isolation
+    - engineering.database-migration-safety
+    - operations.production-observability-baseline
+  tags:
+    - test-plan
+    - qa
+    - testing
+    - regression
+    - api
+    - security
+    - release
+```

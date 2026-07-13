@@ -1,0 +1,484 @@
+# Aegis OS — Docs Registry Bundle
+
+Ce fichier regroupe le registre machine-readable de la documentation :
+
+- `registry/docs/docs.registry.yaml`
+
+---
+
+## FILE: `registry/docs/docs.registry.yaml`
+
+```yaml
+registry:
+  id: registry.docs
+  name: Documentation Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS documentation sections and major documentation assets.
+
+entries:
+  - id: docs.manifest
+    name: Aegis OS Manifest
+    type: doc
+    domain: documentation
+    category: global-manifest
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: MANIFEST.md
+    owner: aegis-os
+    summary: Defines the global inventory and high-level structure of the Aegis OS repository.
+    tags:
+      - manifest
+      - index
+      - repository
+      - overview
+    related_assets:
+      - id: docs.index
+        relationship: related_to
+      - id: registry.skills
+        relationship: related_to
+      - id: registry.playbooks
+        relationship: related_to
+      - id: registry.patterns
+        relationship: related_to
+      - id: registry.templates
+        relationship: related_to
+
+  - id: docs.index
+    name: Documentation Index
+    type: doc
+    domain: documentation
+    category: documentation-index
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/INDEX.md
+    owner: aegis-os
+    summary: Provides the human-readable table of contents for Aegis OS documentation.
+    tags:
+      - docs
+      - index
+      - navigation
+      - overview
+    related_assets:
+      - id: docs.manifest
+        relationship: related_to
+      - id: docs.foundation
+        relationship: related_to
+      - id: docs.architecture
+        relationship: related_to
+
+  - id: docs.foundation
+    name: Foundation Documentation
+    type: doc
+    domain: documentation
+    category: foundation
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/01-foundation
+    owner: aegis-os
+    summary: Defines Aegis OS project context, vision, philosophy, design principles and core values.
+    tags:
+      - foundation
+      - vision
+      - principles
+      - context
+    related_assets:
+      - id: core.identity
+        relationship: related_to
+      - id: docs.architecture
+        relationship: related_to
+      - id: docs.governance
+        relationship: related_to
+
+  - id: docs.architecture
+    name: Architecture Documentation
+    type: doc
+    domain: documentation
+    category: architecture
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/02-architecture
+    owner: aegis-os
+    summary: Documents the system architecture, orchestration engine, decision engine, skill lifecycle and data flow.
+    tags:
+      - architecture
+      - system
+      - orchestration
+      - decision-engine
+    related_assets:
+      - id: core.orchestration
+        relationship: related_to
+      - id: core.decision-engine
+        relationship: related_to
+      - id: architecture.saas-modular-monolith
+        relationship: related_to
+
+  - id: docs.specifications
+    name: Specifications Documentation
+    type: doc
+    domain: documentation
+    category: specifications
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/03-specifications
+    owner: aegis-os
+    summary: Defines specifications for skills, playbooks, patterns, templates and the quality model.
+    tags:
+      - specifications
+      - quality
+      - standards
+      - assets
+    related_assets:
+      - id: framework.skills
+        relationship: related_to
+      - id: framework.playbooks
+        relationship: related_to
+      - id: framework.patterns
+        relationship: related_to
+      - id: framework.templates
+        relationship: related_to
+
+  - id: docs.governance
+    name: Governance Documentation
+    type: doc
+    domain: documentation
+    category: governance
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/04-governance
+    owner: aegis-os
+    summary: Documents contribution, review, versioning, change management and release processes.
+    tags:
+      - governance
+      - review
+      - versioning
+      - release
+    related_assets:
+      - id: docs.governance-advanced
+        relationship: related_to
+      - id: management.rfc-template
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: docs.reference
+    name: Reference Documentation
+    type: doc
+    domain: documentation
+    category: reference
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/05-reference
+    owner: aegis-os
+    summary: Provides reference models for identity, execution, memory, security, testing, logging, deployment, state and other Aegis OS concepts.
+    tags:
+      - reference
+      - models
+      - schemas
+      - standards
+    related_assets:
+      - id: registry.framework
+        relationship: related_to
+      - id: docs.architecture
+        relationship: related_to
+      - id: docs.specifications
+        relationship: related_to
+
+  - id: docs.development
+    name: Development Documentation
+    type: doc
+    domain: documentation
+    category: development
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/06-development
+    owner: aegis-os
+    summary: Defines workflows for developing skills, agents, playbooks, components and documentation.
+    tags:
+      - development
+      - workflow
+      - authoring
+      - validation
+    related_assets:
+      - id: framework.skills
+        relationship: related_to
+      - id: framework.playbooks
+        relationship: related_to
+      - id: framework.templates
+        relationship: related_to
+
+  - id: docs.runtime
+    name: Runtime Documentation
+    type: doc
+    domain: documentation
+    category: runtime
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/07-runtime
+    owner: aegis-os
+    summary: Documents runtime context, execution engine, scheduler, dispatcher, state manager, policy enforcement, recovery and observability.
+    tags:
+      - runtime
+      - execution
+      - scheduler
+      - state
+    related_assets:
+      - id: core.execution-pipeline
+        relationship: related_to
+      - id: core.orchestration
+        relationship: related_to
+      - id: registry.framework
+        relationship: related_to
+
+  - id: docs.sdk
+    name: SDK Documentation
+    type: doc
+    domain: documentation
+    category: sdk
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/08-sdk
+    owner: aegis-os
+    summary: Documents SDK models for Python, TypeScript, interfaces, packaging, versioning, configuration and error behavior.
+    tags:
+      - sdk
+      - python
+      - typescript
+      - interfaces
+    related_assets:
+      - id: docs.cli
+        relationship: related_to
+      - id: docs.runtime
+        relationship: related_to
+      - id: docs.development
+        relationship: related_to
+
+  - id: docs.cli
+    name: CLI Documentation
+    type: doc
+    domain: documentation
+    category: cli
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/09-cli
+    owner: aegis-os
+    summary: Documents CLI commands, configuration, auth, output model, exit codes, non-interactive mode, telemetry and troubleshooting.
+    tags:
+      - cli
+      - commands
+      - automation
+      - developer-tools
+    related_assets:
+      - id: docs.sdk
+        relationship: related_to
+      - id: registry.framework
+        relationship: related_to
+      - id: docs.runtime
+        relationship: related_to
+
+  - id: docs.marketplace
+    name: Marketplace Documentation
+    type: doc
+    domain: documentation
+    category: marketplace
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/10-marketplace
+    owner: aegis-os
+    summary: Defines marketplace architecture, packages, publishing, discovery, installation, updates, trust, reviews and registry integration.
+    tags:
+      - marketplace
+      - packages
+      - publishing
+      - discovery
+    related_assets:
+      - id: registry.framework
+        relationship: related_to
+      - id: docs.governance
+        relationship: related_to
+      - id: docs.security
+        relationship: related_to
+
+  - id: docs.ai
+    name: AI Documentation
+    type: doc
+    domain: documentation
+    category: ai
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/11-ai
+    owner: aegis-os
+    summary: Documents multi-model architecture, model registry, routing, prompting, context injection, tool use, validation, fallback and safety.
+    tags:
+      - ai
+      - models
+      - routing
+      - prompting
+      - safety
+    related_assets:
+      - id: core.thinking-engine
+        relationship: related_to
+      - id: core.decision-engine
+        relationship: related_to
+      - id: docs.runtime
+        relationship: related_to
+
+  - id: docs.operations
+    name: Operations Documentation
+    type: doc
+    domain: documentation
+    category: operations
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/12-operations
+    owner: aegis-os
+    summary: Documents service model, health, SLO/SLA, incidents, on-call, escalation, maintenance, runbooks, postmortems and support.
+    tags:
+      - operations
+      - slo
+      - incident
+      - support
+    related_assets:
+      - id: operations.runbook-template
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+      - id: operations.postmortem-template
+        relationship: related_to
+
+  - id: docs.security
+    name: Security Documentation
+    type: doc
+    domain: documentation
+    category: security
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/13-security
+    owner: aegis-os
+    summary: Documents security overview, threat model, secrets, identity, authorization, hardening, supply chain, audit, incident response and vulnerability management.
+    tags:
+      - security
+      - threat-model
+      - authorization
+      - audit
+    related_assets:
+      - id: security.security-review-template
+        relationship: related_to
+      - id: security.rbac-permission-model
+        relationship: related_to
+      - id: security.tenant-data-isolation
+        relationship: related_to
+
+  - id: docs.governance-advanced
+    name: Advanced Governance Documentation
+    type: doc
+    domain: documentation
+    category: advanced-governance
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/14-governance-advanced
+    owner: aegis-os
+    summary: Defines ownership, approval chains, trust levels, certification, maturity, domain governance, deprecation authority and ecosystem steering.
+    tags:
+      - governance
+      - ownership
+      - certification
+      - maturity
+    related_assets:
+      - id: docs.governance
+        relationship: related_to
+      - id: management.rfc-template
+        relationship: related_to
+      - id: registry.framework
+        relationship: related_to
+
+  - id: docs.roadmap
+    name: Roadmap Documentation
+    type: doc
+    domain: documentation
+    category: roadmap
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/15-roadmap
+    owner: aegis-os
+    summary: Defines the roadmap from vision to v1 with versions, milestones, priorities, delivery plan, dependencies and success metrics.
+    tags:
+      - roadmap
+      - milestones
+      - versions
+      - planning
+    related_assets:
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: docs.governance
+        relationship: related_to
+      - id: docs.adoption
+        relationship: related_to
+
+  - id: docs.rfc
+    name: RFC Documentation
+    type: doc
+    domain: documentation
+    category: rfc
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/16-rfc
+    owner: aegis-os
+    summary: Defines the RFC system, lifecycle, review process, decision model, categories, priority, tracking and archive model.
+    tags:
+      - rfc
+      - decision
+      - proposal
+      - review
+    related_assets:
+      - id: management.rfc-template
+        relationship: related_to
+      - id: docs.governance
+        relationship: related_to
+      - id: docs.governance-advanced
+        relationship: related_to
+
+  - id: docs.adoption
+    name: Adoption Documentation
+    type: doc
+    domain: documentation
+    category: adoption
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: docs/17-adoption
+    owner: aegis-os
+    summary: Documents getting started, personas, adoption paths, onboarding, enterprise adoption, pilot programs, use cases, metrics, training and risks.
+    tags:
+      - adoption
+      - onboarding
+      - training
+      - enterprise
+    related_assets:
+      - id: business.go-to-market-plan-template
+        relationship: related_to
+      - id: docs.roadmap
+        relationship: related_to
+      - id: templates.index
+        relationship: related_to
+
+```

@@ -1,0 +1,67 @@
+## FILE: `templates/operations/release-plan-template/metadata.yaml`
+
+```yaml
+template:
+  id: operations.release-plan-template
+  name: Release Plan Template
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: release-management
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for planning SaaS releases, deployment, validation, rollback, communication and monitoring.
+  purpose: Produce a release plan that aligns scope, risk, testing, deployment steps, validation, rollback and approvals.
+  inputs:
+    - release_name
+    - release_version
+    - release_scope
+    - release_owner
+    - risk_assessment
+    - test_status
+    - deployment_plan
+    - rollback_plan
+    - communication_plan
+  variables:
+    - release_name
+    - release_version
+    - release_owner
+    - target_release_date
+    - release_summary
+    - included_change_1
+    - risk_level
+    - deployment_step_1
+    - validation_check_1
+    - rollback_trigger
+    - monitoring_window
+  outputs:
+    - release_plan_document
+  related_skills:
+    - management.technical-project-manager
+    - infrastructure.devops-engineer
+    - engineering.senior-developer
+    - engineering.software-architect
+    - security.security-engineer
+    - product.product-manager-saas
+  related_playbooks:
+    - operations.prepare-release
+    - infrastructure.deploy-saas-application
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+    - operations.monitor-saas-production
+    - operations.create-runbook
+  related_patterns:
+    - operations.feature-flag-rollout
+    - operations.production-observability-baseline
+    - engineering.database-migration-safety
+    - operations.incident-severity-model
+    - security.audit-logging-traceability
+  tags:
+    - release
+    - deployment
+    - rollback
+    - validation
+    - operations
+    - saas
+    - production
+```

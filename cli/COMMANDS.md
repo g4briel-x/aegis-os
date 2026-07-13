@@ -364,6 +364,57 @@ Command:
 .\cli\aegis.ps1 config:show
 ```
 ---
+```markdown
+# Metadata Commands
+
+## `version`
+
+Role:
+
+```text
+Displays the current Aegis OS CLI version.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 version
+```
+
+---
+
+## `info`
+
+Role:
+
+```text
+Displays project identity, core folders and important entrypoints.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 info
+```
+
+---
+
+## `status`
+
+Role:
+
+```text
+Runs a lightweight repository status check.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 status
+```
+```
+
+
 # UPDATE FILE: `.github/workflows/aegis-cli-smoke-tests.yml`
 
 No structural change is required if the workflow already runs:

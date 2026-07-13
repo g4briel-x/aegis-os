@@ -78,6 +78,10 @@ $commandMap = @{
     "config:path" = "config-path.ps1"
     "config:check" = "config-check.ps1"
 
+    "version" = "version.ps1"
+    "info" = "info.ps1"
+    "status" = "status.ps1"
+
 }
 
 function Show-UnknownCommand {

@@ -19,6 +19,10 @@ Write-Host "  doctor                     Run repository health checks"
 Write-Host "  report                     Generate registry reports"
 Write-Host ""
 
+Write-Host "  version                    Show CLI version"
+Write-Host "  info                       Show project information"
+Write-Host "  status                     Show lightweight repository status"
+
 Write-Host "Registry Commands:" -ForegroundColor Yellow
 Write-Host "  registry:list              List registry YAML files"
 Write-Host "  skill:list                 List registered skills"

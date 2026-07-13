@@ -1,0 +1,61 @@
+## FILE: `.github/workflows/aegis-cli-smoke-tests.yml`
+
+```yaml
+name: Aegis OS CLI Smoke Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  cli-smoke-tests:
+    name: Run CLI Smoke Tests
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show PowerShell version
+        shell: pwsh
+        run: |
+          $PSVersionTable
+
+      - name: Validate required CLI files
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "cli\aegis.ps1")) {
+            throw "Missing CLI entrypoint: cli\aegis.ps1"
+          }
+
+          if (-not (Test-Path "scripts\testing\test-cli-smoke.ps1")) {
+            throw "Missing CLI smoke test entrypoint: scripts\testing\test-cli-smoke.ps1"
+          }
+
+          Write-Host "CLI file presence check passed."
+
+      - name: Run CLI smoke tests
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
+
+      - name: Run registry validation after CLI tests
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+
+      - name: Generate registry reports
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
+
+      - name: CLI smoke test summary
+        shell: pwsh
+        run: |
+          Write-Host "Aegis OS CLI smoke tests completed successfully."
+```

@@ -1,0 +1,63 @@
+## FILE: `templates/operations/postmortem-template/metadata.yaml`
+
+```yaml
+template:
+  id: operations.postmortem-template
+  name: Postmortem Template
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: incident-review
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for analyzing incidents, documenting impact, timeline, root cause, response and corrective actions.
+  purpose: Produce a blameless postmortem that improves reliability, detection, response and prevention.
+  inputs:
+    - incident_name
+    - severity
+    - incident_timeline
+    - customer_impact
+    - root_cause
+    - resolution
+    - corrective_actions
+  variables:
+    - incident_name
+    - incident_id
+    - severity
+    - incident_date
+    - owner
+    - executive_summary
+    - customer_impact
+    - timeline_event_1
+    - detected_by
+    - root_cause
+    - corrective_action_1
+    - action_owner_1
+  outputs:
+    - incident_postmortem_document
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - management.technical-project-manager
+    - engineering.software-architect
+  related_playbooks:
+    - operations.run-postmortem-review
+    - operations.monitor-saas-production
+    - operations.create-runbook
+    - security.respond-to-security-incident
+    - engineering.debug-production-issue
+  related_patterns:
+    - operations.incident-severity-model
+    - operations.production-observability-baseline
+    - security.audit-logging-traceability
+    - engineering.database-migration-safety
+  tags:
+    - postmortem
+    - incident
+    - reliability
+    - operations
+    - root-cause
+    - corrective-actions
+    - production
+```

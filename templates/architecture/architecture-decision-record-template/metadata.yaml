@@ -1,0 +1,62 @@
+## FILE: `templates/architecture/architecture-decision-record-template/metadata.yaml`
+
+```yaml
+template:
+  id: architecture.architecture-decision-record-template
+  name: Architecture Decision Record Template
+  version: 0.1.0
+  status: draft
+  domain: architecture
+  category: decision-documentation
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting important technical and architectural decisions.
+  purpose: Produce clear ADRs with context, options, decision drivers, trade-offs, consequences and follow-up actions.
+  inputs:
+    - adr_title
+    - decision_context
+    - problem_statement
+    - options_considered
+    - chosen_option
+    - trade_offs
+    - risks
+    - consequences
+  variables:
+    - adr_title
+    - adr_id
+    - status
+    - decision_owner
+    - decision_date
+    - decision_summary
+    - context
+    - problem_statement
+    - chosen_option
+    - decision_reason
+  outputs:
+    - architecture_decision_record
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - infrastructure.cloud-architect
+    - security.security-engineer
+  related_playbooks:
+    - engineering.design-saas-architecture
+    - engineering.design-saas-data-model
+    - engineering.create-api-contract
+    - security.design-auth-rbac
+    - operations.prepare-release
+  related_patterns:
+    - architecture.saas-modular-monolith
+    - security.tenant-data-isolation
+    - security.rbac-permission-model
+    - engineering.api-versioning-strategy
+    - engineering.database-migration-safety
+  tags:
+    - adr
+    - architecture
+    - decision
+    - trade-offs
+    - documentation
+    - governance
+```

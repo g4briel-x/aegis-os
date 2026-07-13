@@ -1,5 +1,4 @@
 name: Aegis OS Validation
-
 on:
   push:
     branches:

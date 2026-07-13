@@ -1,0 +1,63 @@
+## FILE: `templates/operations/incident-report-template/metadata.yaml`
+
+```yaml
+template:
+  id: operations.incident-report-template
+  name: Incident Report Template
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: incident-management
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting active or recently resolved production incidents.
+  purpose: Produce a factual incident report covering status, impact, severity, timeline, actions, communication, evidence and next steps.
+  inputs:
+    - incident_name
+    - severity
+    - current_status
+    - customer_impact
+    - affected_systems
+    - timeline
+    - actions_taken
+    - next_steps
+  variables:
+    - incident_name
+    - incident_id
+    - incident_status
+    - severity
+    - owner
+    - incident_commander
+    - current_status
+    - customer_impact
+    - affected_workflows
+    - timeline_event_1
+    - action_1
+    - next_step_1
+  outputs:
+    - incident_report_document
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - management.technical-project-manager
+    - engineering.software-architect
+  related_playbooks:
+    - operations.monitor-saas-production
+    - operations.create-runbook
+    - operations.run-postmortem-review
+    - security.respond-to-security-incident
+    - engineering.debug-production-issue
+  related_patterns:
+    - operations.incident-severity-model
+    - operations.production-observability-baseline
+    - security.audit-logging-traceability
+  tags:
+    - incident
+    - report
+    - operations
+    - severity
+    - outage
+    - communication
+    - production
+```

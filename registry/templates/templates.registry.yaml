@@ -1,0 +1,359 @@
+# Aegis OS — Templates Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des Templates :
+
+- `registry/templates/templates.registry.yaml`
+
+---
+
+## FILE: `registry/templates/templates.registry.yaml`
+
+```yaml
+registry:
+  id: registry.templates
+  name: Templates Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS templates.
+
+entries:
+  - id: product.prd-template
+    name: PRD Template
+    type: template
+    domain: product
+    category: requirements
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/product/prd-template
+    owner: aegis-os
+    summary: Creates Product Requirements Documents that clarify product problem, users, scope, requirements, acceptance criteria, metrics and release readiness.
+    tags:
+      - prd
+      - requirements
+      - product
+      - saas
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: product.create-prd
+        relationship: related_to
+      - id: product.saas-mvp-scope
+        relationship: related_to
+
+  - id: engineering.api-contract-template
+    name: API Contract Template
+    type: template
+    domain: engineering
+    category: api-contract
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/engineering/api-contract-template
+    owner: aegis-os
+    summary: Documents API endpoint behavior, request schema, response schema, errors, authorization, versioning, side effects, observability and tests.
+    tags:
+      - api
+      - contract
+      - backend
+      - frontend
+    related_assets:
+      - id: engineering.create-api-contract
+        relationship: related_to
+      - id: engineering.api-error-handling
+        relationship: related_to
+      - id: security.review-api-security
+        relationship: related_to
+
+  - id: engineering.test-plan-template
+    name: Test Plan Template
+    type: template
+    domain: engineering
+    category: testing
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/engineering/test-plan-template
+    owner: aegis-os
+    summary: Plans how a feature, API, workflow, release or system change will be tested before production.
+    tags:
+      - testing
+      - qa
+      - quality
+      - release
+    related_assets:
+      - id: engineering.write-test-plan
+        relationship: related_to
+      - id: engineering.senior-developer
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: engineering.data-model-template
+    name: Data Model Template
+    type: template
+    domain: engineering
+    category: data-architecture
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/engineering/data-model-template
+    owner: aegis-os
+    summary: Documents SaaS entities, fields, relationships, constraints, ownership, tenant boundaries, permissions, audit events and migration risks.
+    tags:
+      - data-model
+      - database
+      - schema
+      - tenant-isolation
+    related_assets:
+      - id: engineering.design-saas-data-model
+        relationship: related_to
+      - id: engineering.database-engineer
+        relationship: related_to
+      - id: security.tenant-data-isolation
+        relationship: related_to
+
+  - id: operations.runbook-template
+    name: Runbook Template
+    type: template
+    domain: operations
+    category: runbook
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/operations/runbook-template
+    owner: aegis-os
+    summary: Documents repeatable operational procedures for production support, deployments, maintenance, recovery and incident response.
+    tags:
+      - runbook
+      - operations
+      - procedure
+      - support
+    related_assets:
+      - id: operations.create-runbook
+        relationship: related_to
+      - id: infrastructure.devops-engineer
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+
+  - id: operations.postmortem-template
+    name: Postmortem Template
+    type: template
+    domain: operations
+    category: postmortem
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/operations/postmortem-template
+    owner: aegis-os
+    summary: Analyzes incidents after resolution by documenting impact, timeline, root cause, response, lessons and corrective actions.
+    tags:
+      - postmortem
+      - incident
+      - reliability
+      - root-cause
+    related_assets:
+      - id: operations.run-postmortem-review
+        relationship: related_to
+      - id: operations.incident-severity-model
+        relationship: related_to
+      - id: engineering.debug-production-issue
+        relationship: related_to
+
+  - id: operations.incident-report-template
+    name: Incident Report Template
+    type: template
+    domain: operations
+    category: incident-report
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/operations/incident-report-template
+    owner: aegis-os
+    summary: Creates a factual operational record during or shortly after an incident, including status, severity, impact, timeline, actions and next steps.
+    tags:
+      - incident
+      - report
+      - operations
+      - status
+    related_assets:
+      - id: operations.incident-severity-model
+        relationship: related_to
+      - id: security.respond-to-security-incident
+        relationship: related_to
+      - id: engineering.debug-production-issue
+        relationship: related_to
+
+  - id: operations.release-plan-template
+    name: Release Plan Template
+    type: template
+    domain: operations
+    category: release-management
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/operations/release-plan-template
+    owner: aegis-os
+    summary: Plans production releases with scope, risk, dependencies, testing, deployment steps, validation, rollback, monitoring and communication.
+    tags:
+      - release
+      - deployment
+      - rollback
+      - operations
+    related_assets:
+      - id: operations.prepare-release
+        relationship: related_to
+      - id: operations.feature-flag-rollout
+        relationship: related_to
+      - id: infrastructure.deploy-saas-application
+        relationship: related_to
+
+  - id: architecture.architecture-decision-record-template
+    name: Architecture Decision Record Template
+    type: template
+    domain: architecture
+    category: architecture-decision
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/architecture/architecture-decision-record-template
+    owner: aegis-os
+    summary: Records important technical decisions with context, options, trade-offs, consequences, risks and follow-up actions.
+    tags:
+      - architecture
+      - adr
+      - decision
+      - trade-offs
+    related_assets:
+      - id: engineering.software-architect
+        relationship: related_to
+      - id: architecture.saas-modular-monolith
+        relationship: related_to
+      - id: management.rfc-template
+        relationship: related_to
+
+  - id: security.security-review-template
+    name: Security Review Template
+    type: template
+    domain: security
+    category: security-review
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/security/security-review-template
+    owner: aegis-os
+    summary: Reviews features, APIs, data models, integrations and releases for auth, authorization, tenant isolation, data protection, audit logging and abuse risks.
+    tags:
+      - security
+      - review
+      - auth
+      - tenant-isolation
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: security.review-api-security
+        relationship: related_to
+      - id: security.rbac-permission-model
+        relationship: related_to
+
+  - id: business.go-to-market-plan-template
+    name: Go-To-Market Plan Template
+    type: template
+    domain: business
+    category: go-to-market
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/business/go-to-market-plan-template
+    owner: aegis-os
+    summary: Plans how a SaaS product, MVP, pilot or feature reaches customers through segment, ICP, positioning, messaging, offer, channels, funnel and metrics.
+    tags:
+      - gtm
+      - launch
+      - business
+      - marketing
+      - sales
+    related_assets:
+      - id: business.create-go-to-market-plan
+        relationship: related_to
+      - id: product.prepare-saas-launch
+        relationship: related_to
+      - id: business.pricing-strategy-template
+        relationship: related_to
+
+  - id: business.pricing-strategy-template
+    name: Pricing Strategy Template
+    type: template
+    domain: business
+    category: saas-monetization
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/business/pricing-strategy-template
+    owner: aegis-os
+    summary: Defines SaaS pricing strategy, plans, value metric, packaging, trials, paid pilots, discounts, validation and billing implementation needs.
+    tags:
+      - pricing
+      - monetization
+      - saas
+      - subscriptions
+    related_assets:
+      - id: product.define-pricing-strategy
+        relationship: related_to
+      - id: business.billing-subscription-model
+        relationship: related_to
+      - id: business.go-to-market-plan-template
+        relationship: related_to
+
+  - id: design.ux-flow-template
+    name: UX Flow Template
+    type: template
+    domain: design
+    category: saas-ux
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/design/ux-flow-template
+    owner: aegis-os
+    summary: Documents how a user moves through a SaaS workflow from entry point to outcome, including screens, states, actions, permissions, errors and analytics.
+    tags:
+      - ux
+      - flow
+      - design
+      - screens
+      - states
+    related_assets:
+      - id: design.design-saas-ux-flow
+        relationship: related_to
+      - id: design.ux-ui-designer-saas
+        relationship: related_to
+      - id: design.saas-onboarding-flow
+        relationship: related_to
+
+  - id: management.rfc-template
+    name: RFC Template
+    type: template
+    domain: management
+    category: proposal-and-decision
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: templates/management/rfc-template
+    owner: aegis-os
+    summary: Documents significant proposals before decision, including problem, goals, options, impacts, risks, rollout plan, decision and follow-up actions.
+    tags:
+      - rfc
+      - proposal
+      - decision
+      - governance
+    related_assets:
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: architecture.architecture-decision-record-template
+        relationship: related_to
+      - id: operations.feature-flag-rollout
+        relationship: related_to
+
+```

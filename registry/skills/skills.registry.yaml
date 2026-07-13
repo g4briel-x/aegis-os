@@ -1,0 +1,317 @@
+# Aegis OS — Skills Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des Skills :
+
+- `registry/skills/skills.registry.yaml`
+
+---
+
+## FILE: `registry/skills/skills.registry.yaml`
+
+```yaml
+registry:
+  id: registry.skills
+  name: Skills Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS skills.
+
+entries:
+  - id: engineering.senior-developer
+    name: Senior Developer Skill
+    type: skill
+    domain: engineering
+    category: software-engineering
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/engineering/senior-developer
+    owner: aegis-os
+    summary: Provides senior software engineering capability for implementation, refactoring, testing, code review and production-ready delivery.
+    tags:
+      - engineering
+      - development
+      - code
+      - refactoring
+      - testing
+    related_assets:
+      - id: engineering.implement-feature-from-prd
+        relationship: supports
+      - id: engineering.review-pull-request
+        relationship: supports
+      - id: engineering.api-contract-template
+        relationship: uses
+      - id: engineering.test-plan-template
+        relationship: uses
+
+  - id: engineering.software-architect
+    name: Software Architect Skill
+    type: skill
+    domain: engineering
+    category: architecture
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/engineering/software-architect
+    owner: aegis-os
+    summary: Designs system architecture, boundaries, modules, API structure, technical trade-offs and scalable SaaS foundations.
+    tags:
+      - architecture
+      - system-design
+      - saas
+      - technical-decisions
+    related_assets:
+      - id: engineering.design-saas-architecture
+        relationship: supports
+      - id: architecture.saas-modular-monolith
+        relationship: uses
+      - id: architecture.architecture-decision-record-template
+        relationship: uses
+      - id: management.rfc-template
+        relationship: uses
+
+  - id: engineering.database-engineer
+    name: Database Engineer Skill
+    type: skill
+    domain: engineering
+    category: database
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/engineering/database-engineer
+    owner: aegis-os
+    summary: Designs, reviews and optimizes relational data models, SQL queries, migrations, indexes, constraints and production database behavior.
+    tags:
+      - database
+      - sql
+      - postgres
+      - mysql
+      - migrations
+    related_assets:
+      - id: engineering.design-saas-data-model
+        relationship: supports
+      - id: engineering.optimize-database-performance
+        relationship: supports
+      - id: engineering.data-model-template
+        relationship: uses
+      - id: engineering.database-migration-safety
+        relationship: uses
+
+  - id: engineering.senior-debugger
+    name: Senior Debugger Skill
+    type: skill
+    domain: engineering
+    category: debugging
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/engineering/senior-debugger
+    owner: aegis-os
+    summary: Diagnoses production bugs, failed builds, runtime errors, regressions and technical incidents with a structured debugging workflow.
+    tags:
+      - debugging
+      - production
+      - ci
+      - errors
+      - root-cause
+    related_assets:
+      - id: engineering.debug-production-issue
+        relationship: supports
+      - id: infrastructure.fix-failing-ci-pipeline
+        relationship: supports
+      - id: operations.incident-report-template
+        relationship: uses
+      - id: operations.postmortem-template
+        relationship: uses
+
+  - id: product.product-manager-saas
+    name: Product Manager SaaS Skill
+    type: skill
+    domain: product
+    category: product-management
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/product/product-manager-saas
+    owner: aegis-os
+    summary: Defines SaaS product strategy, MVP scope, requirements, roadmap, metrics, pricing inputs and release priorities.
+    tags:
+      - product
+      - saas
+      - mvp
+      - roadmap
+      - requirements
+    related_assets:
+      - id: product.define-saas-mvp
+        relationship: supports
+      - id: product.create-prd
+        relationship: supports
+      - id: product.prd-template
+        relationship: uses
+      - id: product.saas-mvp-scope
+        relationship: uses
+
+  - id: product.business-analyst
+    name: Business Analyst Skill
+    type: skill
+    domain: product
+    category: business-analysis
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/product/business-analyst
+    owner: aegis-os
+    summary: Clarifies requirements, business rules, stakeholders, process flows, acceptance criteria and functional specifications.
+    tags:
+      - business-analysis
+      - requirements
+      - process
+      - specification
+    related_assets:
+      - id: product.run-discovery-interviews
+        relationship: supports
+      - id: product.create-prd
+        relationship: supports
+      - id: product.prd-template
+        relationship: uses
+      - id: design.ux-flow-template
+        relationship: uses
+
+  - id: design.ux-ui-designer-saas
+    name: UX/UI Designer SaaS Skill
+    type: skill
+    domain: design
+    category: ux-ui
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/design/ux-ui-designer-saas
+    owner: aegis-os
+    summary: Designs SaaS user flows, screens, navigation, UX states, onboarding, design systems and product interface behavior.
+    tags:
+      - design
+      - ux
+      - ui
+      - saas
+      - onboarding
+    related_assets:
+      - id: design.design-saas-ux-flow
+        relationship: supports
+      - id: design.saas-onboarding-flow
+        relationship: uses
+      - id: design.ux-flow-template
+        relationship: uses
+      - id: product.prd-template
+        relationship: uses
+
+  - id: infrastructure.devops-engineer
+    name: DevOps Engineer Skill
+    type: skill
+    domain: infrastructure
+    category: devops
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/infrastructure/devops-engineer
+    owner: aegis-os
+    summary: Handles CI/CD, deployment pipelines, environments, automation, infrastructure operations, rollback and production delivery.
+    tags:
+      - devops
+      - ci-cd
+      - deployment
+      - automation
+      - operations
+    related_assets:
+      - id: infrastructure.deploy-saas-application
+        relationship: supports
+      - id: infrastructure.fix-failing-ci-pipeline
+        relationship: supports
+      - id: operations.release-plan-template
+        relationship: uses
+      - id: operations.runbook-template
+        relationship: uses
+
+  - id: infrastructure.cloud-architect
+    name: Cloud Architect Skill
+    type: skill
+    domain: infrastructure
+    category: cloud-architecture
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/infrastructure/cloud-architect
+    owner: aegis-os
+    summary: Designs cloud infrastructure, deployment topology, scalability, resilience, networking, storage and operational architecture.
+    tags:
+      - cloud
+      - infrastructure
+      - scalability
+      - resilience
+      - architecture
+    related_assets:
+      - id: engineering.design-saas-architecture
+        relationship: supports
+      - id: infrastructure.deploy-saas-application
+        relationship: supports
+      - id: operations.production-observability-baseline
+        relationship: uses
+      - id: operations.release-plan-template
+        relationship: uses
+
+  - id: security.security-engineer
+    name: Security Engineer Skill
+    type: skill
+    domain: security
+    category: application-security
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/security/security-engineer
+    owner: aegis-os
+    summary: Reviews and designs SaaS security controls including auth, RBAC, tenant isolation, audit logging, secure APIs and incident response.
+    tags:
+      - security
+      - auth
+      - rbac
+      - tenant-isolation
+      - audit
+    related_assets:
+      - id: security.review-api-security
+        relationship: supports
+      - id: security.design-auth-rbac
+        relationship: supports
+      - id: security.security-review-template
+        relationship: uses
+      - id: security.rbac-permission-model
+        relationship: uses
+      - id: security.tenant-data-isolation
+        relationship: uses
+
+  - id: management.technical-project-manager
+    name: Technical Project Manager Skill
+    type: skill
+    domain: management
+    category: technical-project-management
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/management/technical-project-manager
+    owner: aegis-os
+    summary: Plans and coordinates technical delivery, milestones, risks, dependencies, releases, execution tracking and cross-functional alignment.
+    tags:
+      - management
+      - delivery
+      - planning
+      - coordination
+      - release
+    related_assets:
+      - id: management.plan-saas-mvp-delivery
+        relationship: supports
+      - id: operations.prepare-release
+        relationship: supports
+      - id: management.rfc-template
+        relationship: uses
+      - id: operations.release-plan-template
+        relationship: uses
+```

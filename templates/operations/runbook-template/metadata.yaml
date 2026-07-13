@@ -1,0 +1,66 @@
+## FILE: `templates/operations/runbook-template/metadata.yaml`
+
+```yaml
+template:
+  id: operations.runbook-template
+  name: Runbook Template
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: operational-procedure
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting operational procedures, incident actions, deployment steps, maintenance tasks and recovery processes.
+  purpose: Produce clear runbooks with trigger conditions, prerequisites, safety checks, execution steps, validation, rollback and escalation.
+  inputs:
+    - runbook_name
+    - system_or_service
+    - trigger_conditions
+    - prerequisites
+    - procedure_steps
+    - validation_checks
+    - rollback_plan
+    - escalation_contacts
+  variables:
+    - runbook_name
+    - system_or_service
+    - owner
+    - operational_owner
+    - purpose
+    - trigger_condition_1
+    - default_severity
+    - required_role
+    - prerequisite_1
+    - step_1_action
+    - validation_check_1
+    - rollback_condition
+    - escalation_condition_1
+  outputs:
+    - operational_runbook_document
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - engineering.software-architect
+    - security.security-engineer
+    - management.technical-project-manager
+  related_playbooks:
+    - operations.create-runbook
+    - operations.monitor-saas-production
+    - operations.prepare-release
+    - operations.run-postmortem-review
+    - security.respond-to-security-incident
+    - engineering.debug-production-issue
+  related_patterns:
+    - operations.production-observability-baseline
+    - operations.incident-severity-model
+    - security.audit-logging-traceability
+    - engineering.database-migration-safety
+  tags:
+    - runbook
+    - operations
+    - incident
+    - deployment
+    - recovery
+    - maintenance
+    - production
+```

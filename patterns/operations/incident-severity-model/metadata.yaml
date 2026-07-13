@@ -1,0 +1,65 @@
+## FILE: `patterns/operations/incident-severity-model/metadata.yaml`
+
+```yaml
+pattern:
+  id: operations.incident-severity-model
+  name: Incident Severity Model
+  version: 0.1.0
+  status: draft
+  domain: operations
+  category: incident-management
+  maturity: usable
+  owner: aegis-os
+  description: Reusable pattern for classifying SaaS production incidents by impact, urgency, communication needs and response expectations.
+  problem: Incident response becomes inconsistent when severity levels, escalation rules and communication expectations are not defined.
+  context:
+    - production SaaS
+    - incident response
+    - customer support
+    - monitoring alerts
+    - critical workflows
+    - security events
+    - business impact
+  recommended_when:
+    - production users exist
+    - incidents need prioritization
+    - alerts need consistent response
+    - communication expectations matter
+    - postmortems must be standardized
+  avoid_when:
+    - product has no real users
+    - alerts are handled by one person without formal process
+    - severity levels will not be used
+  outputs:
+    - severity_levels
+    - classification_criteria
+    - response_expectations
+    - escalation_rules
+    - communication_policy
+    - postmortem_rules
+    - severity_test_cases
+  related_skills:
+    - infrastructure.devops-engineer
+    - engineering.senior-debugger
+    - security.security-engineer
+    - management.technical-project-manager
+    - engineering.software-architect
+  related_playbooks:
+    - operations.monitor-saas-production
+    - operations.create-runbook
+    - operations.run-postmortem-review
+    - security.respond-to-security-incident
+    - engineering.debug-production-issue
+  related_patterns:
+    - operations.production-observability-baseline
+    - security.audit-logging-traceability
+    - operations.feature-flag-rollout
+  tags:
+    - incident
+    - severity
+    - operations
+    - reliability
+    - escalation
+    - communication
+    - saas
+```

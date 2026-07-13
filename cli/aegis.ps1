@@ -50,7 +50,13 @@ function Invoke-AegisCommand {
         "domain:list" = "domain-list.ps1"
         "tag:list" = "tag-list.ps1"
         "docs:list" = "docs-list.ps1"
-        "release:status" = "release-status.ps1"               
+        "release:status" = "release-status.ps1" 
+        "asset:show" = "asset-show.ps1"
+        "asset:related" = "asset-related.ps1"
+        "asset:path" = "asset-path.ps1"
+        "asset:open" = "asset-open.ps1"
+        "domain:assets" = "domain-assets.ps1"
+        "tag:assets" = "tag-assets.ps1"
     }
 
     if (-not $commandMap.ContainsKey($CommandName)) {

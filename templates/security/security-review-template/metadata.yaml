@@ -1,0 +1,66 @@
+## FILE: `templates/security/security-review-template/metadata.yaml`
+
+```yaml
+template:
+  id: security.security-review-template
+  name: Security Review Template
+  version: 0.1.0
+  status: draft
+  domain: security
+  category: security-review
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for reviewing SaaS features, APIs, workflows, data models, integrations and releases for security risks.
+  purpose: Produce a security review covering authentication, authorization, tenant isolation, data protection, audit logging, abuse cases, findings and release decision.
+  inputs:
+    - review_name
+    - feature_or_system
+    - security_scope
+    - data_involved
+    - user_roles
+    - api_endpoints
+    - permissions
+    - risks
+    - test_cases
+  variables:
+    - review_name
+    - feature_or_system
+    - review_owner
+    - security_reviewer
+    - security_risk_level
+    - authentication_required
+    - required_permission_1
+    - tenant_boundary
+    - sensitive_data_involved
+    - audit_event_1
+    - security_decision
+  outputs:
+    - security_review_document
+  related_skills:
+    - security.security-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - engineering.database-engineer
+    - infrastructure.devops-engineer
+  related_playbooks:
+    - security.review-api-security
+    - security.design-auth-rbac
+    - security.harden-production-saas
+    - security.respond-to-security-incident
+    - engineering.write-test-plan
+    - operations.prepare-release
+  related_patterns:
+    - security.rbac-permission-model
+    - security.tenant-data-isolation
+    - security.audit-logging-traceability
+    - engineering.api-error-handling
+    - operations.incident-severity-model
+  tags:
+    - security
+    - review
+    - authorization
+    - tenant-isolation
+    - audit
+    - api
+    - saas
+```

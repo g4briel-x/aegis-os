@@ -1,0 +1,65 @@
+## FILE: `templates/engineering/data-model-template/metadata.yaml`
+
+```yaml
+template:
+  id: engineering.data-model-template
+  name: Data Model Template
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: data-architecture
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting SaaS entities, relationships, fields, constraints, tenant boundaries, permissions, audit events and migration requirements.
+  purpose: Produce a clear data model document that aligns product, architecture, database, security and engineering before implementation.
+  inputs:
+    - model_name
+    - domain
+    - entities
+    - fields
+    - relationships
+    - tenant_model
+    - permissions
+    - constraints
+    - lifecycle_states
+  variables:
+    - model_name
+    - domain
+    - owner
+    - model_summary
+    - entity_1
+    - entity_1_purpose
+    - field_1_name
+    - field_1_type
+    - tenant_boundary
+    - ownership_rule
+    - migration_required
+  outputs:
+    - data_model_document
+  related_skills:
+    - engineering.database-engineer
+    - engineering.software-architect
+    - engineering.senior-developer
+    - security.security-engineer
+    - product.business-analyst
+  related_playbooks:
+    - engineering.design-saas-data-model
+    - engineering.create-api-contract
+    - security.design-auth-rbac
+    - engineering.write-test-plan
+    - operations.prepare-release
+  related_patterns:
+    - security.tenant-data-isolation
+    - security.rbac-permission-model
+    - security.audit-logging-traceability
+    - engineering.database-migration-safety
+    - architecture.saas-modular-monolith
+  tags:
+    - data-model
+    - database
+    - schema
+    - entities
+    - relationships
+    - tenant-isolation
+    - saas
+```

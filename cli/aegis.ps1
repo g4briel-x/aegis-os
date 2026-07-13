@@ -73,6 +73,11 @@ $commandMap = @{
 
     "domain:assets" = "domain-assets.ps1"
     "tag:assets" = "tag-assets.ps1"
+
+    "config:show" = "config-show.ps1"
+    "config:path" = "config-path.ps1"
+    "config:check" = "config-check.ps1"
+
 }
 
 function Show-UnknownCommand {

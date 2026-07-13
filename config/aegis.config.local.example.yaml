@@ -1,0 +1,19 @@
+## FILE: `config/aegis.config.local.example.yaml`
+
+```yaml
+aegis:
+  environment: local
+
+local:
+  user_name: local-user
+  machine_name: local-machine
+  notes: Copy this file to aegis.config.local.yaml if local overrides are needed.
+
+paths:
+  root: .
+  reports: reports
+
+cli:
+  default_output: text
+  allow_open_file_explorer: true
+```

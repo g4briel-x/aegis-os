@@ -39,7 +39,9 @@ Write-Host "  asset:path <id>            Show asset repository path"
 Write-Host "  asset:open <id>            Open asset path in file explorer"
 Write-Host "  domain:assets <name>       List assets by domain"
 Write-Host "  tag:assets <tag>           List assets by tag"
-Write-Host ""
+Write-Host "  config:show             Show example configuration"
+Write-Host "  config:path             Show configuration file paths"
+Write-Host "  config:check            Check required configuration files"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"

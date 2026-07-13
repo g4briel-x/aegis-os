@@ -1,0 +1,646 @@
+# Aegis OS — Playbooks Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des Playbooks :
+
+- `registry/playbooks/playbooks.registry.yaml`
+
+---
+
+## FILE: `registry/playbooks/playbooks.registry.yaml`
+
+```yaml
+registry:
+  id: registry.playbooks
+  name: Playbooks Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS playbooks.
+
+entries:
+  - id: engineering.debug-production-issue
+    name: Debug Production Issue Playbook
+    type: playbook
+    domain: engineering
+    category: debugging
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/debug-production-issue
+    owner: aegis-os
+    summary: Diagnoses production bugs and incidents through evidence collection, reproduction, root cause isolation, fix validation and follow-up actions.
+    tags:
+      - debugging
+      - production
+      - incident
+      - root-cause
+    related_assets:
+      - id: engineering.senior-debugger
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+      - id: operations.postmortem-template
+        relationship: related_to
+
+  - id: product.define-saas-mvp
+    name: Define SaaS MVP Playbook
+    type: playbook
+    domain: product
+    category: mvp-definition
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/product/define-saas-mvp
+    owner: aegis-os
+    summary: Defines a SaaS MVP around one customer segment, one painful problem, core outcomes, scope boundaries and measurable launch criteria.
+    tags:
+      - product
+      - saas
+      - mvp
+      - scope
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: product.saas-mvp-scope
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+
+  - id: security.review-api-security
+    name: Review API Security Playbook
+    type: playbook
+    domain: security
+    category: api-security
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/security/review-api-security
+    owner: aegis-os
+    summary: Reviews API endpoints for authentication, authorization, input validation, tenant isolation, safe errors, audit logging and abuse risks.
+    tags:
+      - security
+      - api
+      - auth
+      - tenant-isolation
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: security.security-review-template
+        relationship: related_to
+      - id: security.rbac-permission-model
+        relationship: related_to
+
+  - id: operations.prepare-release
+    name: Prepare Release Playbook
+    type: playbook
+    domain: operations
+    category: release-management
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/operations/prepare-release
+    owner: aegis-os
+    summary: Prepares a SaaS release with scope, testing, deployment plan, rollback, communication, monitoring and release approval.
+    tags:
+      - release
+      - operations
+      - deployment
+      - rollback
+    related_assets:
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+      - id: operations.feature-flag-rollout
+        relationship: related_to
+
+  - id: product.run-discovery-interviews
+    name: Run Discovery Interviews Playbook
+    type: playbook
+    domain: product
+    category: discovery
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/product/run-discovery-interviews
+    owner: aegis-os
+    summary: Runs structured customer discovery interviews to validate problem, urgency, current alternatives, buying triggers and product opportunity.
+    tags:
+      - discovery
+      - customer
+      - interviews
+      - product
+    related_assets:
+      - id: product.business-analyst
+        relationship: related_to
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+
+  - id: product.create-prd
+    name: Create PRD Playbook
+    type: playbook
+    domain: product
+    category: requirements
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/product/create-prd
+    owner: aegis-os
+    summary: Creates a Product Requirements Document with problem, users, goals, scope, requirements, acceptance criteria, metrics and risks.
+    tags:
+      - prd
+      - requirements
+      - product
+      - handoff
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+      - id: design.ux-flow-template
+        relationship: related_to
+
+  - id: design.design-saas-ux-flow
+    name: Design SaaS UX Flow Playbook
+    type: playbook
+    domain: design
+    category: ux-flow
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/design/design-saas-ux-flow
+    owner: aegis-os
+    summary: Designs a SaaS user flow from entry point to desired outcome with screens, states, actions, errors, permissions and acceptance criteria.
+    tags:
+      - ux
+      - ui
+      - flow
+      - design
+    related_assets:
+      - id: design.ux-ui-designer-saas
+        relationship: related_to
+      - id: design.ux-flow-template
+        relationship: related_to
+      - id: design.saas-onboarding-flow
+        relationship: related_to
+
+  - id: engineering.design-saas-architecture
+    name: Design SaaS Architecture Playbook
+    type: playbook
+    domain: engineering
+    category: architecture
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/design-saas-architecture
+    owner: aegis-os
+    summary: Designs SaaS architecture including modules, boundaries, APIs, data, security, infrastructure, observability and release constraints.
+    tags:
+      - architecture
+      - saas
+      - system-design
+      - modules
+    related_assets:
+      - id: engineering.software-architect
+        relationship: related_to
+      - id: architecture.saas-modular-monolith
+        relationship: related_to
+      - id: architecture.architecture-decision-record-template
+        relationship: related_to
+
+  - id: management.plan-saas-mvp-delivery
+    name: Plan SaaS MVP Delivery Playbook
+    type: playbook
+    domain: management
+    category: delivery-planning
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/management/plan-saas-mvp-delivery
+    owner: aegis-os
+    summary: Plans MVP delivery with milestones, dependencies, owners, risks, timeline, release scope and execution checkpoints.
+    tags:
+      - delivery
+      - planning
+      - mvp
+      - management
+    related_assets:
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: product.define-saas-mvp
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: engineering.implement-feature-from-prd
+    name: Implement Feature From PRD Playbook
+    type: playbook
+    domain: engineering
+    category: implementation
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/implement-feature-from-prd
+    owner: aegis-os
+    summary: Turns a PRD into implementation tasks, API/data changes, tests, code delivery, review and release readiness.
+    tags:
+      - implementation
+      - feature
+      - prd
+      - engineering
+    related_assets:
+      - id: engineering.senior-developer
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+      - id: engineering.test-plan-template
+        relationship: related_to
+
+  - id: engineering.review-pull-request
+    name: Review Pull Request Playbook
+    type: playbook
+    domain: engineering
+    category: code-review
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/review-pull-request
+    owner: aegis-os
+    summary: Reviews pull requests for correctness, maintainability, security, tests, architecture fit, performance and release risk.
+    tags:
+      - code-review
+      - pull-request
+      - quality
+      - engineering
+    related_assets:
+      - id: engineering.senior-developer
+        relationship: related_to
+      - id: engineering.software-architect
+        relationship: related_to
+      - id: security.security-engineer
+        relationship: related_to
+
+  - id: infrastructure.fix-failing-ci-pipeline
+    name: Fix Failing CI Pipeline Playbook
+    type: playbook
+    domain: infrastructure
+    category: ci-cd
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/infrastructure/fix-failing-ci-pipeline
+    owner: aegis-os
+    summary: Diagnoses and fixes failing CI pipelines by identifying failing stage, environment drift, dependency issues, test failures and pipeline configuration errors.
+    tags:
+      - ci
+      - pipeline
+      - devops
+      - debugging
+    related_assets:
+      - id: infrastructure.devops-engineer
+        relationship: related_to
+      - id: engineering.senior-debugger
+        relationship: related_to
+      - id: operations.runbook-template
+        relationship: related_to
+
+  - id: infrastructure.deploy-saas-application
+    name: Deploy SaaS Application Playbook
+    type: playbook
+    domain: infrastructure
+    category: deployment
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/infrastructure/deploy-saas-application
+    owner: aegis-os
+    summary: Deploys a SaaS application safely using environment checks, migrations, release steps, validation, monitoring and rollback planning.
+    tags:
+      - deployment
+      - devops
+      - saas
+      - release
+    related_assets:
+      - id: infrastructure.devops-engineer
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+      - id: operations.runbook-template
+        relationship: related_to
+
+  - id: operations.monitor-saas-production
+    name: Monitor SaaS Production Playbook
+    type: playbook
+    domain: operations
+    category: monitoring
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/operations/monitor-saas-production
+    owner: aegis-os
+    summary: Monitors production SaaS health through metrics, logs, traces, alerts, customer impact signals and operational review.
+    tags:
+      - monitoring
+      - observability
+      - production
+      - operations
+    related_assets:
+      - id: infrastructure.devops-engineer
+        relationship: related_to
+      - id: operations.production-observability-baseline
+        relationship: related_to
+      - id: operations.runbook-template
+        relationship: related_to
+
+  - id: security.respond-to-security-incident
+    name: Respond to Security Incident Playbook
+    type: playbook
+    domain: security
+    category: incident-response
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/security/respond-to-security-incident
+    owner: aegis-os
+    summary: Responds to security incidents through triage, containment, evidence preservation, impact assessment, remediation, communication and post-incident actions.
+    tags:
+      - security
+      - incident-response
+      - containment
+      - remediation
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+      - id: operations.postmortem-template
+        relationship: related_to
+
+  - id: operations.run-postmortem-review
+    name: Run Postmortem Review Playbook
+    type: playbook
+    domain: operations
+    category: postmortem
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/operations/run-postmortem-review
+    owner: aegis-os
+    summary: Runs a postmortem review after incidents to document impact, timeline, root cause, contributing factors, lessons and corrective actions.
+    tags:
+      - postmortem
+      - incident
+      - reliability
+      - operations
+    related_assets:
+      - id: operations.postmortem-template
+        relationship: related_to
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: engineering.senior-debugger
+        relationship: related_to
+
+  - id: engineering.optimize-database-performance
+    name: Optimize Database Performance Playbook
+    type: playbook
+    domain: engineering
+    category: database-performance
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/optimize-database-performance
+    owner: aegis-os
+    summary: Improves database performance through query analysis, indexing, schema review, workload patterns, bottleneck isolation and safe rollout.
+    tags:
+      - database
+      - performance
+      - sql
+      - optimization
+    related_assets:
+      - id: engineering.database-engineer
+        relationship: related_to
+      - id: engineering.database-migration-safety
+        relationship: related_to
+      - id: operations.production-observability-baseline
+        relationship: related_to
+
+  - id: engineering.design-saas-data-model
+    name: Design SaaS Data Model Playbook
+    type: playbook
+    domain: engineering
+    category: data-modeling
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/design-saas-data-model
+    owner: aegis-os
+    summary: Designs SaaS data entities, relationships, fields, constraints, tenant boundaries, permissions, audit events and migration considerations.
+    tags:
+      - data-model
+      - database
+      - schema
+      - tenant-isolation
+    related_assets:
+      - id: engineering.database-engineer
+        relationship: related_to
+      - id: engineering.data-model-template
+        relationship: related_to
+      - id: security.tenant-data-isolation
+        relationship: related_to
+
+  - id: engineering.write-test-plan
+    name: Write Test Plan Playbook
+    type: playbook
+    domain: engineering
+    category: testing
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/write-test-plan
+    owner: aegis-os
+    summary: Creates a test plan covering scope, test types, scenarios, acceptance criteria, edge cases, regression risks and release readiness.
+    tags:
+      - testing
+      - qa
+      - test-plan
+      - quality
+    related_assets:
+      - id: engineering.senior-developer
+        relationship: related_to
+      - id: engineering.test-plan-template
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+
+  - id: engineering.create-api-contract
+    name: Create API Contract Playbook
+    type: playbook
+    domain: engineering
+    category: api-contract
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/engineering/create-api-contract
+    owner: aegis-os
+    summary: Creates an API contract with endpoints, schemas, authorization, errors, side effects, versioning, observability and test cases.
+    tags:
+      - api
+      - contract
+      - backend
+      - frontend
+    related_assets:
+      - id: engineering.software-architect
+        relationship: related_to
+      - id: engineering.api-contract-template
+        relationship: related_to
+      - id: engineering.api-error-handling
+        relationship: related_to
+
+  - id: security.design-auth-rbac
+    name: Design Auth RBAC Playbook
+    type: playbook
+    domain: security
+    category: authorization
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/security/design-auth-rbac
+    owner: aegis-os
+    summary: Designs authentication and role-based access control using roles, permissions, resources, scopes, enforcement points and tests.
+    tags:
+      - security
+      - rbac
+      - permissions
+      - auth
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: security.rbac-permission-model
+        relationship: related_to
+      - id: security.security-review-template
+        relationship: related_to
+
+  - id: security.harden-production-saas
+    name: Harden Production SaaS Playbook
+    type: playbook
+    domain: security
+    category: production-hardening
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/security/harden-production-saas
+    owner: aegis-os
+    summary: Hardens a production SaaS application through secure configuration, secrets, access controls, dependencies, logging, monitoring and release safeguards.
+    tags:
+      - security
+      - hardening
+      - production
+      - ops
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: security.security-review-template
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: product.define-pricing-strategy
+    name: Define Pricing Strategy Playbook
+    type: playbook
+    domain: product
+    category: pricing
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/product/define-pricing-strategy
+    owner: aegis-os
+    summary: Defines SaaS pricing strategy using customer value, pricing model, value metric, plans, packaging, trials, validation and billing constraints.
+    tags:
+      - pricing
+      - monetization
+      - saas
+      - business
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: business.pricing-strategy-template
+        relationship: related_to
+      - id: business.billing-subscription-model
+        relationship: related_to
+
+  - id: product.prepare-saas-launch
+    name: Prepare SaaS Launch Playbook
+    type: playbook
+    domain: product
+    category: launch
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/product/prepare-saas-launch
+    owner: aegis-os
+    summary: Prepares SaaS launch with positioning, offer, pricing, assets, channels, funnel, release readiness and launch metrics.
+    tags:
+      - launch
+      - saas
+      - gtm
+      - product
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: business.go-to-market-plan-template
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: business.create-go-to-market-plan
+    name: Create Go-To-Market Plan Playbook
+    type: playbook
+    domain: business
+    category: go-to-market
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/business/create-go-to-market-plan
+    owner: aegis-os
+    summary: Creates a GTM plan with target segment, ICP, positioning, messaging, offer, channels, sales motion, funnel, launch plan and metrics.
+    tags:
+      - gtm
+      - business
+      - launch
+      - sales
+      - marketing
+    related_assets:
+      - id: business.go-to-market-plan-template
+        relationship: related_to
+      - id: business.pricing-strategy-template
+        relationship: related_to
+      - id: product.saas-mvp-scope
+        relationship: related_to
+
+  - id: operations.create-runbook
+    name: Create Runbook Playbook
+    type: playbook
+    domain: operations
+    category: runbook
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: playbooks/operations/create-runbook
+    owner: aegis-os
+    summary: Creates an operational runbook for repeatable production tasks, deployments, incidents, maintenance, escalation and recovery.
+    tags:
+      - runbook
+      - operations
+      - procedure
+      - support
+    related_assets:
+      - id: operations.runbook-template
+        relationship: related_to
+      - id: management.technical-project-manager
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+
+```

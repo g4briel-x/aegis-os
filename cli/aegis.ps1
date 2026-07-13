@@ -43,6 +43,14 @@ function Invoke-AegisCommand {
         "report" = "report.ps1"
         "registry:list" = "registry-list.ps1"
         "asset:find" = "asset-find.ps1"
+        "skill:list" = "skill-list.ps1"
+        "playbook:list" = "playbook-list.ps1"
+        "pattern:list" = "pattern-list.ps1"
+        "template:list" = "template-list.ps1"
+        "domain:list" = "domain-list.ps1"
+        "tag:list" = "tag-list.ps1"
+        "docs:list" = "docs-list.ps1"
+        "release:status" = "release-status.ps1"               
     }
 
     if (-not $commandMap.ContainsKey($CommandName)) {

@@ -1,0 +1,63 @@
+## FILE: `templates/engineering/api-contract-template/metadata.yaml`
+
+```yaml
+template:
+  id: engineering.api-contract-template
+  name: API Contract Template
+  version: 0.1.0
+  status: draft
+  domain: engineering
+  category: api-design
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for documenting REST or HTTP API endpoint contracts.
+  purpose: Produce clear API contracts covering endpoint behavior, schemas, authorization, errors, observability, versioning and tests.
+  inputs:
+    - api_name
+    - endpoint_path
+    - http_method
+    - request_schema
+    - response_schema
+    - authorization_rules
+    - error_responses
+    - test_cases
+  variables:
+    - api_name
+    - owner
+    - http_method
+    - endpoint_path
+    - api_version
+    - authentication_type
+    - required_permission
+    - request_body_example
+    - success_response_example
+    - error_code
+    - success_status_code
+  outputs:
+    - api_contract_document
+  related_skills:
+    - engineering.software-architect
+    - engineering.senior-developer
+    - security.security-engineer
+    - engineering.senior-debugger
+    - product.business-analyst
+  related_playbooks:
+    - engineering.create-api-contract
+    - security.review-api-security
+    - engineering.write-test-plan
+    - engineering.review-pull-request
+    - operations.prepare-release
+  related_patterns:
+    - engineering.api-error-handling
+    - engineering.api-versioning-strategy
+    - security.rbac-permission-model
+    - security.tenant-data-isolation
+  tags:
+    - api
+    - contract
+    - rest
+    - schema
+    - errors
+    - security
+    - testing
+```

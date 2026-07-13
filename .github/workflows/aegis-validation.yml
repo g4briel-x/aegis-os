@@ -1,0 +1,55 @@
+## FILE: `.github/workflows/aegis-validation.yml`
+
+```yaml
+name: Aegis OS Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Aegis OS Repository
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show PowerShell version
+        shell: pwsh
+        run: |
+          $PSVersionTable
+
+      - name: Validate repository structure
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "registry")) {
+            throw "Missing registry directory."
+          }
+
+          if (-not (Test-Path "scripts\validation")) {
+            throw "Missing scripts\validation directory."
+          }
+
+          if (-not (Test-Path "scripts\validation\validate-all.ps1")) {
+            throw "Missing validate-all.ps1."
+          }
+
+          Write-Host "Repository structure validation passed."
+
+      - name: Run Aegis validation scripts
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+
+      - name: Validation summary
+        shell: pwsh
+        run: |
+          Write-Host "Aegis OS validation completed successfully."
+```

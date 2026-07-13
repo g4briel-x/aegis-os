@@ -1,0 +1,244 @@
+# Aegis OS — Releases Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des releases Aegis OS :
+
+- `registry/releases/releases.registry.yaml`
+
+---
+
+## FILE: `registry/releases/releases.registry.yaml`
+
+```yaml
+registry:
+  id: registry.releases
+  name: Releases Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS release versions, release scope, included assets, maturity and completion status.
+
+releases:
+  - id: release.0.1.0
+    name: Aegis OS v0.1.0 Documentation Foundation
+    version: 0.1.0
+    status: draft
+    maturity: usable
+    release_type: foundation
+    owner: aegis-os
+    summary: Establishes the foundational documentation, core concepts, architecture, governance, reference models and adoption materials for Aegis OS.
+    scope:
+      - core identity and execution concepts
+      - documentation foundation
+      - architecture documentation
+      - specifications
+      - governance
+      - reference models
+      - roadmap
+      - adoption materials
+    included_assets:
+      - core.identity
+      - core.thinking-engine
+      - core.decision-engine
+      - core.orchestration
+      - core.quality-gate
+      - core.execution-pipeline
+      - docs.foundation
+      - docs.architecture
+      - docs.specifications
+      - docs.governance
+      - docs.reference
+      - docs.roadmap
+      - docs.rfc
+      - docs.adoption
+    completion_status:
+      core: complete
+      docs: complete
+      skills: not_included
+      playbooks: not_included
+      patterns: not_included
+      templates: not_included
+      registry: not_included
+    release_notes:
+      - Establishes repository-level structure and documentation baseline.
+      - Defines Aegis OS as a modular knowledge, execution and orchestration framework.
+      - Prepares the foundation for future skills, playbooks, patterns, templates and registries.
+
+  - id: release.0.2.0
+    name: Aegis OS v0.2.0 Skills and Execution Assets
+    version: 0.2.0
+    status: draft
+    maturity: usable
+    release_type: asset-library
+    owner: aegis-os
+    summary: Adds the first usable Aegis OS asset library with skills, playbooks, patterns and templates for SaaS product, engineering, security, operations and business execution.
+    scope:
+      - skills framework
+      - premium skills
+      - playbooks framework
+      - premium playbooks
+      - patterns framework
+      - premium patterns
+      - templates framework
+      - premium templates
+      - human-readable indexes
+    included_assets:
+      - framework.skills
+      - framework.playbooks
+      - framework.patterns
+      - framework.templates
+      - engineering.senior-developer
+      - engineering.software-architect
+      - engineering.database-engineer
+      - engineering.senior-debugger
+      - product.product-manager-saas
+      - product.business-analyst
+      - design.ux-ui-designer-saas
+      - infrastructure.devops-engineer
+      - infrastructure.cloud-architect
+      - security.security-engineer
+      - management.technical-project-manager
+      - product.prd-template
+      - engineering.api-contract-template
+      - engineering.test-plan-template
+      - engineering.data-model-template
+      - security.security-review-template
+      - business.go-to-market-plan-template
+      - business.pricing-strategy-template
+      - design.ux-flow-template
+      - management.rfc-template
+    completion_status:
+      skills: complete
+      playbooks: complete
+      patterns: complete
+      templates: complete
+      human_indexes: complete
+      machine_registry: in_progress
+    release_notes:
+      - Adds reusable expert skills for product, engineering, design, infrastructure, security and management.
+      - Adds procedural playbooks for execution.
+      - Adds reusable patterns for architecture, security, engineering, operations, design and business.
+      - Adds reusable templates for common SaaS artifacts and decisions.
+
+  - id: release.0.3.0
+    name: Aegis OS v0.3.0 Registry Layer
+    version: 0.3.0
+    status: draft
+    maturity: experimental
+    release_type: registry-layer
+    owner: aegis-os
+    summary: Adds machine-readable registries that allow Aegis OS assets to be discovered, resolved, filtered and connected by tools, automation and future runtime systems.
+    scope:
+      - registry framework
+      - skills registry
+      - playbooks registry
+      - patterns registry
+      - templates registry
+      - docs registry
+      - domains registry
+      - tags registry
+      - releases registry
+    included_assets:
+      - registry.framework
+      - registry.skills
+      - registry.playbooks
+      - registry.patterns
+      - registry.templates
+      - registry.docs
+      - registry.domains
+      - registry.tags
+      - registry.releases
+    completion_status:
+      registry_framework: complete
+      skills_registry: complete
+      playbooks_registry: complete
+      patterns_registry: complete
+      templates_registry: complete
+      docs_registry: complete
+      domains_registry: complete
+      tags_registry: complete
+      releases_registry: complete
+    release_notes:
+      - Introduces machine-readable asset catalogs.
+      - Connects assets by id, domain, type, tag and related assets.
+      - Prepares Aegis OS for future CLI, runtime, marketplace and automation layers.
+      - Converts repository knowledge into structured metadata.
+
+  - id: release.0.4.0
+    name: Aegis OS v0.4.0 Automation and Validation
+    version: 0.4.0
+    status: planned
+    maturity: experimental
+    release_type: automation
+    owner: aegis-os
+    summary: Planned release for validation scripts, registry checks, asset integrity checks, generation tools and repository automation.
+    scope:
+      - registry validation scripts
+      - asset path validation
+      - duplicate id detection
+      - YAML schema validation
+      - index generation helpers
+      - release checks
+      - GitHub workflow preparation
+    included_assets: []
+    completion_status:
+      scripts: planned
+      validation: planned
+      ci: planned
+      automation_docs: planned
+    release_notes:
+      - Future release.
+      - Should make registry and asset consistency easier to verify automatically.
+
+  - id: release.0.5.0
+    name: Aegis OS v0.5.0 CLI Foundation
+    version: 0.5.0
+    status: planned
+    maturity: experimental
+    release_type: cli-foundation
+    owner: aegis-os
+    summary: Planned release for the first CLI foundation that can inspect, validate and query Aegis OS assets from the registry layer.
+    scope:
+      - CLI project commands
+      - registry query commands
+      - asset listing
+      - validation commands
+      - doctor command
+      - local project checks
+    included_assets: []
+    completion_status:
+      cli: planned
+      registry_query: planned
+      validation_commands: planned
+      documentation: planned
+    release_notes:
+      - Future release.
+      - Should allow Aegis OS to become actionable from the terminal.
+
+  - id: release.1.0.0
+    name: Aegis OS v1.0.0 Usable Framework
+    version: 1.0.0
+    status: planned
+    maturity: stable
+    release_type: stable-framework
+    owner: aegis-os
+    summary: Planned stable release where Aegis OS becomes usable as a structured framework with documentation, assets, registry, validation and CLI-level workflows.
+    scope:
+      - stable documentation
+      - certified asset library
+      - validated registries
+      - working CLI
+      - release process
+      - governance process
+      - adoption guide
+    included_assets: []
+    completion_status:
+      docs: planned
+      assets: planned
+      registry: planned
+      cli: planned
+      validation: planned
+      governance: planned
+    release_notes:
+      - Future release.
+      - Should represent the first complete usable Aegis OS framework.
+```

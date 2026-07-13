@@ -1,0 +1,65 @@
+## FILE: `templates/business/go-to-market-plan-template/metadata.yaml`
+
+```yaml
+template:
+  id: business.go-to-market-plan-template
+  name: Go-To-Market Plan Template
+  version: 0.1.0
+  status: draft
+  domain: business
+  category: go-to-market
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for planning SaaS launches, pilots, acquisition, positioning, messaging, channels and GTM execution.
+  purpose: Produce a clear GTM plan connecting target segment, ICP, offer, positioning, channels, funnel, metrics and execution ownership.
+  inputs:
+    - product_or_offer
+    - target_segment
+    - icp
+    - value_proposition
+    - positioning
+    - offer
+    - channels
+    - launch_plan
+    - success_metrics
+  variables:
+    - plan_name
+    - product_or_offer
+    - owner
+    - launch_date
+    - executive_summary
+    - primary_segment
+    - icp_name
+    - problem_statement
+    - value_proposition
+    - primary_channel_1
+    - primary_launch_metric
+  outputs:
+    - go_to_market_plan_document
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - management.technical-project-manager
+    - design.ux-ui-designer-saas
+    - engineering.software-architect
+  related_playbooks:
+    - business.create-go-to-market-plan
+    - product.define-pricing-strategy
+    - product.prepare-saas-launch
+    - product.define-saas-mvp
+    - product.run-discovery-interviews
+  related_patterns:
+    - product.saas-mvp-scope
+    - business.billing-subscription-model
+    - design.saas-onboarding-flow
+    - operations.feature-flag-rollout
+  tags:
+    - gtm
+    - launch
+    - saas
+    - positioning
+    - messaging
+    - acquisition
+    - sales
+    - marketing
+```

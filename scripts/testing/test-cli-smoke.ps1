@@ -26,6 +26,7 @@ $tests = @(
     "test-cli-core-commands.ps1",
     "test-cli-registry-commands.ps1",
     "test-cli-asset-commands.ps1"
+    "test-cli-config-commands.ps1"
 )
 
 foreach ($test in $tests) {

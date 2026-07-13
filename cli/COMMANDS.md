@@ -315,6 +315,68 @@ Command:
 
 ---
 
+```markdown
+# Configuration Commands
+
+## `config:path`
+
+Role:
+
+```text
+Displays expected Aegis OS configuration paths.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 config:path
+```
+
+---
+
+## `config:check`
+
+Role:
+
+```text
+Checks that required configuration example files exist.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 config:check
+```
+
+---
+
+## `config:show`
+
+Role:
+
+```text
+Displays the example CLI configuration.
+```
+
+Command:
+
+```powershell
+.\cli\aegis.ps1 config:show
+```
+---
+# UPDATE FILE: `.github/workflows/aegis-cli-smoke-tests.yml`
+
+No structural change is required if the workflow already runs:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
+```
+
+Once `test-cli-smoke.ps1` includes `test-cli-config-commands.ps1`, GitHub Actions will automatically test the configuration commands.
+
+---
+
+
 ## `domain:assets`
 
 Role:
@@ -361,4 +423,4 @@ git push
 
 # 6. Final Principle
 
-> The command reference keeps the CLI understandable as Aegis OS grows.
+>  Every new CLI command group should be added to smoke tests before future automation depends on it.

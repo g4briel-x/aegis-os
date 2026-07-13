@@ -1,0 +1,350 @@
+# Aegis OS — Tags Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des tags Aegis OS :
+
+- `registry/tags/tags.registry.yaml`
+
+---
+
+## FILE: `registry/tags/tags.registry.yaml`
+
+```yaml
+registry:
+  id: registry.tags
+  name: Tags Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of standard tags used to classify Aegis OS assets.
+
+tags:
+  - id: tag.engineering
+    name: engineering
+    category: domain
+    status: draft
+    maturity: usable
+    description: Engineering-related assets: code, APIs, database, testing, debugging and implementation.
+
+  - id: tag.product
+    name: product
+    category: domain
+    status: draft
+    maturity: usable
+    description: Product-related assets: MVP, requirements, discovery, roadmap and SaaS product strategy.
+
+  - id: tag.design
+    name: design
+    category: domain
+    status: draft
+    maturity: usable
+    description: Design-related assets: UX, UI, onboarding, screens, states and accessibility.
+
+  - id: tag.security
+    name: security
+    category: domain
+    status: draft
+    maturity: usable
+    description: Security-related assets: authentication, authorization, RBAC, tenant isolation, audit and hardening.
+
+  - id: tag.infrastructure
+    name: infrastructure
+    category: domain
+    status: draft
+    maturity: usable
+    description: Infrastructure-related assets: cloud, DevOps, CI/CD, deployment and environments.
+
+  - id: tag.operations
+    name: operations
+    category: domain
+    status: draft
+    maturity: usable
+    description: Operations-related assets: releases, monitoring, incidents, runbooks, support and reliability.
+
+  - id: tag.business
+    name: business
+    category: domain
+    status: draft
+    maturity: usable
+    description: Business-related assets: pricing, monetization, go-to-market, launch and sales motion.
+
+  - id: tag.management
+    name: management
+    category: domain
+    status: draft
+    maturity: usable
+    description: Management-related assets: planning, delivery, RFCs, decisions and coordination.
+
+  - id: tag.documentation
+    name: documentation
+    category: domain
+    status: draft
+    maturity: usable
+    description: Documentation-related assets: docs, reference guides, specifications and governance material.
+
+  - id: tag.registry
+    name: registry
+    category: system
+    status: draft
+    maturity: usable
+    description: Registry-related assets: machine-readable catalogs, metadata, relationships and automation.
+
+  - id: tag.core
+    name: core
+    category: system
+    status: draft
+    maturity: usable
+    description: Core Aegis OS assets: identity, thinking, decisions, orchestration, quality and execution.
+
+  - id: tag.shared
+    name: shared
+    category: system
+    status: draft
+    maturity: usable
+    description: Shared standards, principles, glossary, security, operations and performance references.
+
+  - id: tag.saas
+    name: saas
+    category: product-type
+    status: draft
+    maturity: usable
+    description: Assets specifically useful for Software-as-a-Service product design, build and operations.
+
+  - id: tag.mvp
+    name: mvp
+    category: product-stage
+    status: draft
+    maturity: usable
+    description: Assets used to define or deliver a minimum viable product.
+
+  - id: tag.prd
+    name: prd
+    category: artifact
+    status: draft
+    maturity: usable
+    description: Assets related to Product Requirements Documents.
+
+  - id: tag.requirements
+    name: requirements
+    category: artifact
+    status: draft
+    maturity: usable
+    description: Assets related to functional, business or product requirements.
+
+  - id: tag.api
+    name: api
+    category: technical-topic
+    status: draft
+    maturity: usable
+    description: Assets related to API design, contracts, security, errors and versioning.
+
+  - id: tag.database
+    name: database
+    category: technical-topic
+    status: draft
+    maturity: usable
+    description: Assets related to database schema, SQL, migrations, indexing and performance.
+
+  - id: tag.data-model
+    name: data-model
+    category: technical-topic
+    status: draft
+    maturity: usable
+    description: Assets related to entities, fields, relationships, constraints and ownership.
+
+  - id: tag.testing
+    name: testing
+    category: quality
+    status: draft
+    maturity: usable
+    description: Assets related to tests, QA, validation and release confidence.
+
+  - id: tag.debugging
+    name: debugging
+    category: engineering-process
+    status: draft
+    maturity: usable
+    description: Assets related to diagnosing errors, bugs, incidents and root causes.
+
+  - id: tag.architecture
+    name: architecture
+    category: technical-topic
+    status: draft
+    maturity: usable
+    description: Assets related to system structure, modules, boundaries and technical decisions.
+
+  - id: tag.security-review
+    name: security-review
+    category: security-process
+    status: draft
+    maturity: usable
+    description: Assets related to reviewing security risks before release.
+
+  - id: tag.rbac
+    name: rbac
+    category: security-topic
+    status: draft
+    maturity: usable
+    description: Assets related to roles, permissions, resources, scopes and authorization.
+
+  - id: tag.tenant-isolation
+    name: tenant-isolation
+    category: security-topic
+    status: draft
+    maturity: usable
+    description: Assets related to multi-tenant data boundaries and cross-tenant protection.
+
+  - id: tag.audit
+    name: audit
+    category: security-topic
+    status: draft
+    maturity: usable
+    description: Assets related to audit logging, traceability and accountability.
+
+  - id: tag.release
+    name: release
+    category: operations-process
+    status: draft
+    maturity: usable
+    description: Assets related to planning, deploying, validating and monitoring releases.
+
+  - id: tag.deployment
+    name: deployment
+    category: operations-process
+    status: draft
+    maturity: usable
+    description: Assets related to deploying SaaS applications safely.
+
+  - id: tag.rollback
+    name: rollback
+    category: operations-process
+    status: draft
+    maturity: usable
+    description: Assets related to recovery, rollback and safe release reversal.
+
+  - id: tag.incident
+    name: incident
+    category: operations-process
+    status: draft
+    maturity: usable
+    description: Assets related to incidents, reports, severity, response and postmortems.
+
+  - id: tag.runbook
+    name: runbook
+    category: operations-artifact
+    status: draft
+    maturity: usable
+    description: Assets related to repeatable operational procedures.
+
+  - id: tag.postmortem
+    name: postmortem
+    category: operations-artifact
+    status: draft
+    maturity: usable
+    description: Assets related to incident learning, root cause and corrective actions.
+
+  - id: tag.observability
+    name: observability
+    category: operations-topic
+    status: draft
+    maturity: usable
+    description: Assets related to logs, metrics, traces, alerts and monitoring.
+
+  - id: tag.pricing
+    name: pricing
+    category: business-topic
+    status: draft
+    maturity: usable
+    description: Assets related to SaaS pricing strategy, plans, packages and willingness-to-pay validation.
+
+  - id: tag.monetization
+    name: monetization
+    category: business-topic
+    status: draft
+    maturity: usable
+    description: Assets related to revenue model, subscription, entitlements and billing.
+
+  - id: tag.billing
+    name: billing
+    category: business-topic
+    status: draft
+    maturity: usable
+    description: Assets related to subscriptions, invoices, trials, upgrades, downgrades and cancellation.
+
+  - id: tag.gtm
+    name: gtm
+    category: business-process
+    status: draft
+    maturity: usable
+    description: Assets related to go-to-market planning, positioning, channels and launch strategy.
+
+  - id: tag.launch
+    name: launch
+    category: business-process
+    status: draft
+    maturity: usable
+    description: Assets related to SaaS launch preparation and execution.
+
+  - id: tag.ux
+    name: ux
+    category: design-topic
+    status: draft
+    maturity: usable
+    description: Assets related to user experience, flows, screens and interaction behavior.
+
+  - id: tag.ui
+    name: ui
+    category: design-topic
+    status: draft
+    maturity: usable
+    description: Assets related to user interface design and visual product experience.
+
+  - id: tag.onboarding
+    name: onboarding
+    category: design-topic
+    status: draft
+    maturity: usable
+    description: Assets related to guiding users from signup to first meaningful value.
+
+  - id: tag.rfc
+    name: rfc
+    category: management-artifact
+    status: draft
+    maturity: usable
+    description: Assets related to proposals, structured review and traceable decisions.
+
+  - id: tag.decision
+    name: decision
+    category: management-topic
+    status: draft
+    maturity: usable
+    description: Assets related to choices, trade-offs, approvals and consequences.
+
+  - id: tag.governance
+    name: governance
+    category: management-topic
+    status: draft
+    maturity: usable
+    description: Assets related to ownership, review, certification, maturity and change control.
+
+  - id: tag.automation
+    name: automation
+    category: system-topic
+    status: draft
+    maturity: usable
+    description: Assets related to scripts, CLI workflows, validation and machine execution.
+
+  - id: tag.runtime
+    name: runtime
+    category: system-topic
+    status: draft
+    maturity: usable
+    description: Assets related to execution engine, orchestration, scheduler, state and policies.
+
+  - id: tag.marketplace
+    name: marketplace
+    category: distribution-topic
+    status: draft
+    maturity: usable
+    description: Assets related to packaging, publishing, trust, discovery and installation.
+
+```

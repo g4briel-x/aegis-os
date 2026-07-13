@@ -1,0 +1,336 @@
+# Aegis OS — Domains Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des domaines Aegis OS :
+
+- `registry/domains/domains.registry.yaml`
+
+---
+
+## FILE: `registry/domains/domains.registry.yaml`
+
+```yaml
+registry:
+  id: registry.domains
+  name: Domains Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS functional domains, ownership, asset paths, primary assets and tags.
+
+domains:
+  - id: domain.engineering
+    name: Engineering
+    slug: engineering
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers software development, APIs, data models, testing, debugging, code review, architecture implementation and technical quality.
+    asset_paths:
+      - skills/engineering
+      - playbooks/engineering
+      - patterns/engineering
+      - templates/engineering
+    primary_assets:
+      - engineering.senior-developer
+      - engineering.software-architect
+      - engineering.database-engineer
+      - engineering.senior-debugger
+      - engineering.api-contract-template
+      - engineering.data-model-template
+    tags:
+      - engineering
+      - code
+      - api
+      - database
+      - testing
+      - debugging
+
+  - id: domain.product
+    name: Product
+    slug: product
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers SaaS product strategy, MVP scope, requirements, discovery, roadmap, pricing inputs and feature definition.
+    asset_paths:
+      - skills/product
+      - playbooks/product
+      - patterns/product
+      - templates/product
+    primary_assets:
+      - product.product-manager-saas
+      - product.business-analyst
+      - product.define-saas-mvp
+      - product.create-prd
+      - product.prd-template
+      - product.saas-mvp-scope
+    tags:
+      - product
+      - saas
+      - mvp
+      - requirements
+      - discovery
+
+  - id: domain.design
+    name: Design
+    slug: design
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers SaaS UX/UI, onboarding, screens, user flows, interface states, accessibility and design handoff.
+    asset_paths:
+      - skills/design
+      - playbooks/design
+      - patterns/design
+      - templates/design
+    primary_assets:
+      - design.ux-ui-designer-saas
+      - design.design-saas-ux-flow
+      - design.ux-flow-template
+      - design.saas-onboarding-flow
+    tags:
+      - design
+      - ux
+      - ui
+      - onboarding
+      - flows
+
+  - id: domain.security
+    name: Security
+    slug: security
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers authentication, authorization, RBAC, tenant isolation, audit logging, API security, hardening and incident response.
+    asset_paths:
+      - skills/security
+      - playbooks/security
+      - patterns/security
+      - templates/security
+      - docs/13-security
+    primary_assets:
+      - security.security-engineer
+      - security.review-api-security
+      - security.design-auth-rbac
+      - security.security-review-template
+      - security.rbac-permission-model
+      - security.tenant-data-isolation
+      - security.audit-logging-traceability
+    tags:
+      - security
+      - auth
+      - rbac
+      - tenant-isolation
+      - audit
+
+  - id: domain.infrastructure
+    name: Infrastructure
+    slug: infrastructure
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers cloud architecture, DevOps, CI/CD, environments, deployments, scalability and platform operations.
+    asset_paths:
+      - skills/infrastructure
+      - playbooks/infrastructure
+    primary_assets:
+      - infrastructure.devops-engineer
+      - infrastructure.cloud-architect
+      - infrastructure.deploy-saas-application
+      - infrastructure.fix-failing-ci-pipeline
+    tags:
+      - infrastructure
+      - devops
+      - cloud
+      - deployment
+      - ci-cd
+
+  - id: domain.operations
+    name: Operations
+    slug: operations
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers production operations, releases, monitoring, incidents, runbooks, postmortems, support and reliability.
+    asset_paths:
+      - playbooks/operations
+      - patterns/operations
+      - templates/operations
+      - docs/12-operations
+    primary_assets:
+      - operations.prepare-release
+      - operations.monitor-saas-production
+      - operations.create-runbook
+      - operations.release-plan-template
+      - operations.runbook-template
+      - operations.incident-report-template
+      - operations.postmortem-template
+      - operations.production-observability-baseline
+    tags:
+      - operations
+      - release
+      - incident
+      - monitoring
+      - runbook
+
+  - id: domain.architecture
+    name: Architecture
+    slug: architecture
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers system structure, technical decisions, modular boundaries, integration choices, architecture records and trade-offs.
+    asset_paths:
+      - patterns/architecture
+      - templates/architecture
+      - docs/02-architecture
+    primary_assets:
+      - architecture.saas-modular-monolith
+      - architecture.architecture-decision-record-template
+      - engineering.software-architect
+      - engineering.design-saas-architecture
+    tags:
+      - architecture
+      - system-design
+      - adr
+      - trade-offs
+
+  - id: domain.business
+    name: Business
+    slug: business
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers go-to-market, pricing, monetization, subscriptions, business validation, launch motion and commercial strategy.
+    asset_paths:
+      - playbooks/business
+      - patterns/business
+      - templates/business
+    primary_assets:
+      - business.create-go-to-market-plan
+      - business.go-to-market-plan-template
+      - business.pricing-strategy-template
+      - business.billing-subscription-model
+    tags:
+      - business
+      - gtm
+      - pricing
+      - monetization
+      - launch
+
+  - id: domain.management
+    name: Management
+    slug: management
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers technical delivery, planning, coordination, RFCs, decisions, milestones, risks and cross-functional execution.
+    asset_paths:
+      - skills/management
+      - playbooks/management
+      - templates/management
+    primary_assets:
+      - management.technical-project-manager
+      - management.plan-saas-mvp-delivery
+      - management.rfc-template
+    tags:
+      - management
+      - delivery
+      - planning
+      - rfc
+      - decision
+
+  - id: domain.documentation
+    name: Documentation
+    slug: documentation
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers Aegis OS documentation, guides, reference models, specifications, governance documentation and adoption materials.
+    asset_paths:
+      - docs
+      - MANIFEST.md
+    primary_assets:
+      - docs.manifest
+      - docs.index
+      - docs.foundation
+      - docs.architecture
+      - docs.specifications
+      - docs.reference
+    tags:
+      - documentation
+      - docs
+      - reference
+      - guides
+      - governance
+
+  - id: domain.registry
+    name: Registry
+    slug: registry
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers machine-readable catalogs used to resolve assets, relationships, domains, tags, versions and release metadata.
+    asset_paths:
+      - registry
+    primary_assets:
+      - registry.skills
+      - registry.playbooks
+      - registry.patterns
+      - registry.templates
+      - registry.docs
+      - registry.domains
+    tags:
+      - registry
+      - catalog
+      - metadata
+      - automation
+      - runtime
+
+  - id: domain.core
+    name: Core
+    slug: core
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers the core Aegis OS identity, thinking engine, decision engine, orchestration, quality gate and execution pipeline.
+    asset_paths:
+      - core
+    primary_assets:
+      - core.identity
+      - core.thinking-engine
+      - core.decision-engine
+      - core.orchestration
+      - core.quality-gate
+      - core.execution-pipeline
+    tags:
+      - core
+      - orchestration
+      - decision-engine
+      - execution
+      - quality
+
+  - id: domain.shared
+    name: Shared
+    slug: shared
+    owner: aegis-os
+    status: draft
+    maturity: usable
+    summary: Covers shared engineering principles, standards, security baselines, operations guidance, performance and glossary references.
+    asset_paths:
+      - shared
+    primary_assets:
+      - shared.engineering-principles
+      - shared.quality-standards
+      - shared.security.owasp
+      - shared.operations.observability
+      - shared.performance
+      - shared.glossary
+    tags:
+      - shared
+      - standards
+      - principles
+      - quality
+      - reference
+
+```

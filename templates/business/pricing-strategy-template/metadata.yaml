@@ -1,0 +1,63 @@
+## FILE: `templates/business/pricing-strategy-template/metadata.yaml`
+
+```yaml
+template:
+  id: business.pricing-strategy-template
+  name: Pricing Strategy Template
+  version: 0.1.0
+  status: draft
+  domain: business
+  category: saas-monetization
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for defining SaaS pricing strategy, plans, packaging, value metrics, trials, pilots, discounts and validation.
+  purpose: Produce a pricing strategy that connects customer value, willingness to pay, entitlements, billing behavior and revenue goals.
+  inputs:
+    - product_or_offer
+    - target_segment
+    - customer_value
+    - pricing_objective
+    - pricing_model
+    - value_metric
+    - plan_structure
+    - validation_method
+    - revenue_assumptions
+  variables:
+    - pricing_strategy_name
+    - product_or_offer
+    - owner
+    - primary_segment
+    - core_value
+    - pricing_objective
+    - pricing_model
+    - value_metric
+    - plan_1_name
+    - plan_1_price
+    - validation_success_criteria
+  outputs:
+    - pricing_strategy_document
+  related_skills:
+    - product.product-manager-saas
+    - product.business-analyst
+    - management.technical-project-manager
+    - engineering.software-architect
+    - engineering.database-engineer
+  related_playbooks:
+    - product.define-pricing-strategy
+    - business.create-go-to-market-plan
+    - product.prepare-saas-launch
+    - product.define-saas-mvp
+    - product.run-discovery-interviews
+  related_patterns:
+    - business.billing-subscription-model
+    - product.saas-mvp-scope
+    - design.saas-onboarding-flow
+  tags:
+    - pricing
+    - monetization
+    - saas
+    - subscriptions
+    - packaging
+    - value-metric
+    - paid-pilot
+```

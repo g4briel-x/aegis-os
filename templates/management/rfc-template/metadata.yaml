@@ -1,0 +1,63 @@
+## FILE: `templates/management/rfc-template/metadata.yaml`
+
+```yaml
+template:
+  id: management.rfc-template
+  name: RFC Template
+  version: 0.1.0
+  status: draft
+  domain: management
+  category: proposal-and-decision
+  maturity: usable
+  owner: aegis-os
+  description: Reusable template for proposing, reviewing and deciding significant product, technical, process or governance changes.
+  purpose: Produce an RFC document with problem, goals, proposal, options, impacts, risks, rollout, decision and follow-up actions.
+  inputs:
+    - rfc_title
+    - author
+    - problem_statement
+    - goals
+    - proposal
+    - options_considered
+    - impact_analysis
+    - risks
+    - success_metrics
+  variables:
+    - rfc_title
+    - rfc_id
+    - author
+    - owner
+    - status
+    - summary
+    - problem_statement
+    - proposal_detail
+    - recommended_option
+    - decision
+  outputs:
+    - request_for_comments_document
+  related_skills:
+    - management.technical-project-manager
+    - engineering.software-architect
+    - product.product-manager-saas
+    - security.security-engineer
+    - infrastructure.devops-engineer
+  related_playbooks:
+    - product.create-prd
+    - engineering.design-saas-architecture
+    - operations.prepare-release
+    - security.review-api-security
+    - management.plan-saas-mvp-delivery
+  related_patterns:
+    - architecture.saas-modular-monolith
+    - engineering.api-versioning-strategy
+    - engineering.database-migration-safety
+    - operations.feature-flag-rollout
+  tags:
+    - rfc
+    - proposal
+    - decision
+    - governance
+    - architecture
+    - product
+    - change-management
+```

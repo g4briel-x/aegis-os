@@ -1,0 +1,358 @@
+# Aegis OS — Patterns Registry Bundle
+
+Ce fichier regroupe le registre machine-readable des Patterns :
+
+- `registry/patterns/patterns.registry.yaml`
+
+---
+
+## FILE: `registry/patterns/patterns.registry.yaml`
+
+```yaml
+registry:
+  id: registry.patterns
+  name: Patterns Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS patterns.
+
+entries:
+  - id: architecture.saas-modular-monolith
+    name: SaaS Modular Monolith Pattern
+    type: pattern
+    domain: architecture
+    category: application-architecture
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/architecture/saas-modular-monolith
+    owner: aegis-os
+    summary: Defines a SaaS architecture using one deployable application with strong internal module boundaries, clear domain ownership and controlled coupling.
+    tags:
+      - architecture
+      - saas
+      - modular-monolith
+      - modules
+    related_assets:
+      - id: engineering.software-architect
+        relationship: related_to
+      - id: engineering.design-saas-architecture
+        relationship: related_to
+      - id: architecture.architecture-decision-record-template
+        relationship: related_to
+
+  - id: security.rbac-permission-model
+    name: RBAC Permission Model Pattern
+    type: pattern
+    domain: security
+    category: authorization
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/security/rbac-permission-model
+    owner: aegis-os
+    summary: Defines roles, permissions, resources, scopes and enforcement points for secure SaaS authorization.
+    tags:
+      - security
+      - rbac
+      - permissions
+      - authorization
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: security.design-auth-rbac
+        relationship: related_to
+      - id: security.security-review-template
+        relationship: related_to
+
+  - id: engineering.api-error-handling
+    name: API Error Handling Pattern
+    type: pattern
+    domain: engineering
+    category: api-design
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/engineering/api-error-handling
+    owner: aegis-os
+    summary: Defines predictable, safe and actionable API error responses with stable codes, safe messages and traceability.
+    tags:
+      - api
+      - errors
+      - backend
+      - contracts
+    related_assets:
+      - id: engineering.create-api-contract
+        relationship: related_to
+      - id: engineering.api-contract-template
+        relationship: related_to
+      - id: security.review-api-security
+        relationship: related_to
+
+  - id: operations.feature-flag-rollout
+    name: Feature Flag Rollout Pattern
+    type: pattern
+    domain: operations
+    category: release-safety
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/operations/feature-flag-rollout
+    owner: aegis-os
+    summary: Defines gradual and observable feature rollout by separating deployment from activation and supporting safe rollback.
+    tags:
+      - feature-flags
+      - release
+      - rollout
+      - operations
+    related_assets:
+      - id: operations.prepare-release
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+      - id: management.rfc-template
+        relationship: related_to
+
+  - id: product.saas-mvp-scope
+    name: SaaS MVP Scope Pattern
+    type: pattern
+    domain: product
+    category: mvp-scope
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/product/saas-mvp-scope
+    owner: aegis-os
+    summary: Defines a SaaS MVP around one customer segment, one painful use case and one measurable outcome.
+    tags:
+      - product
+      - mvp
+      - saas
+      - scope
+    related_assets:
+      - id: product.product-manager-saas
+        relationship: related_to
+      - id: product.define-saas-mvp
+        relationship: related_to
+      - id: product.prd-template
+        relationship: related_to
+
+  - id: security.tenant-data-isolation
+    name: Tenant Data Isolation Pattern
+    type: pattern
+    domain: security
+    category: multi-tenancy
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/security/tenant-data-isolation
+    owner: aegis-os
+    summary: Defines how SaaS applications prevent cross-tenant data access through ownership, query boundaries, tests and audit controls.
+    tags:
+      - security
+      - tenant-isolation
+      - multi-tenant
+      - data
+    related_assets:
+      - id: security.security-engineer
+        relationship: related_to
+      - id: engineering.data-model-template
+        relationship: related_to
+      - id: engineering.design-saas-data-model
+        relationship: related_to
+
+  - id: security.audit-logging-traceability
+    name: Audit Logging Traceability Pattern
+    type: pattern
+    domain: security
+    category: audit
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/security/audit-logging-traceability
+    owner: aegis-os
+    summary: Defines how sensitive actions, security events and operational changes are recorded for accountability and investigation.
+    tags:
+      - audit
+      - security
+      - traceability
+      - logging
+    related_assets:
+      - id: security.security-review-template
+        relationship: related_to
+      - id: operations.incident-report-template
+        relationship: related_to
+      - id: engineering.data-model-template
+        relationship: related_to
+
+  - id: operations.production-observability-baseline
+    name: Production Observability Baseline Pattern
+    type: pattern
+    domain: operations
+    category: observability
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/operations/production-observability-baseline
+    owner: aegis-os
+    summary: Defines the minimum observability foundation for safely operating a SaaS application in production.
+    tags:
+      - observability
+      - monitoring
+      - logs
+      - metrics
+      - traces
+    related_assets:
+      - id: operations.monitor-saas-production
+        relationship: related_to
+      - id: infrastructure.devops-engineer
+        relationship: related_to
+      - id: operations.runbook-template
+        relationship: related_to
+
+  - id: engineering.background-job-processing
+    name: Background Job Processing Pattern
+    type: pattern
+    domain: engineering
+    category: async-processing
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/engineering/background-job-processing
+    owner: aegis-os
+    summary: Defines asynchronous job processing with payload rules, idempotency, tenant scope, retries, dead-letter handling and observability.
+    tags:
+      - background-jobs
+      - queues
+      - async
+      - retries
+    related_assets:
+      - id: engineering.senior-developer
+        relationship: related_to
+      - id: operations.production-observability-baseline
+        relationship: related_to
+      - id: security.tenant-data-isolation
+        relationship: related_to
+
+  - id: engineering.database-migration-safety
+    name: Database Migration Safety Pattern
+    type: pattern
+    domain: engineering
+    category: database-migrations
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/engineering/database-migration-safety
+    owner: aegis-os
+    summary: Defines safe SaaS database migrations with backward compatibility, staged rollout, backups, validation and recovery.
+    tags:
+      - database
+      - migration
+      - safety
+      - rollback
+    related_assets:
+      - id: engineering.database-engineer
+        relationship: related_to
+      - id: engineering.data-model-template
+        relationship: related_to
+      - id: operations.release-plan-template
+        relationship: related_to
+
+  - id: engineering.api-versioning-strategy
+    name: API Versioning Strategy Pattern
+    type: pattern
+    domain: engineering
+    category: api-versioning
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/engineering/api-versioning-strategy
+    owner: aegis-os
+    summary: Defines how SaaS APIs evolve without breaking clients through compatibility rules, deprecation, migration guides and contract tests.
+    tags:
+      - api
+      - versioning
+      - compatibility
+      - deprecation
+    related_assets:
+      - id: engineering.create-api-contract
+        relationship: related_to
+      - id: engineering.api-contract-template
+        relationship: related_to
+      - id: management.rfc-template
+        relationship: related_to
+
+  - id: design.saas-onboarding-flow
+    name: SaaS Onboarding Flow Pattern
+    type: pattern
+    domain: design
+    category: onboarding
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/design/saas-onboarding-flow
+    owner: aegis-os
+    summary: Defines how new SaaS users move from signup to first meaningful value through guided activation and reduced friction.
+    tags:
+      - ux
+      - onboarding
+      - activation
+      - design
+    related_assets:
+      - id: design.ux-ui-designer-saas
+        relationship: related_to
+      - id: design.ux-flow-template
+        relationship: related_to
+      - id: design.design-saas-ux-flow
+        relationship: related_to
+
+  - id: business.billing-subscription-model
+    name: Billing Subscription Model Pattern
+    type: pattern
+    domain: business
+    category: billing
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/business/billing-subscription-model
+    owner: aegis-os
+    summary: Defines SaaS plans, subscriptions, entitlements, invoices, trials, upgrades, downgrades and cancellation behavior.
+    tags:
+      - billing
+      - subscriptions
+      - pricing
+      - entitlements
+    related_assets:
+      - id: business.pricing-strategy-template
+        relationship: related_to
+      - id: product.define-pricing-strategy
+        relationship: related_to
+      - id: engineering.data-model-template
+        relationship: related_to
+
+  - id: operations.incident-severity-model
+    name: Incident Severity Model Pattern
+    type: pattern
+    domain: operations
+    category: incident-management
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: patterns/operations/incident-severity-model
+    owner: aegis-os
+    summary: Defines incident severity classification using customer impact, urgency, business risk, security exposure and response requirements.
+    tags:
+      - incident
+      - severity
+      - operations
+      - support
+    related_assets:
+      - id: operations.incident-report-template
+        relationship: related_to
+      - id: operations.postmortem-template
+        relationship: related_to
+      - id: operations.run-postmortem-review
+        relationship: related_to
+
+```

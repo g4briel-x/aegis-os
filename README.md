@@ -1,5 +1,3 @@
-## FILE: `README.md`
-
 # Aegis OS
 
 Version: 0.5.0  

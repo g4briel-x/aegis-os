@@ -1,13 +1,9 @@
-## FILE: `cli/aegis.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Aegis OS CLI entrypoint.
 
 .DESCRIPTION
 Central command router for Aegis OS local repository operations.
-
 .USAGE
 .\cli\aegis.ps1 help
 .\cli\aegis.ps1 validate
@@ -33,7 +29,7 @@ Central command router for Aegis OS local repository operations.
 
 param(
     [Parameter(Position = 0)]
-    [string]$Command = "help",
+    [string]$Command = "Help",
 
     [Parameter(Position = 1)]
     [string]$Argument = ""
@@ -124,4 +120,3 @@ function Invoke-AegisCommand {
 }
 
 Invoke-AegisCommand -CommandName $Command -ArgumentValue $Argument
-```

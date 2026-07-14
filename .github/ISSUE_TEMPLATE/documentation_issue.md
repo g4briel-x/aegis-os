@@ -1,7 +1,3 @@
-## FILE: `.github/ISSUE_TEMPLATE/documentation_issue.md`
-
-```markdown
----
 name: Documentation issue
 about: Report missing, unclear or outdated documentation
 title: "docs: "
@@ -55,5 +51,4 @@ scripts
 cli
 config
 reports
-```
-```
+

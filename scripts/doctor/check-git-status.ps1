@@ -1,6 +1,4 @@
-## FILE: `scripts/doctor/check-git-status.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Checks Git availability and repository status.
@@ -51,4 +49,4 @@ else {
 }
 
 exit 0
-```
+

@@ -1,6 +1,3 @@
-## FILE: `cli/commands/doctor.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Runs Aegis OS doctor.
@@ -17,4 +14,3 @@ if (-not (Test-Path $scriptPath)) {
 
 & powershell -ExecutionPolicy Bypass -File $scriptPath
 exit $LASTEXITCODE
-```

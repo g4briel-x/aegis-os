@@ -1,7 +1,3 @@
-## FILE: `.github/workflows/aegis-cli-smoke-tests.yml`
-
-```yaml
-
 name: Aegis OS CLI Smoke Tests
 
 on:
@@ -59,4 +55,3 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Aegis OS CLI smoke tests completed successfully."
-```

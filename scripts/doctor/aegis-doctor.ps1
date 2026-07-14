@@ -1,6 +1,3 @@
-## FILE: `scripts/doctor/aegis-doctor.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Runs the Aegis OS repository health check.
@@ -84,4 +81,3 @@ else {
 Write-Host ""
 Write-Host "Aegis OS Doctor completed successfully." -ForegroundColor Green
 exit 0
-```

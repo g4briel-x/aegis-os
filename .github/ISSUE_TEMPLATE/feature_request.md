@@ -1,7 +1,4 @@
-## FILE: `.github/ISSUE_TEMPLATE/feature_request.md`
 
-```markdown
----
 name: Feature request
 about: Suggest a new Aegis OS capability
 title: "feat: "
@@ -67,5 +64,3 @@ Optional.
 
 ```text
 Optional.
-```
-```

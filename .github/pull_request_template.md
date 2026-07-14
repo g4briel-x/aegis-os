@@ -1,6 +1,3 @@
-## FILE: `.github/PULL_REQUEST_TEMPLATE.md`
-
-```markdown
 # Pull Request
 
 ## Summary
@@ -78,8 +75,7 @@ powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps
 
 ```text
 Optional.
-```
-```
+
 
 ---
 

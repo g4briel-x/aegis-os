@@ -1,6 +1,3 @@
-## FILE: `cli/commands/status.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Runs a lightweight Aegis OS repository status check.
@@ -66,4 +63,3 @@ if ($failures.Count -gt 0) {
 
 Write-Host "Status check passed." -ForegroundColor Green
 exit 0
-```

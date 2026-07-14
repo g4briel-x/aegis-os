@@ -102,17 +102,3 @@ of the Additional Use Grant, you can report it to: agencis-sarl(at)outlook.fr
 
 Reports are treated confidentially where possible, and are used only to
 evaluate potential license compliance issues.
-
-
-Notes for maintainers (remove before publishing)
-
-Update the Licensor name/entity and contact details above.
-The "Change Date" (4 years is the BSL default; MariaDB and others use
-this) means each released version automatically becomes MIT-licensed
-after that period — this reassures contributors and users that the
-restriction isn't permanent. You can shorten or lengthen it.
-Consider having an actual lawyer review the Additional Use Grant wording
-before relying on it commercially — the boundary between "internal use"
-and "offering as a service" is where disputes tend to happen, so the
-clearer this section is, the fewer arguments later.
-```

@@ -1,93 +1,153 @@
-## FILE: `scripts/reports/generate-release-report.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Generates a release report from the releases registry.
-#>
+Generates the Aegis OS release report.
 
-param(
-    [string]$ReleasesRegistryPath = "registry\releases\releases.registry.yaml",
-    [string]$OutputPath = "reports\registry\RELEASE_REPORT.md"
-)
+.DESCRIPTION
+Scans the releases registry and creates a human-readable release report.
+
+.USAGE
+powershell -ExecutionPolicy Bypass -File scripts\reports\generate-release-report.ps1
+#>
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Generating Release Report" -ForegroundColor Cyan
+Write-Host "Aegis OS - Release Report" -ForegroundColor Cyan
 
-if (-not (Test-Path $ReleasesRegistryPath)) {
-    Write-Error "Releases registry not found: $ReleasesRegistryPath"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
+
+$registryPath = "registry\releases\releases.registry.yaml"
+$outputDir = "reports\registry"
+$outputFile = Join-Path $outputDir "RELEASE_REPORT.md"
+
+if (-not (Test-Path $registryPath)) {
+    Write-Error "Releases registry not found: $registryPath"
     exit 1
 }
 
-$outputDir = Split-Path -Parent $OutputPath
-New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+if (-not (Test-Path $outputDir)) {
+    New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+}
 
-$content = Get-Content $ReleasesRegistryPath
+$lines = Get-Content $registryPath
 $releases = @()
-$current = [ordered]@{
-    id = ""
-    name = ""
-    version = ""
-    status = ""
-    maturity = ""
-}
 
-foreach ($line in $content) {
-    if ($line -match "^\s*-\s*id:\s*(release\..+)\s*$") {
-        if (-not [string]::IsNullOrWhiteSpace($current.id)) {
-            $releases += [PSCustomObject]$current
+$currentId = ""
+$currentName = ""
+$currentVersion = ""
+$currentStatus = ""
+$currentMaturity = ""
+$currentSummary = ""
+$insideEntry = $false
+
+foreach ($line in $lines) {
+    if ($line -match '^\s{2}-\s*id:\s*(release\..+)\s*$') {
+        if ($insideEntry -and -not [string]::IsNullOrWhiteSpace($currentId)) {
+            $releases += [PSCustomObject]@{
+                Id       = $currentId
+                Name     = $currentName
+                Version  = $currentVersion
+                Status   = $currentStatus
+                Maturity = $currentMaturity
+                Summary  = $currentSummary
+            }
         }
 
-        $current = [ordered]@{
-            id = $Matches[1].Trim()
-            name = ""
-            version = ""
-            status = ""
-            maturity = ""
-        }
+        $insideEntry = $true
+        $currentId = $Matches[1].Trim().Trim('"').Trim("'")
+        $currentName = ""
+        $currentVersion = ""
+        $currentStatus = ""
+        $currentMaturity = ""
+        $currentSummary = ""
+        continue
     }
-    elseif ($line -match "^\s*name:\s*(.+)\s*$" -and -not [string]::IsNullOrWhiteSpace($current.id)) {
-        $current.name = $Matches[1].Trim()
+
+    if ($insideEntry -and $line -match '^\s*name:\s*(.+)\s*$') {
+        $currentName = $Matches[1].Trim().Trim('"').Trim("'")
+        continue
     }
-    elseif ($line -match "^\s*version:\s*(.+)\s*$" -and -not [string]::IsNullOrWhiteSpace($current.id)) {
-        $current.version = $Matches[1].Trim()
+
+    if ($insideEntry -and $line -match '^\s*version:\s*(.+)\s*$') {
+        $currentVersion = $Matches[1].Trim().Trim('"').Trim("'")
+        continue
     }
-    elseif ($line -match "^\s*status:\s*(.+)\s*$" -and -not [string]::IsNullOrWhiteSpace($current.id)) {
-        $current.status = $Matches[1].Trim()
+
+    if ($insideEntry -and $line -match '^\s*status:\s*(.+)\s*$') {
+        $currentStatus = $Matches[1].Trim().Trim('"').Trim("'")
+        continue
     }
-    elseif ($line -match "^\s*maturity:\s*(.+)\s*$" -and -not [string]::IsNullOrWhiteSpace($current.id)) {
-        $current.maturity = $Matches[1].Trim()
+
+    if ($insideEntry -and $line -match '^\s*maturity:\s*(.+)\s*$') {
+        $currentMaturity = $Matches[1].Trim().Trim('"').Trim("'")
+        continue
+    }
+
+    if ($insideEntry -and $line -match '^\s*summary:\s*(.+)\s*$') {
+        $currentSummary = $Matches[1].Trim().Trim('"').Trim("'")
+        continue
     }
 }
 
-if (-not [string]::IsNullOrWhiteSpace($current.id)) {
-    $releases += [PSCustomObject]$current
+if ($insideEntry -and -not [string]::IsNullOrWhiteSpace($currentId)) {
+    $releases += [PSCustomObject]@{
+        Id       = $currentId
+        Name     = $currentName
+        Version  = $currentVersion
+        Status   = $currentStatus
+        Maturity = $currentMaturity
+        Summary  = $currentSummary
+    }
 }
 
-$lines = @()
-$lines += "# Aegis OS — Release Report"
-$lines += ""
-$lines += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-$lines += ""
-$lines += "---"
-$lines += ""
-$lines += "# 1. Releases"
-$lines += ""
-$lines += "| ID | Name | Version | Status | Maturity |"
-$lines += "|---|---|---|---|---|"
+$reportLines = @()
+$reportLines += "# Aegis OS - Release Report"
+$reportLines += ""
+$reportLines += "Generated by:"
+$reportLines += ""
+$reportLines += '```text'
+$reportLines += "scripts/reports/generate-release-report.ps1"
+$reportLines += '```'
+$reportLines += ""
+$reportLines += "## Releases"
+$reportLines += ""
+$reportLines += "| ID | Name | Version | Status | Maturity |"
+$reportLines += "|---|---|---|---|---|"
 
-foreach ($release in $releases) {
-    $lines += "| `$($release.id)` | $($release.name) | $($release.version) | $($release.status) | $($release.maturity) |"
+foreach ($release in ($releases | Sort-Object Version)) {
+    $reportLines += "| `$($release.Id)` | $($release.Name) | $($release.Version) | $($release.Status) | $($release.Maturity) |"
 }
 
-$lines += ""
-$lines += "# 2. Final Principle"
-$lines += ""
-$lines += "> Release reports make Aegis OS progress visible."
+$reportLines += ""
+$reportLines += "## Details"
 
-$lines | Set-Content -Path $OutputPath -Encoding UTF8
+foreach ($release in ($releases | Sort-Object Version)) {
+    $reportLines += ""
+    $reportLines += "### $($release.Version) - $($release.Name)"
+    $reportLines += ""
+    $reportLines += '```text'
+    $reportLines += "ID: $($release.Id)"
+    $reportLines += "Status: $($release.Status)"
+    $reportLines += "Maturity: $($release.Maturity)"
+    $reportLines += '```'
+    $reportLines += ""
+    $reportLines += $release.Summary
+}
 
-Write-Host "Generated $OutputPath" -ForegroundColor Green
+$reportLines += ""
+$reportLines += "## Totals"
+$reportLines += ""
+$reportLines += '```text'
+$reportLines += "Total releases: $($releases.Count)"
+$reportLines += '```'
+$reportLines += ""
+$reportLines += "## Final Principle"
+$reportLines += ""
+$reportLines += "> Release reports make Aegis OS milestone progress visible and auditable."
+
+Set-Content -Path $outputFile -Value $reportLines -Encoding UTF8
+
+Write-Host "OK  Generated $outputFile" -ForegroundColor Green
 exit 0
-```

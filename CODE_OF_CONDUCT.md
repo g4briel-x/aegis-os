@@ -1,5 +1,3 @@
-## FILE: `CODE_OF_CONDUCT.md`
-
 # Code of Conduct
 
 ## 1. Purpose

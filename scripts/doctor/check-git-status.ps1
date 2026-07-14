@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
 Checks Git availability and repository status.
@@ -9,7 +8,12 @@ powershell -ExecutionPolicy Bypass -File scripts\doctor\check-git-status.ps1
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Git Status Check" -ForegroundColor Cyan
+Write-Host "Aegis OS - Git Status Check" -ForegroundColor Cyan
+
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
 
 try {
     $gitVersion = git --version
@@ -35,18 +39,37 @@ if ($insideRepo -ne "true") {
 
 Write-Host "OK  Inside Git repository" -ForegroundColor Green
 
-$branch = git branch --show-current
-Write-Host "Branch: $branch" -ForegroundColor Yellow
+try {
+    $branch = git branch --show-current
 
-$status = git status --short
-
-if ([string]::IsNullOrWhiteSpace($status)) {
-    Write-Host "OK  Working tree is clean" -ForegroundColor Green
+    if ([string]::IsNullOrWhiteSpace($branch)) {
+        Write-Host "WARN Branch name unavailable or detached HEAD" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "Branch: $branch" -ForegroundColor Yellow
+    }
 }
-else {
-    Write-Host "WARN Working tree has changes:" -ForegroundColor Yellow
-    $status | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
+catch {
+    Write-Host "WARN Could not read current branch" -ForegroundColor Yellow
+}
+
+try {
+    $gitStatus = git status --short
+
+    if ([string]::IsNullOrWhiteSpace($gitStatus)) {
+        Write-Host "OK  Working tree is clean" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARN Working tree has changes:" -ForegroundColor Yellow
+
+        foreach ($line in $gitStatus) {
+            Write-Host $line -ForegroundColor Yellow
+        }
+    }
+}
+catch {
+    Write-Host "BAD Could not read Git status" -ForegroundColor Red
+    exit 1
 }
 
 exit 0
-

@@ -1,6 +1,4 @@
-## FILE: `cli/commands/template-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS templates from the templates registry.
@@ -27,4 +25,3 @@ Select-String -Path $registryPath -Pattern "^\s*-\s*id:\s*(.+)$" | ForEach-Objec
 }
 
 exit 0
-```

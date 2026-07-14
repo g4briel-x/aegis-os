@@ -1,9 +1,9 @@
-## FILE: `scripts/testing/test-cli-registry-commands.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Runs CLI registry listing commands.
+Runs Aegis OS CLI registry listing commands.
+
+.DESCRIPTION
+Checks that registry-related CLI commands execute successfully.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-registry-commands.ps1
@@ -11,7 +11,7 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-registry-comma
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — CLI Registry Command Test" -ForegroundColor Cyan
+Write-Host "Aegis OS - CLI Registry Command Test" -ForegroundColor Cyan
 
 $commands = @(
     "skill:list",
@@ -25,6 +25,7 @@ $commands = @(
 )
 
 foreach ($command in $commands) {
+    Write-Host ""
     Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
 
     & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
@@ -35,6 +36,6 @@ foreach ($command in $commands) {
     }
 }
 
+Write-Host ""
 Write-Host "CLI registry command test passed." -ForegroundColor Green
 exit 0
-```

@@ -1,6 +1,4 @@
-## FILE: `cli/commands/validate.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Runs Aegis OS validation.
@@ -17,4 +15,3 @@ if (-not (Test-Path $scriptPath)) {
 
 & powershell -ExecutionPolicy Bypass -File $scriptPath
 exit $LASTEXITCODE
-```

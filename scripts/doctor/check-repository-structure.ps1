@@ -1,6 +1,3 @@
-## FILE: `scripts/doctor/check-repository-structure.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Checks required Aegis OS repository folders.
@@ -11,7 +8,7 @@ powershell -ExecutionPolicy Bypass -File scripts\doctor\check-repository-structu
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Repository Structure Check" -ForegroundColor Cyan
+Write-Host "Aegis OS - Repository Structure Check" -ForegroundColor Cyan
 
 $requiredFolders = @(
     "core",
@@ -24,7 +21,16 @@ $requiredFolders = @(
     "registry",
     "scripts",
     "scripts\validation",
-    "scripts\reports"
+    "scripts\reports",
+    "scripts\doctor",
+    "scripts\testing",
+    "cli",
+    "cli\commands",
+    "config",
+    "reports",
+    "install",
+    ".github",
+    ".github\workflows"
 )
 
 $failures = @()
@@ -42,10 +48,14 @@ foreach ($folder in $requiredFolders) {
 if ($failures.Count -gt 0) {
     Write-Host ""
     Write-Host "Missing folders:" -ForegroundColor Red
-    $failures | ForEach-Object { Write-Host "- $_" -ForegroundColor Red }
+
+    foreach ($failure in $failures) {
+        Write-Host "- $failure" -ForegroundColor Red
+    }
+
     exit 1
 }
 
+Write-Host ""
 Write-Host "Repository structure check passed." -ForegroundColor Green
 exit 0
-```

@@ -1,6 +1,4 @@
-## FILE: `cli/commands/help.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Shows Aegis OS CLI help.
@@ -59,4 +57,3 @@ Write-Host "  .\cli\aegis.ps1 tag:assets api"
 Write-Host ""
 
 exit 0
-```

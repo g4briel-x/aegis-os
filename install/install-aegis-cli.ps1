@@ -1,6 +1,4 @@
-## FILE: `install/install-aegis-cli.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Installs the Aegis OS CLI as a PowerShell function.
@@ -72,4 +70,3 @@ Write-Host "Restart PowerShell, then run:" -ForegroundColor Cyan
 Write-Host "aegis help" -ForegroundColor Yellow
 
 exit 0
-```

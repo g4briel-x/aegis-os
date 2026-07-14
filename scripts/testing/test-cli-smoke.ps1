@@ -1,6 +1,3 @@
-## FILE: `scripts/testing/test-cli-smoke.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Runs all Aegis OS CLI smoke tests.
@@ -14,7 +11,7 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — CLI Smoke Tests" -ForegroundColor Cyan
+Write-Host "Aegis OS - CLI Smoke Tests" -ForegroundColor Cyan
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
@@ -25,9 +22,9 @@ $tests = @(
     "test-cli-files.ps1",
     "test-cli-core-commands.ps1",
     "test-cli-registry-commands.ps1",
-    "test-cli-asset-commands.ps1"
-    "test-cli-config-commands.ps1"
-     "test-cli-metadata-commands.ps1"
+    "test-cli-asset-commands.ps1",
+    "test-cli-config-commands.ps1",
+    "test-cli-metadata-commands.ps1"
 )
 
 foreach ($test in $tests) {
@@ -52,4 +49,3 @@ foreach ($test in $tests) {
 Write-Host ""
 Write-Host "CLI smoke tests passed." -ForegroundColor Green
 exit 0
-```

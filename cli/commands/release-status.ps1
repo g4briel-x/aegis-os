@@ -1,6 +1,4 @@
-## FILE: `cli/commands/release-status.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Shows Aegis OS release status from the releases registry.
@@ -68,4 +66,3 @@ if (-not [string]::IsNullOrWhiteSpace($currentId)) {
 }
 
 exit 0
-```

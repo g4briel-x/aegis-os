@@ -1,9 +1,9 @@
-## FILE: `scripts/testing/test-cli-asset-commands.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Runs CLI asset inspection commands against known assets.
+Runs Aegis OS CLI asset inspection commands.
+
+.DESCRIPTION
+Checks that asset-related CLI commands execute successfully.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-asset-commands.ps1
@@ -11,7 +11,7 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-asset-commands
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — CLI Asset Command Test" -ForegroundColor Cyan
+Write-Host "Aegis OS - CLI Asset Command Test" -ForegroundColor Cyan
 
 $commands = @(
     @("asset:find", "security"),
@@ -26,6 +26,7 @@ foreach ($commandSpec in $commands) {
     $command = $commandSpec[0]
     $argument = $commandSpec[1]
 
+    Write-Host ""
     Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
 
     & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
@@ -36,6 +37,6 @@ foreach ($commandSpec in $commands) {
     }
 }
 
+Write-Host ""
 Write-Host "CLI asset command test passed." -ForegroundColor Green
 exit 0
-```

@@ -30,7 +30,7 @@ Central command router for Aegis OS local repository operations.
 param(
     [Parameter(Position = 0)]
     [string]$Command = "Help",
-
+    
     [Parameter(Position = 1)]
     [string]$Argument = ""
 )

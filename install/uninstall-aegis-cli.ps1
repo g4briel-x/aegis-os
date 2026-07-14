@@ -1,6 +1,4 @@
-## FILE: `install/uninstall-aegis-cli.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Removes the Aegis OS CLI PowerShell function from the user profile.
@@ -39,4 +37,3 @@ Write-Host "Aegis CLI removed from PowerShell profile." -ForegroundColor Green
 Write-Host "Restart PowerShell to complete uninstall." -ForegroundColor Yellow
 
 exit 0
-```

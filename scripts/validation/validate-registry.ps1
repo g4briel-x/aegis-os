@@ -1,6 +1,3 @@
-## FILE: `scripts/validation/validate-registry.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Runs core registry validations.
@@ -14,9 +11,12 @@ powershell -ExecutionPolicy Bypass -File scripts\validation\validate-registry.ps
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Registry Validation" -ForegroundColor Cyan
+Write-Host "Aegis OS - Registry Validation" -ForegroundColor Cyan
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
 
 $checks = @(
     "validate-yaml.ps1",
@@ -47,4 +47,3 @@ foreach ($check in $checks) {
 Write-Host ""
 Write-Host "Registry validation passed." -ForegroundColor Green
 exit 0
-```

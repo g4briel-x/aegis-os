@@ -1,38 +1,42 @@
-## FILE: `scripts/testing/test-cli-metadata-commands.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Runs CLI metadata commands.
+Runs Aegis OS CLI metadata command tests.
 
 .DESCRIPTION
-Checks that Aegis OS CLI metadata commands are wired correctly.
+Checks that version, information and status commands execute successfully.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-metadata-commands.ps1
 #>
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = 'Stop'
 
-Write-Host "Aegis OS — CLI Metadata Command Test" -ForegroundColor Cyan
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot '..\..')
+
+Set-Location $repoRoot
+
+Write-Host 'Aegis OS - CLI Metadata Command Test' -ForegroundColor Cyan
 
 $commands = @(
-    "version",
-    "info",
-    "status"
+    'version',
+    'info',
+    'status'
 )
 
 foreach ($command in $commands) {
-    Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
+    Write-Host ''
+    Write-Host ('Running: .\cli\aegis.ps1 {0}' -f $command) -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+    & powershell -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "CLI metadata command failed: $command"
+        Write-Error ('CLI metadata command failed: {0}' -f $command)
         exit $LASTEXITCODE
     }
 }
 
-Write-Host "CLI metadata command test passed." -ForegroundColor Green
+Write-Host ''
+Write-Host 'CLI metadata command test passed.' -ForegroundColor Green
+
 exit 0
-```

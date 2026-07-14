@@ -1,14 +1,4 @@
-# Aegis OS — Docs Registry Bundle
 
-Ce fichier regroupe le registre machine-readable de la documentation :
-
-- `registry/docs/docs.registry.yaml`
-
----
-
-## FILE: `registry/docs/docs.registry.yaml`
-
-```yaml
 registry:
   id: registry.docs
   name: Documentation Registry
@@ -480,5 +470,3 @@ entries:
         relationship: related_to
       - id: templates.index
         relationship: related_to
-
-```

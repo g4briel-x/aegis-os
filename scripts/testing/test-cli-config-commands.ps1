@@ -1,31 +1,34 @@
-## FILE: `scripts/testing/test-cli-config-commands.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Runs CLI configuration commands.
+Runs Aegis OS CLI configuration command tests.
 
 .DESCRIPTION
-Checks that Aegis OS CLI configuration commands are wired correctly.
+Checks that the configuration-related CLI commands execute successfully.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-config-commands.ps1
 #>
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = 'Stop'
 
-Write-Host "Aegis OS — CLI Configuration Command Test" -ForegroundColor Cyan
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot '..\..')
+
+Set-Location $repoRoot
+
+Write-Host 'Aegis OS - CLI Configuration Command Test' -ForegroundColor Cyan
 
 $commands = @(
-    "config:path",
-    "config:check",
-    "config:show"
+    'config:show',
+    'config:path',
+    'config:check'
 )
 
 foreach ($command in $commands) {
+    Write-Host ''
     Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+    & powershell -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "CLI configuration command failed: $command"
@@ -33,6 +36,7 @@ foreach ($command in $commands) {
     }
 }
 
-Write-Host "CLI configuration command test passed." -ForegroundColor Green
+Write-Host ''
+Write-Host 'CLI configuration command test passed.' -ForegroundColor Green
+
 exit 0
-```

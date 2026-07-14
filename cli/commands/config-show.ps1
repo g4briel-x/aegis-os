@@ -1,6 +1,4 @@
-## FILE: `cli/commands/config-show.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Shows the Aegis OS example configuration.
@@ -27,4 +25,3 @@ Get-Content $configPath | ForEach-Object {
 }
 
 exit 0
-```

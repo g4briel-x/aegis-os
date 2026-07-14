@@ -1,6 +1,3 @@
-## FILE: `scripts/validation/validate-paths.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Validates that registry entry paths exist in the repository.
@@ -19,14 +16,30 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Registry Path Validation" -ForegroundColor Cyan
+Write-Host "Aegis OS - Registry Path Validation" -ForegroundColor Cyan
+
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
 
 if (-not (Test-Path $RegistryRoot)) {
     Write-Error "Registry root not found: $RegistryRoot"
     exit 1
 }
 
-$yamlFiles = Get-ChildItem -Path $RegistryRoot -Recurse -File -Include *.yaml, *.yml
+$yamlFiles = @(
+    Get-ChildItem -Path $RegistryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -eq ".yaml" -or $_.Extension -eq ".yml"
+    }
+)
+
+if ($yamlFiles.Count -eq 0) {
+    Write-Error "No YAML registry files found under $RegistryRoot"
+    exit 1
+}
+
 $failures = @()
 
 foreach ($file in $yamlFiles) {
@@ -35,6 +48,13 @@ foreach ($file in $yamlFiles) {
     foreach ($line in $lines) {
         if ($line -match "^\s*path:\s*(.+)\s*$") {
             $relativePath = $Matches[1].Trim().Trim('"').Trim("'")
+
+            if ([string]::IsNullOrWhiteSpace($relativePath)) {
+                $failures += "$($file.FullName) -> empty path value"
+                Write-Host "BAD empty path in $($file.FullName)" -ForegroundColor Red
+                continue
+            }
+
             $targetPath = Join-Path $RepositoryRoot $relativePath
 
             if (-not (Test-Path $targetPath)) {
@@ -51,10 +71,14 @@ foreach ($file in $yamlFiles) {
 if ($failures.Count -gt 0) {
     Write-Host ""
     Write-Host "Missing registry paths:" -ForegroundColor Red
-    $failures | ForEach-Object { Write-Host "- $_" -ForegroundColor Red }
+
+    foreach ($failure in $failures) {
+        Write-Host "- $failure" -ForegroundColor Red
+    }
+
     exit 1
 }
 
+Write-Host ""
 Write-Host "Path validation passed." -ForegroundColor Green
 exit 0
-```

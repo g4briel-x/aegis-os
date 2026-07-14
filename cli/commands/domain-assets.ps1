@@ -1,50 +1,98 @@
-## FILE: `cli/commands/domain-assets.ps1`
+<#
+.SYNOPSIS
+Lists Aegis OS assets belonging to a specific domain.
 
-```powershell
-param([string]$Argument = "")
+.USAGE
+.\cli\aegis.ps1 domain:assets security
+#>
+
+param(
+    [string]$Argument = ""
+)
 
 $ErrorActionPreference = "Stop"
 
 if ([string]::IsNullOrWhiteSpace($Argument)) {
     Write-Host "Usage: .\cli\aegis.ps1 domain:assets <domain>" -ForegroundColor Yellow
-    exit 1
+    exit 2
 }
 
-$files = Get-ChildItem -Path "registry" -Recurse -File -Include *.yaml, *.yml
-$matches = @()
+$registryRoot = "registry"
 
-foreach ($file in $files) {
-    $lines = Get-Content $file.FullName
+if (-not (Test-Path $registryRoot)) {
+    Write-Host "Registry folder not found: $registryRoot" -ForegroundColor Red
+    exit 3
+}
+
+$yamlFiles = @(
+    Get-ChildItem -Path $registryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -in @(".yaml", ".yml")
+    }
+)
+
+if ($yamlFiles.Count -eq 0) {
+    Write-Host "No registry YAML files found." -ForegroundColor Yellow
+    exit 0
+}
+
+$assetIds = [System.Collections.Generic.List[string]]::new()
+
+foreach ($file in $yamlFiles) {
+    $lines = Get-Content -Path $file.FullName
+
+    $insideEntry = $false
     $currentId = ""
     $currentDomain = ""
 
     foreach ($line in $lines) {
-        if ($line -match "^\s*-\s*id:\s*(.+)\s*$") {
-            if ($currentDomain -eq $Argument -and -not [string]::IsNullOrWhiteSpace($currentId)) {
-                $matches += $currentId
+        if ($line -match '^\s{2}-\s*id:\s*(.+)\s*$') {
+            if (
+                $insideEntry -and
+                $currentDomain -eq $Argument -and
+                -not [string]::IsNullOrWhiteSpace($currentId)
+            ) {
+                $assetIds.Add($currentId)
             }
 
+            $insideEntry = $true
             $currentId = $Matches[1].Trim().Trim('"').Trim("'")
             $currentDomain = ""
+            continue
         }
-        elseif ($line -match "^\s*domain:\s*(.+)\s*$") {
+
+        if ($insideEntry -and $line -match '^\s{4}domain:\s*(.+)\s*$') {
             $currentDomain = $Matches[1].Trim().Trim('"').Trim("'")
         }
     }
 
-    if ($currentDomain -eq $Argument -and -not [string]::IsNullOrWhiteSpace($currentId)) {
-        $matches += $currentId
+    if (
+        $insideEntry -and
+        $currentDomain -eq $Argument -and
+        -not [string]::IsNullOrWhiteSpace($currentId)
+    ) {
+        $assetIds.Add($currentId)
     }
 }
+
+$uniqueAssetIds = @(
+    $assetIds |
+    Sort-Object -Unique
+)
 
 Write-Host "Assets in domain '$Argument':" -ForegroundColor Cyan
 Write-Host ""
 
-if ($matches.Count -eq 0) {
+if ($uniqueAssetIds.Count -eq 0) {
     Write-Host "No assets found." -ForegroundColor Yellow
     exit 0
 }
 
-$matches | Sort-Object -Unique | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
+foreach ($assetId in $uniqueAssetIds) {
+    Write-Host $assetId -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "Total assets: $($uniqueAssetIds.Count)" -ForegroundColor Green
+
 exit 0
-```

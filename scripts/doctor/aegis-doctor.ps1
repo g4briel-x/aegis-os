@@ -11,7 +11,7 @@ powershell -ExecutionPolicy Bypass -File scripts\doctor\aegis-doctor.ps1
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Doctor" -ForegroundColor Cyan
+Write-Host "Aegis OS - Doctor" -ForegroundColor Cyan
 Write-Host "Running repository health checks..." -ForegroundColor Cyan
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path

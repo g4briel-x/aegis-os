@@ -1,12 +1,10 @@
-## FILE: `scripts/validation/validate-ids.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Validates duplicate ids across registry files.
+Validates registry entry ids.
 
 .DESCRIPTION
-Scans registry YAML files for id fields and reports duplicates.
+Scans registry YAML files and checks that primary registry ids and entry ids are present and unique.
+Related asset ids are references and are not counted as primary ids.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File scripts\validation\validate-ids.ps1
@@ -18,47 +16,92 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Registry ID Validation" -ForegroundColor Cyan
+Write-Host "Aegis OS - ID Validation" -ForegroundColor Cyan
+
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
 
 if (-not (Test-Path $RegistryRoot)) {
     Write-Error "Registry root not found: $RegistryRoot"
     exit 1
 }
 
-$yamlFiles = Get-ChildItem -Path $RegistryRoot -Recurse -File -Include *.yaml, *.yml
-$idMap = @{}
-$duplicates = @()
+$yamlFiles = @(
+    Get-ChildItem -Path $RegistryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -eq ".yaml" -or $_.Extension -eq ".yml"
+    }
+)
+
+if ($yamlFiles.Count -eq 0) {
+    Write-Error "No YAML registry files found under $RegistryRoot"
+    exit 1
+}
+
+$ids = @{}
+$failures = @()
 
 foreach ($file in $yamlFiles) {
     $lines = Get-Content $file.FullName
+    $insideEntries = $false
+    $insideRelatedAssets = $false
+    $lineNumber = 0
 
     foreach ($line in $lines) {
-        if ($line -match "^\s*-\s*id:\s*(.+)\s*$" -or $line -match "^\s*id:\s*(.+)\s*$") {
+        $lineNumber++
+
+        if ($line -match "^\s*entries:\s*$") {
+            $insideEntries = $true
+            $insideRelatedAssets = $false
+            continue
+        }
+
+        if ($line -match "^\s*related_assets:\s*$") {
+            $insideRelatedAssets = $true
+            continue
+        }
+
+        if ($insideRelatedAssets -and $line -match "^\s{2,}\w") {
+            $insideRelatedAssets = $false
+        }
+
+        $isRegistryId = $line -match "^\s{2}id:\s*(.+)\s*$" -and -not $insideEntries
+        $isEntryId = $line -match "^\s{2}-\s*id:\s*(.+)\s*$" -and $insideEntries -and -not $insideRelatedAssets
+
+        if ($isRegistryId -or $isEntryId) {
             $id = $Matches[1].Trim().Trim('"').Trim("'")
 
             if ([string]::IsNullOrWhiteSpace($id)) {
+                $failures += "$($file.FullName):$lineNumber -> empty id"
+                Write-Host "BAD empty id at $($file.FullName):$lineNumber" -ForegroundColor Red
                 continue
             }
 
-            if ($idMap.ContainsKey($id)) {
-                $duplicates += "$id appears in $($idMap[$id]) and $($file.FullName)"
-                Write-Host "DUP $id" -ForegroundColor Red
+            if ($ids.ContainsKey($id)) {
+                $failures += "$($file.FullName):$lineNumber -> duplicate id '$id' also found at $($ids[$id])"
+                Write-Host "BAD duplicate id: $id" -ForegroundColor Red
             }
             else {
-                $idMap[$id] = $file.FullName
+                $ids[$id] = "$($file.FullName):$lineNumber"
                 Write-Host "OK  $id" -ForegroundColor Green
             }
         }
     }
 }
 
-if ($duplicates.Count -gt 0) {
+if ($failures.Count -gt 0) {
     Write-Host ""
-    Write-Host "Duplicate ids found:" -ForegroundColor Red
-    $duplicates | ForEach-Object { Write-Host "- $_" -ForegroundColor Red }
+    Write-Host "ID validation failures:" -ForegroundColor Red
+
+    foreach ($failure in $failures) {
+        Write-Host "- $failure" -ForegroundColor Red
+    }
+
     exit 1
 }
 
+Write-Host ""
 Write-Host "ID validation passed." -ForegroundColor Green
 exit 0
-```

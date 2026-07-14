@@ -8,7 +8,7 @@ Runs a lightweight Aegis OS repository status check.
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Status" -ForegroundColor Cyan
+Write-Host "Aegis OS - Status" -ForegroundColor Cyan
 Write-Host ""
 
 $checks = @(
@@ -41,13 +41,14 @@ try {
     $branch = git branch --show-current
     Write-Host "Git branch: $branch" -ForegroundColor Cyan
 
-    $status = git status --short
+    $gitStatus = git status --short
 
-    if ([string]::IsNullOrWhiteSpace($status)) {
+    if ([string]::IsNullOrWhiteSpace($gitStatus)) {
         Write-Host "Git working tree: clean" -ForegroundColor Green
     }
     else {
         Write-Host "Git working tree: has changes" -ForegroundColor Yellow
+        Write-Host $gitStatus -ForegroundColor Yellow
     }
 }
 catch {

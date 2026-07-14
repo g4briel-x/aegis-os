@@ -1,6 +1,4 @@
-## FILE: `cli/commands/asset-path.ps1`
 
-```powershell
 param([string]$Argument = "")
 
 $ErrorActionPreference = "Stop"
@@ -32,4 +30,3 @@ foreach ($file in $files) {
 
 Write-Host "Path not found for asset: $Argument" -ForegroundColor Red
 exit 1
-```

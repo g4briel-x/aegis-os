@@ -1,6 +1,4 @@
-## FILE: `cli/commands/asset-related.ps1`
 
-```powershell
 param([string]$Argument = "")
 
 $ErrorActionPreference = "Stop"
@@ -61,4 +59,3 @@ if ($related.Count -eq 0) {
 
 $related | Sort-Object -Unique | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
 exit 0
-```

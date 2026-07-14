@@ -1,6 +1,4 @@
-## FILE: `cli/commands/registry-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS registry YAML files.
@@ -30,4 +28,3 @@ foreach ($file in $files | Sort-Object FullName) {
 }
 
 exit 0
-```

@@ -1,6 +1,4 @@
-## FILE: `cli/commands/tag-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS tags from the tags registry.
@@ -29,4 +27,3 @@ Select-String -Path $registryPath -Pattern "^\s*name:\s*(.+)$" | ForEach-Object 
 }
 
 exit 0
-```

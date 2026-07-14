@@ -1,6 +1,4 @@
-## FILE: `cli/commands/domain-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS domains from the domains registry.
@@ -27,4 +25,3 @@ Select-String -Path $registryPath -Pattern "^\s*slug:\s*(.+)$" | ForEach-Object 
 }
 
 exit 0
-```

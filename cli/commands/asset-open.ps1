@@ -1,6 +1,4 @@
-## FILE: `cli/commands/asset-open.ps1`
 
-```powershell
 param([string]$Argument = "")
 
 $ErrorActionPreference = "Stop"
@@ -25,4 +23,3 @@ if (-not (Test-Path $assetPath)) {
 
 Invoke-Item $assetPath
 exit 0
-```

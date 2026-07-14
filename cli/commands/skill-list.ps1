@@ -1,6 +1,4 @@
-## FILE: `cli/commands/skill-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS skills from the skills registry.
@@ -61,4 +59,3 @@ if (-not [string]::IsNullOrWhiteSpace($currentId)) {
 }
 
 exit 0
-```

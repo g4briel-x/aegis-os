@@ -1,39 +1,45 @@
-## FILE: `scripts/reports/generate-all-reports.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Generates all Aegis OS reports.
+Generates all Aegis OS registry reports.
+
+.DESCRIPTION
+Runs all report generation scripts from scripts/reports.
+
+.USAGE
+powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
 #>
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Generating All Reports" -ForegroundColor Cyan
+Write-Host "Aegis OS - Generate All Reports" -ForegroundColor Cyan
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
 
-$reportScripts = @(
+Set-Location $repoRoot
+
+$reports = @(
     "generate-registry-summary.ps1",
     "generate-asset-map.ps1",
     "generate-domain-report.ps1",
     "generate-release-report.ps1"
 )
 
-foreach ($script in $reportScripts) {
-    $scriptPath = Join-Path $scriptRoot $script
+foreach ($report in $reports) {
+    $reportPath = Join-Path $scriptRoot $report
 
-    if (-not (Test-Path $scriptPath)) {
-        Write-Error "Report script missing: $scriptPath"
+    if (-not (Test-Path $reportPath)) {
+        Write-Error "Report script missing: $reportPath"
         exit 1
     }
 
     Write-Host ""
-    Write-Host "Running $script..." -ForegroundColor Yellow
+    Write-Host "Running $report..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $scriptPath
+    & powershell -ExecutionPolicy Bypass -File $reportPath
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "$script failed."
+        Write-Error "$report failed."
         exit $LASTEXITCODE
     }
 }
@@ -41,4 +47,3 @@ foreach ($script in $reportScripts) {
 Write-Host ""
 Write-Host "All reports generated successfully." -ForegroundColor Green
 exit 0
-```

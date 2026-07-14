@@ -1,29 +1,16 @@
-## FILE: `cli/commands/version.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Shows the Aegis OS CLI version.
+Displays the current Aegis OS CLI version.
 
 .USAGE
 .\cli\aegis.ps1 version
 #>
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = 'Stop'
 
-$configPath = "config\aegis.config.example.yaml"
-$version = "0.1.0"
+$version = '0.5.0'
 
-if (Test-Path $configPath) {
-    $versionLine = Select-String -Path $configPath -Pattern "^\s*version:\s*(.+)\s*$" | Select-Object -First 1
-
-    if ($versionLine) {
-        $version = $versionLine.Matches[0].Groups[1].Value.Trim().Trim('"').Trim("'")
-    }
-}
-
-Write-Host "Aegis OS CLI" -ForegroundColor Cyan
-Write-Host "Version: $version" -ForegroundColor Yellow
+Write-Host 'Aegis OS CLI' -ForegroundColor Cyan
+Write-Host ('Version: {0}' -f $version) -ForegroundColor Green
 
 exit 0
-```

@@ -1,6 +1,3 @@
-## FILE: `cli/commands/info.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Shows Aegis OS project information.
@@ -11,7 +8,7 @@ Shows Aegis OS project information.
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Project Info" -ForegroundColor Cyan
+Write-Host "Aegis OS - Project Info" -ForegroundColor Cyan
 Write-Host ""
 
 Write-Host "Identity:" -ForegroundColor Yellow
@@ -34,7 +31,8 @@ $paths = @(
     "scripts",
     "cli",
     "config",
-    "reports"
+    "reports",
+    "install"
 )
 
 foreach ($path in $paths) {
@@ -47,6 +45,7 @@ foreach ($path in $paths) {
 }
 
 Write-Host ""
+
 Write-Host "Entrypoints:" -ForegroundColor Yellow
 
 $entrypoints = @(
@@ -66,5 +65,15 @@ foreach ($entrypoint in $entrypoints) {
     }
 }
 
+Write-Host ""
+
+Write-Host "Useful Commands:" -ForegroundColor Yellow
+Write-Host "  .\cli\aegis.ps1 help"
+Write-Host "  .\cli\aegis.ps1 status"
+Write-Host "  .\cli\aegis.ps1 doctor"
+Write-Host "  .\cli\aegis.ps1 validate"
+Write-Host "  .\cli\aegis.ps1 report"
+
+Write-Host ""
+Write-Host "Project info check completed." -ForegroundColor Green
 exit 0
-```

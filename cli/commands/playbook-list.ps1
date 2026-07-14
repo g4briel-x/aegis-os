@@ -1,6 +1,4 @@
-## FILE: `cli/commands/playbook-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS playbooks from the playbooks registry.
@@ -61,4 +59,3 @@ if (-not [string]::IsNullOrWhiteSpace($currentId)) {
 }
 
 exit 0
-```

@@ -1,6 +1,4 @@
-## FILE: `cli/commands/config-path.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Shows Aegis OS configuration paths.
@@ -30,4 +28,3 @@ foreach ($path in $paths) {
 }
 
 exit 0
-```

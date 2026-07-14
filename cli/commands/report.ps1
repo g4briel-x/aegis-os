@@ -1,6 +1,4 @@
-## FILE: `cli/commands/report.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Generates Aegis OS registry reports.
@@ -17,4 +15,3 @@ if (-not (Test-Path $scriptPath)) {
 
 & powershell -ExecutionPolicy Bypass -File $scriptPath
 exit $LASTEXITCODE
-```

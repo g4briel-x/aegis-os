@@ -1,6 +1,4 @@
-## FILE: `cli/commands/pattern-list.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Lists Aegis OS patterns from the patterns registry.
@@ -27,4 +25,3 @@ Select-String -Path $registryPath -Pattern "^\s*-\s*id:\s*(.+)$" | ForEach-Objec
 }
 
 exit 0
-```

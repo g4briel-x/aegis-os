@@ -1,6 +1,4 @@
-## FILE: `cli/commands/asset-show.ps1`
 
-```powershell
 param([string]$Argument = "")
 
 $ErrorActionPreference = "Stop"
@@ -45,4 +43,3 @@ foreach ($file in $files) {
 
 Write-Host "Asset not found: $Argument" -ForegroundColor Red
 exit 1
-```

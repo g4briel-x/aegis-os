@@ -1,6 +1,4 @@
-## FILE: `install/check-aegis-cli.ps1`
 
-```powershell
 <#
 .SYNOPSIS
 Checks whether the Aegis OS CLI profile function is installed.
@@ -40,4 +38,3 @@ Write-Host "After restarting PowerShell, test with:" -ForegroundColor Cyan
 Write-Host "aegis help" -ForegroundColor Yellow
 
 exit 0
-```

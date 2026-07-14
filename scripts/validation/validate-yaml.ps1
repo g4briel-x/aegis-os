@@ -1,6 +1,3 @@
-## FILE: `scripts/validation/validate-yaml.ps1`
-
-```powershell
 <#
 .SYNOPSIS
 Validates that registry YAML files can be parsed.
@@ -20,14 +17,24 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — YAML Validation" -ForegroundColor Cyan
+Write-Host "Aegis OS - YAML Validation" -ForegroundColor Cyan
+
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
 
 if (-not (Test-Path $RegistryRoot)) {
     Write-Error "Registry root not found: $RegistryRoot"
     exit 1
 }
 
-$yamlFiles = Get-ChildItem -Path $RegistryRoot -Recurse -File -Include *.yaml, *.yml
+$yamlFiles = @(
+    Get-ChildItem -Path $RegistryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -eq ".yaml" -or $_.Extension -eq ".yml"
+    }
+)
 
 if ($yamlFiles.Count -eq 0) {
     Write-Error "No YAML registry files found under $RegistryRoot"
@@ -39,9 +46,10 @@ $hasYamlModule = $false
 try {
     Import-Module powershell-yaml -ErrorAction Stop
     $hasYamlModule = $true
+    Write-Host "OK  powershell-yaml module loaded" -ForegroundColor Green
 }
 catch {
-    Write-Warning "powershell-yaml module not found. Running basic YAML file checks only."
+    Write-Host "WARN powershell-yaml module not found. Running basic YAML file checks only." -ForegroundColor Yellow
 }
 
 $failures = @()
@@ -55,24 +63,31 @@ foreach ($file in $yamlFiles) {
         }
 
         if ($hasYamlModule) {
-            $null = ConvertFrom-Yaml $content
+            $null = ConvertFrom-Yaml -Yaml $content
         }
 
         Write-Host "OK  $($file.FullName)" -ForegroundColor Green
     }
     catch {
-        $failures += "$($file.FullName): $($_.Exception.Message)"
+        $message = $_.Exception.Message
+        $failures += "$($file.FullName): $message"
+
         Write-Host "BAD $($file.FullName)" -ForegroundColor Red
+        Write-Host "    $message" -ForegroundColor Red
     }
 }
 
 if ($failures.Count -gt 0) {
     Write-Host ""
     Write-Host "YAML validation failures:" -ForegroundColor Red
-    $failures | ForEach-Object { Write-Host "- $_" -ForegroundColor Red }
+
+    foreach ($failure in $failures) {
+        Write-Host "- $failure" -ForegroundColor Red
+    }
+
     exit 1
 }
 
+Write-Host ""
 Write-Host "YAML validation passed." -ForegroundColor Green
 exit 0
-```

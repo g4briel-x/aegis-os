@@ -1,95 +1,151 @@
-## FILE: `scripts/reports/generate-asset-map.ps1`
-
-```powershell
 <#
 .SYNOPSIS
-Generates a simple asset map from registry files.
-#>
+Generates the Aegis OS asset map report.
 
-param(
-    [string]$RegistryRoot = "registry",
-    [string]$OutputPath = "reports\registry\ASSET_MAP.md"
-)
+.DESCRIPTION
+Scans registry YAML files and creates a human-readable asset map.
+
+.USAGE
+powershell -ExecutionPolicy Bypass -File scripts\reports\generate-asset-map.ps1
+#>
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Aegis OS — Generating Asset Map" -ForegroundColor Cyan
+Write-Host "Aegis OS - Asset Map Report" -ForegroundColor Cyan
 
-if (-not (Test-Path $RegistryRoot)) {
-    Write-Error "Registry root not found: $RegistryRoot"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..")
+
+Set-Location $repoRoot
+
+$registryRoot = "registry"
+$outputDir = "reports\registry"
+$outputFile = Join-Path $outputDir "ASSET_MAP.md"
+
+if (-not (Test-Path $registryRoot)) {
+    Write-Error "Registry folder not found: $registryRoot"
     exit 1
 }
 
-$outputDir = Split-Path -Parent $OutputPath
-New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+if (-not (Test-Path $outputDir)) {
+    New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+}
 
-$yamlFiles = Get-ChildItem -Path $RegistryRoot -Recurse -File -Include *.yaml, *.yml
-$entries = @()
-
-foreach ($file in $yamlFiles) {
-    $current = [ordered]@{
-        id = ""
-        type = ""
-        domain = ""
-        path = ""
-        source = (Resolve-Path $file.FullName -Relative)
+$yamlFiles = @(
+    Get-ChildItem -Path $registryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -eq ".yaml" -or $_.Extension -eq ".yml"
     }
+)
 
-    $linesInFile = Get-Content $file.FullName
+if ($yamlFiles.Count -eq 0) {
+    Write-Error "No registry YAML files found."
+    exit 1
+}
 
-    foreach ($line in $linesInFile) {
-        if ($line -match "^\s*-\s*id:\s*(.+)\s*$") {
-            if (-not [string]::IsNullOrWhiteSpace($current.id)) {
-                $entries += [PSCustomObject]$current
+$assets = @()
+
+foreach ($file in ($yamlFiles | Sort-Object FullName)) {
+    $lines = Get-Content $file.FullName
+
+    $currentId = ""
+    $currentName = ""
+    $currentType = ""
+    $currentDomain = ""
+    $currentPath = ""
+    $insideEntry = $false
+
+    foreach ($line in $lines) {
+        if ($line -match "^\s{2}-\s*id:\s*(.+)\s*$") {
+            if ($insideEntry -and -not [string]::IsNullOrWhiteSpace($currentId)) {
+                $assets += [PSCustomObject]@{
+                    Id = $currentId
+                    Name = $currentName
+                    Type = $currentType
+                    Domain = $currentDomain
+                    Path = $currentPath
+                    Source = (Resolve-Path $file.FullName -Relative)
+                }
             }
 
-            $current = [ordered]@{
-                id = $Matches[1].Trim().Trim('"').Trim("'")
-                type = ""
-                domain = ""
-                path = ""
-                source = (Resolve-Path $file.FullName -Relative)
-            }
+            $insideEntry = $true
+            $currentId = $Matches[1].Trim().Trim('"').Trim("'")
+            $currentName = ""
+            $currentType = ""
+            $currentDomain = ""
+            $currentPath = ""
+            continue
         }
-        elseif ($line -match "^\s*type:\s*(.+)\s*$") {
-            $current.type = $Matches[1].Trim().Trim('"').Trim("'")
+
+        if ($insideEntry -and $line -match "^\s*name:\s*(.+)\s*$") {
+            $currentName = $Matches[1].Trim().Trim('"').Trim("'")
+            continue
         }
-        elseif ($line -match "^\s*domain:\s*(.+)\s*$") {
-            $current.domain = $Matches[1].Trim().Trim('"').Trim("'")
+
+        if ($insideEntry -and $line -match "^\s*type:\s*(.+)\s*$") {
+            $currentType = $Matches[1].Trim().Trim('"').Trim("'")
+            continue
         }
-        elseif ($line -match "^\s*path:\s*(.+)\s*$") {
-            $current.path = $Matches[1].Trim().Trim('"').Trim("'")
+
+        if ($insideEntry -and $line -match "^\s*domain:\s*(.+)\s*$") {
+            $currentDomain = $Matches[1].Trim().Trim('"').Trim("'")
+            continue
+        }
+
+        if ($insideEntry -and $line -match "^\s*path:\s*(.+)\s*$") {
+            $currentPath = $Matches[1].Trim().Trim('"').Trim("'")
+            continue
         }
     }
 
-    if (-not [string]::IsNullOrWhiteSpace($current.id)) {
-        $entries += [PSCustomObject]$current
+    if ($insideEntry -and -not [string]::IsNullOrWhiteSpace($currentId)) {
+        $assets += [PSCustomObject]@{
+            Id = $currentId
+            Name = $currentName
+            Type = $currentType
+            Domain = $currentDomain
+            Path = $currentPath
+            Source = (Resolve-Path $file.FullName -Relative)
+        }
     }
 }
 
-$lines = @()
-$lines += "# Aegis OS — Asset Map"
-$lines += ""
-$lines += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-$lines += ""
-$lines += "---"
-$lines += ""
-$lines += "# 1. Assets"
-$lines += ""
-$lines += "| ID | Type | Domain | Path | Source Registry |"
-$lines += "|---|---|---|---|---|"
+$reportLines = @()
+$reportLines += "# Aegis OS - Asset Map"
+$reportLines += ""
+$reportLines += "Generated by:"
+$reportLines += ""
+$reportLines += '```text'
+$reportLines += "scripts/reports/generate-asset-map.ps1"
+$reportLines += '```'
+$reportLines += ""
+$reportLines += "## Assets"
+$reportLines += ""
+$reportLines += "| ID | Name | Type | Domain | Path |"
+$reportLines += "|---|---|---|---|---|"
 
-foreach ($entry in $entries | Sort-Object id) {
-    $lines += "| `$($entry.id)` | $($entry.type) | $($entry.domain) | `$($entry.path)` | `$($entry.source)` |"
+foreach ($asset in ($assets | Sort-Object Domain, Id)) {
+    $id = $asset.Id
+    $name = $asset.Name
+    $type = $asset.Type
+    $domain = $asset.Domain
+    $path = $asset.Path
+
+    $reportLines += "| `$id` | $name | $type | $domain | `$path` |"
 }
 
-$lines += ""
-$lines += "# 2. Final Principle"
-$lines += ""
-$lines += "> Asset maps help humans audit what the registries expose to tools."
+$reportLines += ""
+$reportLines += "## Totals"
+$reportLines += ""
+$reportLines += '```text'
+$reportLines += "Total assets: $($assets.Count)"
+$reportLines += '```'
+$reportLines += ""
+$reportLines += "## Final Principle"
+$reportLines += ""
+$reportLines += "> Asset maps make registered Aegis OS assets easier to inspect and navigate."
 
-$lines | Set-Content -Path $OutputPath -Encoding UTF8
+Set-Content -Path $outputFile -Value $reportLines -Encoding UTF8
 
-Write-Host "Generated $OutputPath" -ForegroundColor Green
+Write-Host "OK  Generated $outputFile" -ForegroundColor Green
 exit 0
-```

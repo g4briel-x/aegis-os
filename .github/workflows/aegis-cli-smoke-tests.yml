@@ -1,6 +1,7 @@
 ## FILE: `.github/workflows/aegis-cli-smoke-tests.yml`
 
 ```yaml
+
 name: Aegis OS CLI Smoke Tests
 
 on:

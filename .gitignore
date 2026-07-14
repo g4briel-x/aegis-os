@@ -1,0 +1,75 @@
+## FILE: `.gitignore`
+
+```gitignore
+# Aegis OS — Git Ignore
+
+# Local configuration
+config/aegis.config.local.yaml
+config/*.local.yaml
+
+# Generated reports
+reports/registry/*.tmp
+reports/registry/*.log
+
+# PowerShell temporary files
+*.ps1xml
+*.psc1
+*.pssc
+*.psd1.bak
+*.ps1.bak
+
+# Logs
+*.log
+logs/
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+*.swp
+*.swo
+
+# Node / frontend future tooling
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+coverage/
+
+# Python future tooling
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Package artifacts
+*.tgz
+*.zip
+*.tar.gz
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Local CLI artifacts
+.aegis/
+aegis.local.json
+```

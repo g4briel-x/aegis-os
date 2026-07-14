@@ -1,0 +1,123 @@
+## FILE: `LICENSE`
+
+```text
+MIT License
+
+Copyright (c) 2026 Aegis OS Contributors
+
+Aegis OS Business Source License 1.1
+
+Licensor: Aegis OS Contributors (AG Digital Enterprise)
+Licensed Work: Aegis OS
+Additional Use Grant: See below
+Change Date: Four (4) years from the date of each version's publication
+Change License: MIT License
+
+Terms
+
+The Licensor hereby grants you the right to copy, modify, create derivative
+works, redistribute, and make non-production use of the Licensed Work. The
+Licensor may make an Additional Use Grant, above, permitting limited
+production use.
+
+Effective on the Change Date, or the fourth anniversary of the first publicly
+available distribution of a specific version of the Licensed Work under this
+License, whichever comes first, the Licensor hereby grants you rights under
+the terms of the Change License, and the rights granted in the paragraph
+above terminate.
+
+If your use of the Licensed Work does not comply with the terms of this
+license, you must purchase a commercial license from the Licensor, or
+refrain from using the Licensed Work.
+
+All copies of the original and modified Licensed Work, and derivative works
+thereof, are subject to this License. This License applies separately for
+each version of the Licensed Work, and the Change Date may vary for each
+version.
+
+You must conspicuously display this License on each original or modified
+copy of the Licensed Work. If you receive the Licensed Work in original or
+modified form from a third party, the terms and conditions set forth in this
+License apply to your use of that work.
+
+Any use of the Licensed Work in violation of this License will automatically
+terminate your rights under this License for the current and all other
+versions of the Licensed Work.
+
+This License does not grant you any right in any trademark or logo of the
+Licensor or its affiliates (provided that you may use a trademark or logo of
+the Licensor as expressly required by this License).
+
+TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSED WORK IS PROVIDED ON
+AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+INCLUDING, WITHOUT LIMITATION, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
+
+
+Additional Use Grant
+
+You may use, copy, modify, and self-host the Licensed Work free of charge
+for any of the following purposes:
+
+
+Personal use — running or modifying the software for your own,
+individual, non-commercial purposes.
+Educational and research use — use by students, teachers, academic
+institutions, or researchers for teaching, learning, or non-commercial
+research.
+Internal use — use inside your own organization, for your own
+operations, without offering the Licensed Work (or a service
+substantially derived from it) to third parties for a fee.
+
+
+Any of the following requires a separate commercial license from the
+Licensor:
+
+
+Offering the Licensed Work, or any product or service whose primary value
+derives from the Licensed Work, to third parties (including as a hosted
+or managed service — "SaaS").
+Embedding, bundling, or redistributing the Licensed Work (modified or
+unmodified) as part of a commercial product or service offered to third
+parties.
+Any other use not explicitly covered by the grants above.
+
+To obtain a commercial license, contact: [ton adresse e-mail / contact pro]
+
+Compliance Verification
+
+If the Licensor has a reasonable, good-faith belief that your use of the
+Licensed Work exceeds the scope of the Additional Use Grant above, the
+Licensor may request, with at least thirty (30) days' written notice,
+that you provide reasonably sufficient information to confirm compliance
+(e.g., a written description of how the Licensed Work is deployed or
+offered). This does not grant the Licensor any right to access your
+systems, source code, or confidential information, and any information
+you provide will be used solely to assess license compliance.
+
+If such a review identifies use beyond the Additional Use Grant, you must,
+within a reasonable period, either cease the non-compliant use or obtain
+the appropriate commercial license from the Licensor.
+
+Reporting a Suspected Violation
+
+If you believe a third party is using the Licensed Work beyond the scope
+of the Additional Use Grant, you can report it to: [ton adresse e-mail /
+contact dédié, ex: license@aegis-os.example]
+
+Reports are treated confidentially where possible, and are used only to
+evaluate potential license compliance issues.
+
+
+Notes for maintainers (remove before publishing)
+
+Update the Licensor name/entity and contact details above.
+The "Change Date" (4 years is the BSL default; MariaDB and others use
+this) means each released version automatically becomes MIT-licensed
+after that period — this reassures contributors and users that the
+restriction isn't permanent. You can shorten or lengthen it.
+Consider having an actual lawyer review the Additional Use Grant wording
+before relying on it commercially — the boundary between "internal use"
+and "offering as a service" is where disputes tend to happen, so the
+clearer this section is, the fewer arguments later.
+```

@@ -1,0 +1,1791 @@
+diff --git a/cli/aegis.ps1 b/cli/aegis.ps1
+index 73f68c0..a0f14ef 100644
+--- a/cli/aegis.ps1
++++ b/cli/aegis.ps1
+@@ -37,6 +37,11 @@ param(
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $CliRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+ $RepoRoot = Resolve-Path (Join-Path $CliRoot "..")
+ $CommandsRoot = Join-Path $CliRoot "commands"
+@@ -87,7 +92,7 @@ function Show-UnknownCommand {
+ 
+     Write-Host "Unknown command: $CommandName" -ForegroundColor Red
+     Write-Host ""
+-    & powershell -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
++    & $PSExe -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
+ }
+ 
+ function Invoke-AegisCommand {
+@@ -110,10 +115,10 @@ function Invoke-AegisCommand {
+     }
+ 
+     if ([string]::IsNullOrWhiteSpace($ArgumentValue)) {
+-        & powershell -ExecutionPolicy Bypass -File $scriptPath
++        & $PSExe -ExecutionPolicy Bypass -File $scriptPath
+     }
+     else {
+-        & powershell -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
++        & $PSExe -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
+     }
+ 
+     exit $LASTEXITCODE
+diff --git a/cli/commands/asset-open.ps1 b/cli/commands/asset-open.ps1
+index 048625e..4b4b2c0 100644
+--- a/cli/commands/asset-open.ps1
++++ b/cli/commands/asset-open.ps1
+@@ -3,12 +3,17 @@ param([string]$Argument = "")
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ if ([string]::IsNullOrWhiteSpace($Argument)) {
+     Write-Host "Usage: .\cli\aegis.ps1 asset:open <asset-id>" -ForegroundColor Yellow
+     exit 1
+ }
+ 
+-$pathOutput = & powershell -ExecutionPolicy Bypass -File "cli\commands\asset-path.ps1" -Argument $Argument
++$pathOutput = & $PSExe -ExecutionPolicy Bypass -File "cli\commands\asset-path.ps1" -Argument $Argument
+ 
+ if ($LASTEXITCODE -ne 0) {
+     exit $LASTEXITCODE
+diff --git a/cli/commands/doctor.ps1 b/cli/commands/doctor.ps1
+index 8825f21..7fc49ba 100644
+--- a/cli/commands/doctor.ps1
++++ b/cli/commands/doctor.ps1
+@@ -5,6 +5,11 @@ Runs Aegis OS doctor.
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $scriptPath = "scripts\doctor\aegis-doctor.ps1"
+ 
+ if (-not (Test-Path $scriptPath)) {
+@@ -12,5 +17,5 @@ if (-not (Test-Path $scriptPath)) {
+     exit 1
+ }
+ 
+-& powershell -ExecutionPolicy Bypass -File $scriptPath
++& $PSExe -ExecutionPolicy Bypass -File $scriptPath
+ exit $LASTEXITCODE
+\ No newline at end of file
+diff --git a/cli/commands/report.ps1 b/cli/commands/report.ps1
+index d83e921..58e730a 100644
+--- a/cli/commands/report.ps1
++++ b/cli/commands/report.ps1
+@@ -6,6 +6,11 @@ Generates Aegis OS registry reports.
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $scriptPath = "scripts\reports\generate-all-reports.ps1"
+ 
+ if (-not (Test-Path $scriptPath)) {
+@@ -13,5 +18,5 @@ if (-not (Test-Path $scriptPath)) {
+     exit 1
+ }
+ 
+-& powershell -ExecutionPolicy Bypass -File $scriptPath
++& $PSExe -ExecutionPolicy Bypass -File $scriptPath
+ exit $LASTEXITCODE
+\ No newline at end of file
+diff --git a/cli/commands/validate.ps1 b/cli/commands/validate.ps1
+index 0d3cab8..e3e9823 100644
+--- a/cli/commands/validate.ps1
++++ b/cli/commands/validate.ps1
+@@ -6,6 +6,11 @@ Runs Aegis OS validation.
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $scriptPath = "scripts\validation\validate-all.ps1"
+ 
+ if (-not (Test-Path $scriptPath)) {
+@@ -13,5 +18,5 @@ if (-not (Test-Path $scriptPath)) {
+     exit 1
+ }
+ 
+-& powershell -ExecutionPolicy Bypass -File $scriptPath
++& $PSExe -ExecutionPolicy Bypass -File $scriptPath
+ exit $LASTEXITCODE
+diff --git a/config/aegis.config.example.yaml b/config/aegis.config.example.yaml
+index f4b9e87..36660b1 100644
+--- a/config/aegis.config.example.yaml
++++ b/config/aegis.config.example.yaml
+@@ -1,5 +1,3 @@
+-## FILE: `config/aegis.config.example.yaml`
+-
+ aegis:
+   name: Aegis OS
+   version: 0.1.0
+@@ -45,4 +43,4 @@ reports:
+ cli:
+   entrypoint: cli/aegis.ps1
+   default_output: text
+-  allow_open_file_explorer: true
+\ No newline at end of file
++  allow_open_file_explorer: true
+diff --git a/config/aegis.config.local.example.yaml b/config/aegis.config.local.example.yaml
+index df39104..3238f32 100644
+--- a/config/aegis.config.local.example.yaml
++++ b/config/aegis.config.local.example.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `config/aegis.config.local.example.yaml`
+-
+-```yaml
+ aegis:
+   environment: local
+ 
+@@ -16,4 +13,3 @@ paths:
+ cli:
+   default_output: text
+   allow_open_file_explorer: true
+-```
+diff --git a/generate-skills.ps1 b/generate-skills.ps1
+index 3a67435..5dfc735 100644
+--- a/generate-skills.ps1
++++ b/generate-skills.ps1
+@@ -13,11 +13,11 @@ $skills = @(
+     "product/product-manager-saas",
+     "product/business-analyst",
+ 
+-    "design/ux-ui-designer",
++    "design/ux-ui-designer-saas",
+ 
+     "infrastructure/devops-engineer",
+     "infrastructure/cloud-architect",
+-    "infrastructure/security-engineer",
++    "security/security-engineer",
+ 
+     "management/technical-project-manager"
+ )
+diff --git a/patterns/architecture/saas-modular-monolith/metadata.yaml b/patterns/architecture/saas-modular-monolith/metadata.yaml
+index eac6d42..5811790 100644
+--- a/patterns/architecture/saas-modular-monolith/metadata.yaml
++++ b/patterns/architecture/saas-modular-monolith/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/architecture/saas-modular-monolith/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: architecture.saas-modular-monolith
+   name: SaaS Modular Monolith
+@@ -52,4 +49,3 @@ pattern:
+     - maintainability
+     - scalability
+     - boundaries
+-```
+diff --git a/patterns/business/billing-subscription-model/metadata.yaml b/patterns/business/billing-subscription-model/metadata.yaml
+index 50c0a79..8b7fc00 100644
+--- a/patterns/business/billing-subscription-model/metadata.yaml
++++ b/patterns/business/billing-subscription-model/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/business/billing-subscription-model/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: business.billing-subscription-model
+   name: Billing Subscription Model
+@@ -66,4 +63,3 @@ pattern:
+     - monetization
+     - entitlements
+     - invoices
+-```
+diff --git a/patterns/design/saas-onboarding-flow/metadata.yaml b/patterns/design/saas-onboarding-flow/metadata.yaml
+index 3440160..9172b5b 100644
+--- a/patterns/design/saas-onboarding-flow/metadata.yaml
++++ b/patterns/design/saas-onboarding-flow/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/design/saas-onboarding-flow/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: design.saas-onboarding-flow
+   name: SaaS Onboarding Flow
+@@ -63,4 +60,3 @@ pattern:
+     - product
+     - retention
+     - mvp
+-```
+diff --git a/patterns/engineering/api-error-handling/metadata.yaml b/patterns/engineering/api-error-handling/metadata.yaml
+index b0fa5d6..c281ddb 100644
+--- a/patterns/engineering/api-error-handling/metadata.yaml
++++ b/patterns/engineering/api-error-handling/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/engineering/api-error-handling/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: engineering.api-error-handling
+   name: API Error Handling
+@@ -52,4 +49,3 @@ pattern:
+     - security
+     - observability
+     - frontend
+-```
+diff --git a/patterns/engineering/api-versioning-strategy/metadata.yaml b/patterns/engineering/api-versioning-strategy/metadata.yaml
+index d93510f..7ab876f 100644
+--- a/patterns/engineering/api-versioning-strategy/metadata.yaml
++++ b/patterns/engineering/api-versioning-strategy/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/engineering/api-versioning-strategy/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: engineering.api-versioning-strategy
+   name: API Versioning Strategy
+@@ -63,4 +60,3 @@ pattern:
+     - contracts
+     - migration
+     - saas
+-```
+diff --git a/patterns/engineering/background-job-processing/metadata.yaml b/patterns/engineering/background-job-processing/metadata.yaml
+index 4f7aae8..9d62b07 100644
+--- a/patterns/engineering/background-job-processing/metadata.yaml
++++ b/patterns/engineering/background-job-processing/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/engineering/background-job-processing/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: engineering.background-job-processing
+   name: Background Job Processing
+@@ -66,4 +63,3 @@ pattern:
+     - workers
+     - observability
+     - saas
+-```
+diff --git a/patterns/engineering/database-migration-safety/metadata.yaml b/patterns/engineering/database-migration-safety/metadata.yaml
+index 901fcac..6c2b00f 100644
+--- a/patterns/engineering/database-migration-safety/metadata.yaml
++++ b/patterns/engineering/database-migration-safety/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/engineering/database-migration-safety/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: engineering.database-migration-safety
+   name: Database Migration Safety
+@@ -65,4 +62,3 @@ pattern:
+     - production
+     - saas
+     - safety
+-```
+diff --git a/patterns/operations/feature-flag-rollout/metadata.yaml b/patterns/operations/feature-flag-rollout/metadata.yaml
+index ac92b52..aa00c22 100644
+--- a/patterns/operations/feature-flag-rollout/metadata.yaml
++++ b/patterns/operations/feature-flag-rollout/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/operations/feature-flag-rollout/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: operations.feature-flag-rollout
+   name: Feature Flag Rollout
+@@ -57,4 +54,3 @@ pattern:
+     - monitoring
+     - rollback
+     - saas
+-```
+\ No newline at end of file
+diff --git a/patterns/operations/incident-severity-model/metadata.yaml b/patterns/operations/incident-severity-model/metadata.yaml
+index 57f65ff..d81f973 100644
+--- a/patterns/operations/incident-severity-model/metadata.yaml
++++ b/patterns/operations/incident-severity-model/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/operations/incident-severity-model/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: operations.incident-severity-model
+   name: Incident Severity Model
+@@ -62,4 +59,3 @@ pattern:
+     - escalation
+     - communication
+     - saas
+-```
+\ No newline at end of file
+diff --git a/patterns/operations/production-observability-baseline/metadata.yaml b/patterns/operations/production-observability-baseline/metadata.yaml
+index 9e8fbd9..e1206d0 100644
+--- a/patterns/operations/production-observability-baseline/metadata.yaml
++++ b/patterns/operations/production-observability-baseline/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/operations/production-observability-baseline/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: operations.production-observability-baseline
+   name: Production Observability Baseline
+@@ -64,4 +61,3 @@ pattern:
+     - production
+     - reliability
+     - saas
+-```
+diff --git a/patterns/product/saas-mvp-scope/metadata.yaml b/patterns/product/saas-mvp-scope/metadata.yaml
+index a44a60f..08713b2 100644
+--- a/patterns/product/saas-mvp-scope/metadata.yaml
++++ b/patterns/product/saas-mvp-scope/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/product/saas-mvp-scope/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: product.saas-mvp-scope
+   name: SaaS MVP Scope
+@@ -59,4 +56,3 @@ pattern:
+     - prioritization
+     - validation
+     - launch
+-```
+diff --git a/patterns/security/audit-logging-traceability/metadata.yaml b/patterns/security/audit-logging-traceability/metadata.yaml
+index deb3cc2..fdd40f2 100644
+--- a/patterns/security/audit-logging-traceability/metadata.yaml
++++ b/patterns/security/audit-logging-traceability/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/security/audit-logging-traceability/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: security.audit-logging-traceability
+   name: Audit Logging Traceability
+@@ -62,4 +59,3 @@ pattern:
+     - compliance
+     - incident-response
+     - saas
+-```
+\ No newline at end of file
+diff --git a/patterns/security/rbac-permission-model/metadata.yaml b/patterns/security/rbac-permission-model/metadata.yaml
+index 632876e..bbe9542 100644
+--- a/patterns/security/rbac-permission-model/metadata.yaml
++++ b/patterns/security/rbac-permission-model/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/security/rbac-permission-model/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: security.rbac-permission-model
+   name: RBAC Permission Model
+@@ -55,4 +52,3 @@ pattern:
+     - tenant-isolation
+     - security
+     - saas
+-```
+\ No newline at end of file
+diff --git a/patterns/security/tenant-data-isolation/metadata.yaml b/patterns/security/tenant-data-isolation/metadata.yaml
+index 0cdb0bb..345e35b 100644
+--- a/patterns/security/tenant-data-isolation/metadata.yaml
++++ b/patterns/security/tenant-data-isolation/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `patterns/security/tenant-data-isolation/metadata.yaml`
+-
+-```yaml
+ pattern:
+   id: security.tenant-data-isolation
+   name: Tenant Data Isolation
+@@ -55,4 +52,3 @@ pattern:
+     - authorization
+     - data-boundaries
+     - privacy
+-```
+diff --git a/playbooks/business/create-go-to-market-plan/metadata.yaml b/playbooks/business/create-go-to-market-plan/metadata.yaml
+index dc5a678..6cb450f 100644
+--- a/playbooks/business/create-go-to-market-plan/metadata.yaml
++++ b/playbooks/business/create-go-to-market-plan/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/business/create-go-to-market-plan/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: business.create-go-to-market-plan
+   name: Create Go-To-Market Plan
+@@ -49,4 +46,3 @@ playbook:
+     - marketing
+     - saas
+     - growth
+-```
+diff --git a/playbooks/design/design-saas-ux-flow/metadata.yaml b/playbooks/design/design-saas-ux-flow/metadata.yaml
+index e1d58ad..c7e90e2 100644
+--- a/playbooks/design/design-saas-ux-flow/metadata.yaml
++++ b/playbooks/design/design-saas-ux-flow/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/design/design-saas-ux-flow/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: design.design-saas-ux-flow
+   name: Design SaaS UX Flow
+@@ -45,4 +42,3 @@ playbook:
+     - product-design
+     - screen-states
+     - handoff
+-```
+diff --git a/playbooks/engineering/create-api-contract/metadata.yaml b/playbooks/engineering/create-api-contract/metadata.yaml
+index eef53d7..55ae6c9 100644
+--- a/playbooks/engineering/create-api-contract/metadata.yaml
++++ b/playbooks/engineering/create-api-contract/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/create-api-contract/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.create-api-contract
+   name: Create API Contract
+@@ -50,4 +47,3 @@ playbook:
+     - schema
+     - authorization
+     - integration
+-```
+diff --git a/playbooks/engineering/debug-production-issue/metadata.yaml b/playbooks/engineering/debug-production-issue/metadata.yaml
+index d933ebd..3a9d45d 100644
+--- a/playbooks/engineering/debug-production-issue/metadata.yaml
++++ b/playbooks/engineering/debug-production-issue/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/debug-production-issue/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.debug-production-issue
+   name: Debug Production Issue
+@@ -41,4 +38,3 @@ playbook:
+     - rollback
+     - recovery
+     - root-cause-analysis
+-```
+\ No newline at end of file
+diff --git a/playbooks/engineering/design-saas-architecture/metadata.yaml b/playbooks/engineering/design-saas-architecture/metadata.yaml
+index 789466e..34d680e 100644
+--- a/playbooks/engineering/design-saas-architecture/metadata.yaml
++++ b/playbooks/engineering/design-saas-architecture/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/design-saas-architecture/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.design-saas-architecture
+   name: Design SaaS Architecture
+@@ -51,4 +48,3 @@ playbook:
+     - infrastructure
+     - security
+     - scalability
+-```
+\ No newline at end of file
+diff --git a/playbooks/engineering/design-saas-data-model/metadata.yaml b/playbooks/engineering/design-saas-data-model/metadata.yaml
+index 04f460c..240251c 100644
+--- a/playbooks/engineering/design-saas-data-model/metadata.yaml
++++ b/playbooks/engineering/design-saas-data-model/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/design-saas-data-model/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.design-saas-data-model
+   name: Design SaaS Data Model
+@@ -49,4 +46,3 @@ playbook:
+     - relationships
+     - multi-tenancy
+     - migration
+-```
+diff --git a/playbooks/engineering/implement-feature-from-prd/metadata.yaml b/playbooks/engineering/implement-feature-from-prd/metadata.yaml
+index 0ce92a5..0736331 100644
+--- a/playbooks/engineering/implement-feature-from-prd/metadata.yaml
++++ b/playbooks/engineering/implement-feature-from-prd/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/implement-feature-from-prd/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.implement-feature-from-prd
+   name: Implement Feature From PRD
+@@ -47,4 +44,3 @@ playbook:
+     - testing
+     - pull-request
+     - release
+-```
+diff --git a/playbooks/engineering/optimize-database-performance/metadata.yaml b/playbooks/engineering/optimize-database-performance/metadata.yaml
+index 5ef608b..c1464ae 100644
+--- a/playbooks/engineering/optimize-database-performance/metadata.yaml
++++ b/playbooks/engineering/optimize-database-performance/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/optimize-database-performance/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.optimize-database-performance
+   name: Optimize Database Performance
+@@ -47,4 +44,3 @@ playbook:
+     - indexes
+     - query-optimization
+     - observability
+-```
+diff --git a/playbooks/engineering/review-pull-request/metadata.yaml b/playbooks/engineering/review-pull-request/metadata.yaml
+index 8b43021..398f72a 100644
+--- a/playbooks/engineering/review-pull-request/metadata.yaml
++++ b/playbooks/engineering/review-pull-request/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/review-pull-request/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.review-pull-request
+   name: Review Pull Request
+@@ -46,4 +43,3 @@ playbook:
+     - security
+     - architecture
+     - quality
+-```
+diff --git a/playbooks/engineering/write-test-plan/metadata.yaml b/playbooks/engineering/write-test-plan/metadata.yaml
+index 45f9556..4068629 100644
+--- a/playbooks/engineering/write-test-plan/metadata.yaml
++++ b/playbooks/engineering/write-test-plan/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/engineering/write-test-plan/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: engineering.write-test-plan
+   name: Write Test Plan
+@@ -48,4 +45,3 @@ playbook:
+     - regression
+     - validation
+     - release-readiness
+-```
+diff --git a/playbooks/infrastructure/deploy-saas-application/metadata.yaml b/playbooks/infrastructure/deploy-saas-application/metadata.yaml
+index 38e4d9e..a6fb1c8 100644
+--- a/playbooks/infrastructure/deploy-saas-application/metadata.yaml
++++ b/playbooks/infrastructure/deploy-saas-application/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/infrastructure/deploy-saas-application/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: infrastructure.deploy-saas-application
+   name: Deploy SaaS Application
+@@ -47,4 +44,3 @@ playbook:
+     - smoke-test
+     - monitoring
+     - infrastructure
+-```
+\ No newline at end of file
+diff --git a/playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml b/playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml
+index ef8f136..7b23586 100644
+--- a/playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml
++++ b/playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/infrastructure/fix-failing-ci-pipeline/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: infrastructure.fix-failing-ci-pipeline
+   name: Fix Failing CI Pipeline
+@@ -44,4 +41,3 @@ playbook:
+     - tests
+     - deployment
+     - troubleshooting
+-```
+diff --git a/playbooks/management/plan-saas-mvp-delivery/metadata.yaml b/playbooks/management/plan-saas-mvp-delivery/metadata.yaml
+index fac0e88..d9181ef 100644
+--- a/playbooks/management/plan-saas-mvp-delivery/metadata.yaml
++++ b/playbooks/management/plan-saas-mvp-delivery/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/management/plan-saas-mvp-delivery/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: management.plan-saas-mvp-delivery
+   name: Plan SaaS MVP Delivery
+@@ -48,4 +45,3 @@ playbook:
+     - backlog
+     - dependencies
+     - launch
+-```
+\ No newline at end of file
+diff --git a/playbooks/operations/create-runbook/metadata.yaml b/playbooks/operations/create-runbook/metadata.yaml
+index 1de568e..c8d0785 100644
+--- a/playbooks/operations/create-runbook/metadata.yaml
++++ b/playbooks/operations/create-runbook/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/operations/create-runbook/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: operations.create-runbook
+   name: Create Runbook
+@@ -50,4 +47,3 @@ playbook:
+     - rollback
+     - verification
+     - documentation
+-```
+\ No newline at end of file
+diff --git a/playbooks/operations/monitor-saas-production/metadata.yaml b/playbooks/operations/monitor-saas-production/metadata.yaml
+index eac1ef8..c7b331f 100644
+--- a/playbooks/operations/monitor-saas-production/metadata.yaml
++++ b/playbooks/operations/monitor-saas-production/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/operations/monitor-saas-production/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: operations.monitor-saas-production
+   name: Monitor SaaS Production
+@@ -45,4 +42,3 @@ playbook:
+     - metrics
+     - latency
+     - operations
+-```
+\ No newline at end of file
+diff --git a/playbooks/operations/prepare-release/metadata.yaml b/playbooks/operations/prepare-release/metadata.yaml
+index dec12a7..e56efe6 100644
+--- a/playbooks/operations/prepare-release/metadata.yaml
++++ b/playbooks/operations/prepare-release/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/operations/prepare-release/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: operations.prepare-release
+   name: Prepare Release
+@@ -45,4 +42,3 @@ playbook:
+     - validation
+     - operations
+     - communication
+-```
+diff --git a/playbooks/operations/run-postmortem-review/metadata.yaml b/playbooks/operations/run-postmortem-review/metadata.yaml
+index 7861767..75732ed 100644
+--- a/playbooks/operations/run-postmortem-review/metadata.yaml
++++ b/playbooks/operations/run-postmortem-review/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/operations/run-postmortem-review/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: operations.run-postmortem-review
+   name: Run Postmortem Review
+@@ -46,4 +43,3 @@ playbook:
+     - reliability
+     - prevention
+     - follow-up
+-```
+diff --git a/playbooks/product/create-prd/metadata.yaml b/playbooks/product/create-prd/metadata.yaml
+index 4855880..8ec4081 100644
+--- a/playbooks/product/create-prd/metadata.yaml
++++ b/playbooks/product/create-prd/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/product/create-prd/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: product.create-prd
+   name: Create PRD
+@@ -46,4 +43,3 @@ playbook:
+     - product
+     - saas
+     - specification
+-```
+\ No newline at end of file
+diff --git a/playbooks/product/define-pricing-strategy/metadata.yaml b/playbooks/product/define-pricing-strategy/metadata.yaml
+index b4d7b8d..7e9d057 100644
+--- a/playbooks/product/define-pricing-strategy/metadata.yaml
++++ b/playbooks/product/define-pricing-strategy/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/product/define-pricing-strategy/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: product.define-pricing-strategy
+   name: Define Pricing Strategy
+@@ -48,4 +45,3 @@ playbook:
+     - revenue
+     - go-to-market
+     - validation
+-```
+diff --git a/playbooks/product/define-saas-mvp/metadata.yaml b/playbooks/product/define-saas-mvp/metadata.yaml
+index ffd2d84..59a9729 100644
+--- a/playbooks/product/define-saas-mvp/metadata.yaml
++++ b/playbooks/product/define-saas-mvp/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/product/define-saas-mvp/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: product.define-saas-mvp
+   name: Define SaaS MVP
+@@ -43,6 +40,3 @@ playbook:
+     - prioritization
+     - startup
+     - discovery
+-```
+-
+-# ---
+\ No newline at end of file
+diff --git a/playbooks/product/prepare-saas-launch/metadata.yaml b/playbooks/product/prepare-saas-launch/metadata.yaml
+index a42befa..6fb59a5 100644
+--- a/playbooks/product/prepare-saas-launch/metadata.yaml
++++ b/playbooks/product/prepare-saas-launch/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/product/prepare-saas-launch/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: product.prepare-saas-launch
+   name: Prepare SaaS Launch
+@@ -53,4 +50,3 @@ playbook:
+     - positioning
+     - analytics
+     - release-readiness
+-```
+diff --git a/playbooks/product/run-discovery-interviews/metadata.yaml b/playbooks/product/run-discovery-interviews/metadata.yaml
+index 97a7ab6..c7cc865 100644
+--- a/playbooks/product/run-discovery-interviews/metadata.yaml
++++ b/playbooks/product/run-discovery-interviews/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/product/run-discovery-interviews/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: product.run-discovery-interviews
+   name: Run Discovery Interviews
+@@ -41,4 +38,3 @@ playbook:
+     - validation
+     - product
+     - mvp
+-```
+diff --git a/playbooks/security/design-auth-rbac/metadata.yaml b/playbooks/security/design-auth-rbac/metadata.yaml
+index 6b2eafa..566c77e 100644
+--- a/playbooks/security/design-auth-rbac/metadata.yaml
++++ b/playbooks/security/design-auth-rbac/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/security/design-auth-rbac/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: security.design-auth-rbac
+   name: Design Auth RBAC
+@@ -48,4 +45,3 @@ playbook:
+     - tenant-isolation
+     - security
+     - access-control
+-```
+diff --git a/playbooks/security/harden-production-saas/metadata.yaml b/playbooks/security/harden-production-saas/metadata.yaml
+index 3c85987..774dda7 100644
+--- a/playbooks/security/harden-production-saas/metadata.yaml
++++ b/playbooks/security/harden-production-saas/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/security/harden-production-saas/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: security.harden-production-saas
+   name: Harden Production SaaS
+@@ -50,4 +47,3 @@ playbook:
+     - secrets
+     - api-security
+     - monitoring
+-```
+diff --git a/playbooks/security/respond-to-security-incident/metadata.yaml b/playbooks/security/respond-to-security-incident/metadata.yaml
+index dcb7309..5dc8c3d 100644
+--- a/playbooks/security/respond-to-security-incident/metadata.yaml
++++ b/playbooks/security/respond-to-security-incident/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/security/respond-to-security-incident/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: security.respond-to-security-incident
+   name: Respond to Security Incident
+@@ -46,4 +43,3 @@ playbook:
+     - containment
+     - recovery
+     - audit
+-```
+\ No newline at end of file
+diff --git a/playbooks/security/review-api-security/metadata.yaml b/playbooks/security/review-api-security/metadata.yaml
+index 116d813..8663d7e 100644
+--- a/playbooks/security/review-api-security/metadata.yaml
++++ b/playbooks/security/review-api-security/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `playbooks/security/review-api-security/metadata.yaml`
+-
+-```yaml
+ playbook:
+   id: security.review-api-security
+   name: Review API Security
+@@ -44,4 +41,3 @@ playbook:
+     - data-exposure
+     - audit
+     - owasp
+-```
+diff --git a/registry/domains/domains.registry.yaml b/registry/domains/domains.registry.yaml
+index f498154..b80841a 100644
+--- a/registry/domains/domains.registry.yaml
++++ b/registry/domains/domains.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Domains Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des domaines Aegis OS :
+-
+-- `registry/domains/domains.registry.yaml`
+-
+----
+-
+-## FILE: `registry/domains/domains.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.domains
+   name: Domains Registry
+@@ -332,5 +321,3 @@ domains:
+       - principles
+       - quality
+       - reference
+-
+-```
+\ No newline at end of file
+diff --git a/registry/patterns/patterns.registry.yaml b/registry/patterns/patterns.registry.yaml
+index adaae2f..940f4dd 100644
+--- a/registry/patterns/patterns.registry.yaml
++++ b/registry/patterns/patterns.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Patterns Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des Patterns :
+-
+-- `registry/patterns/patterns.registry.yaml`
+-
+----
+-
+-## FILE: `registry/patterns/patterns.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.patterns
+   name: Patterns Registry
+@@ -354,5 +343,3 @@ entries:
+         relationship: related_to
+       - id: operations.run-postmortem-review
+         relationship: related_to
+-
+-```
+\ No newline at end of file
+diff --git a/registry/playbooks/playbooks.registry.yaml b/registry/playbooks/playbooks.registry.yaml
+index 76442c7..eda7de2 100644
+--- a/registry/playbooks/playbooks.registry.yaml
++++ b/registry/playbooks/playbooks.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Playbooks Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des Playbooks :
+-
+-- `registry/playbooks/playbooks.registry.yaml`
+-
+----
+-
+-## FILE: `registry/playbooks/playbooks.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.playbooks
+   name: Playbooks Registry
+@@ -642,5 +631,3 @@ entries:
+         relationship: related_to
+       - id: operations.incident-report-template
+         relationship: related_to
+-
+-```
+\ No newline at end of file
+diff --git a/registry/releases/releases.registry.yaml b/registry/releases/releases.registry.yaml
+index 8536f40..40b6c75 100644
+--- a/registry/releases/releases.registry.yaml
++++ b/registry/releases/releases.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Releases Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des releases Aegis OS :
+-
+-- `registry/releases/releases.registry.yaml`
+-
+----
+-
+-## FILE: `registry/releases/releases.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.releases
+   name: Releases Registry
+@@ -241,4 +230,3 @@ releases:
+     release_notes:
+       - Future release.
+       - Should represent the first complete usable Aegis OS framework.
+-```
+diff --git a/registry/skills/skills.registry.yaml b/registry/skills/skills.registry.yaml
+index 21087cd..7be873f 100644
+--- a/registry/skills/skills.registry.yaml
++++ b/registry/skills/skills.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Skills Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des Skills :
+-
+-- `registry/skills/skills.registry.yaml`
+-
+----
+-
+-## FILE: `registry/skills/skills.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.skills
+   name: Skills Registry
+@@ -314,4 +303,3 @@ entries:
+         relationship: uses
+       - id: operations.release-plan-template
+         relationship: uses
+-```
+\ No newline at end of file
+diff --git a/registry/tags/tags.registry.yaml b/registry/tags/tags.registry.yaml
+index 0f83ce2..3ef50bf 100644
+--- a/registry/tags/tags.registry.yaml
++++ b/registry/tags/tags.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Tags Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des tags Aegis OS :
+-
+-- `registry/tags/tags.registry.yaml`
+-
+----
+-
+-## FILE: `registry/tags/tags.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.tags
+   name: Tags Registry
+@@ -23,77 +12,77 @@ tags:
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Engineering-related assets: code, APIs, database, testing, debugging and implementation.
++    description: "Engineering-related assets: code, APIs, database, testing, debugging and implementation."
+ 
+   - id: tag.product
+     name: product
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Product-related assets: MVP, requirements, discovery, roadmap and SaaS product strategy.
++    description: "Product-related assets: MVP, requirements, discovery, roadmap and SaaS product strategy."
+ 
+   - id: tag.design
+     name: design
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Design-related assets: UX, UI, onboarding, screens, states and accessibility.
++    description: "Design-related assets: UX, UI, onboarding, screens, states and accessibility."
+ 
+   - id: tag.security
+     name: security
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Security-related assets: authentication, authorization, RBAC, tenant isolation, audit and hardening.
++    description: "Security-related assets: authentication, authorization, RBAC, tenant isolation, audit and hardening."
+ 
+   - id: tag.infrastructure
+     name: infrastructure
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Infrastructure-related assets: cloud, DevOps, CI/CD, deployment and environments.
++    description: "Infrastructure-related assets: cloud, DevOps, CI/CD, deployment and environments."
+ 
+   - id: tag.operations
+     name: operations
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Operations-related assets: releases, monitoring, incidents, runbooks, support and reliability.
++    description: "Operations-related assets: releases, monitoring, incidents, runbooks, support and reliability."
+ 
+   - id: tag.business
+     name: business
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Business-related assets: pricing, monetization, go-to-market, launch and sales motion.
++    description: "Business-related assets: pricing, monetization, go-to-market, launch and sales motion."
+ 
+   - id: tag.management
+     name: management
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Management-related assets: planning, delivery, RFCs, decisions and coordination.
++    description: "Management-related assets: planning, delivery, RFCs, decisions and coordination."
+ 
+   - id: tag.documentation
+     name: documentation
+     category: domain
+     status: draft
+     maturity: usable
+-    description: Documentation-related assets: docs, reference guides, specifications and governance material.
++    description: "Documentation-related assets: docs, reference guides, specifications and governance material."
+ 
+   - id: tag.registry
+     name: registry
+     category: system
+     status: draft
+     maturity: usable
+-    description: Registry-related assets: machine-readable catalogs, metadata, relationships and automation.
++    description: "Registry-related assets: machine-readable catalogs, metadata, relationships and automation."
+ 
+   - id: tag.core
+     name: core
+     category: system
+     status: draft
+     maturity: usable
+-    description: Core Aegis OS assets: identity, thinking, decisions, orchestration, quality and execution.
++    description: "Core Aegis OS assets: identity, thinking, decisions, orchestration, quality and execution."
+ 
+   - id: tag.shared
+     name: shared
+@@ -346,5 +335,3 @@ tags:
+     status: draft
+     maturity: usable
+     description: Assets related to packaging, publishing, trust, discovery and installation.
+-
+-```
+\ No newline at end of file
+diff --git a/registry/templates/templates.registry.yaml b/registry/templates/templates.registry.yaml
+index a90aa07..8fac5c7 100644
+--- a/registry/templates/templates.registry.yaml
++++ b/registry/templates/templates.registry.yaml
+@@ -1,14 +1,3 @@
+-# Aegis OS — Templates Registry Bundle
+-
+-Ce fichier regroupe le registre machine-readable des Templates :
+-
+-- `registry/templates/templates.registry.yaml`
+-
+----
+-
+-## FILE: `registry/templates/templates.registry.yaml`
+-
+-```yaml
+ registry:
+   id: registry.templates
+   name: Templates Registry
+@@ -355,5 +344,3 @@ entries:
+         relationship: related_to
+       - id: operations.feature-flag-rollout
+         relationship: related_to
+-
+-```
+\ No newline at end of file
+diff --git a/scripts/doctor/aegis-doctor.ps1 b/scripts/doctor/aegis-doctor.ps1
+index 6ef06ee..0ff19a5 100644
+--- a/scripts/doctor/aegis-doctor.ps1
++++ b/scripts/doctor/aegis-doctor.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\doctor\aegis-doctor.ps1
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - Doctor" -ForegroundColor Cyan
+ Write-Host "Running repository health checks..." -ForegroundColor Cyan
+ 
+@@ -36,7 +41,7 @@ foreach ($check in $checks) {
+     Write-Host ""
+     Write-Host "Running $check..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $checkPath
++    & $PSExe -ExecutionPolicy Bypass -File $checkPath
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "$check failed."
+@@ -50,7 +55,7 @@ if (Test-Path $validationScript) {
+     Write-Host ""
+     Write-Host "Running registry validation..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $validationScript
++    & $PSExe -ExecutionPolicy Bypass -File $validationScript
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "Registry validation failed."
+@@ -67,7 +72,7 @@ if (Test-Path $reportScript) {
+     Write-Host ""
+     Write-Host "Generating registry reports..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $reportScript
++    & $PSExe -ExecutionPolicy Bypass -File $reportScript
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "Report generation failed."
+diff --git a/scripts/reports/generate-all-reports.ps1 b/scripts/reports/generate-all-reports.ps1
+index 8c34460..ab5e6d9 100644
+--- a/scripts/reports/generate-all-reports.ps1
++++ b/scripts/reports/generate-all-reports.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - Generate All Reports" -ForegroundColor Cyan
+ 
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+@@ -36,7 +41,7 @@ foreach ($report in $reports) {
+     Write-Host ""
+     Write-Host "Running $report..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $reportPath
++    & $PSExe -ExecutionPolicy Bypass -File $reportPath
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "$report failed."
+diff --git a/scripts/testing/test-cli-asset-commands.ps1 b/scripts/testing/test-cli-asset-commands.ps1
+index 41a0b95..bfe83ec 100644
+--- a/scripts/testing/test-cli-asset-commands.ps1
++++ b/scripts/testing/test-cli-asset-commands.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-asset-commands
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - CLI Asset Command Test" -ForegroundColor Cyan
+ 
+ $commands = @(
+@@ -29,7 +34,7 @@ foreach ($commandSpec in $commands) {
+     Write-Host ""
+     Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
++    & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "CLI asset command failed: $command $argument"
+diff --git a/scripts/testing/test-cli-config-commands.ps1 b/scripts/testing/test-cli-config-commands.ps1
+index 4088579..263b2cd 100644
+--- a/scripts/testing/test-cli-config-commands.ps1
++++ b/scripts/testing/test-cli-config-commands.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-config-command
+ 
+ $ErrorActionPreference = 'Stop'
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+ $repoRoot = Resolve-Path (Join-Path $scriptRoot '..\..')
+ 
+@@ -28,7 +33,7 @@ foreach ($command in $commands) {
+     Write-Host ''
+     Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
++    & $PSExe -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "CLI configuration command failed: $command"
+diff --git a/scripts/testing/test-cli-core-commands.ps1 b/scripts/testing/test-cli-core-commands.ps1
+index 1d9b9ee..672f89a 100644
+--- a/scripts/testing/test-cli-core-commands.ps1
++++ b/scripts/testing/test-cli-core-commands.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-core-commands.
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - CLI Core Command Test" -ForegroundColor Cyan
+ 
+ $commands = @(
+@@ -28,12 +33,12 @@ foreach ($commandSpec in $commands) {
+     if ([string]::IsNullOrWhiteSpace($argument)) {
+         Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
+ 
+-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
++        & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+     }
+     else {
+         Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
+ 
+-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
++        & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
+     }
+ 
+     if ($LASTEXITCODE -ne 0) {
+diff --git a/scripts/testing/test-cli-metadata-commands.ps1 b/scripts/testing/test-cli-metadata-commands.ps1
+index a861dea..d1c35a0 100644
+--- a/scripts/testing/test-cli-metadata-commands.ps1
++++ b/scripts/testing/test-cli-metadata-commands.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-metadata-comma
+ 
+ $ErrorActionPreference = 'Stop'
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+ $repoRoot = Resolve-Path (Join-Path $scriptRoot '..\..')
+ 
+@@ -28,7 +33,7 @@ foreach ($command in $commands) {
+     Write-Host ''
+     Write-Host ('Running: .\cli\aegis.ps1 {0}' -f $command) -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
++    & $PSExe -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error ('CLI metadata command failed: {0}' -f $command)
+diff --git a/scripts/testing/test-cli-registry-commands.ps1 b/scripts/testing/test-cli-registry-commands.ps1
+index be6f254..c3dc9a4 100644
+--- a/scripts/testing/test-cli-registry-commands.ps1
++++ b/scripts/testing/test-cli-registry-commands.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-registry-comma
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - CLI Registry Command Test" -ForegroundColor Cyan
+ 
+ $commands = @(
+@@ -28,7 +33,7 @@ foreach ($command in $commands) {
+     Write-Host ""
+     Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
++    & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "CLI registry command failed: $command"
+diff --git a/scripts/testing/test-cli-smoke.ps1 b/scripts/testing/test-cli-smoke.ps1
+index c4dd5ad..9098f0c 100644
+--- a/scripts/testing/test-cli-smoke.ps1
++++ b/scripts/testing/test-cli-smoke.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - CLI Smoke Tests" -ForegroundColor Cyan
+ 
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+@@ -38,7 +43,7 @@ foreach ($test in $tests) {
+     Write-Host ""
+     Write-Host "Running $test..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $testPath
++    & $PSExe -ExecutionPolicy Bypass -File $testPath
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "$test failed."
+diff --git a/scripts/validation/validate-all.ps1 b/scripts/validation/validate-all.ps1
+index c984b24..96c9982 100644
+--- a/scripts/validation/validate-all.ps1
++++ b/scripts/validation/validate-all.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - Full Validation" -ForegroundColor Cyan
+ 
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+@@ -28,7 +33,7 @@ if (-not (Test-Path $registryValidation)) {
+ Write-Host ""
+ Write-Host "Running registry validation..." -ForegroundColor Yellow
+ 
+-& powershell -ExecutionPolicy Bypass -File $registryValidation
++& $PSExe -ExecutionPolicy Bypass -File $registryValidation
+ 
+ if ($LASTEXITCODE -ne 0) {
+     Write-Error "Full validation failed."
+diff --git a/scripts/validation/validate-registry.ps1 b/scripts/validation/validate-registry.ps1
+index f6de977..a826450 100644
+--- a/scripts/validation/validate-registry.ps1
++++ b/scripts/validation/validate-registry.ps1
+@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\validation\validate-registry.ps
+ 
+ $ErrorActionPreference = "Stop"
+ 
++
++# Resolve the exact PowerShell host currently running this script
++# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
++# instead of hardcoding a binary name that may not exist on this machine.
++$PSExe = (Get-Process -Id $PID).Path
+ Write-Host "Aegis OS - Registry Validation" -ForegroundColor Cyan
+ 
+ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+@@ -36,7 +41,7 @@ foreach ($check in $checks) {
+     Write-Host ""
+     Write-Host "Running $check..." -ForegroundColor Yellow
+ 
+-    & powershell -ExecutionPolicy Bypass -File $checkPath
++    & $PSExe -ExecutionPolicy Bypass -File $checkPath
+ 
+     if ($LASTEXITCODE -ne 0) {
+         Write-Error "$check failed."
+diff --git a/skills/design/ux-ui-designer-saas/metadata.yaml b/skills/design/ux-ui-designer-saas/metadata.yaml
+index 5d0f26a..87db333 100644
+--- a/skills/design/ux-ui-designer-saas/metadata.yaml
++++ b/skills/design/ux-ui-designer-saas/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/design/ux-ui-designer-saas/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: design.ux-ui-designer-saas
+   name: UX/UI Designer SaaS
+@@ -42,4 +39,3 @@ skill:
+     - usability
+     - accessibility
+     - design-system
+-```
+\ No newline at end of file
+diff --git a/skills/engineering/database-engineer/metadata.yaml b/skills/engineering/database-engineer/metadata.yaml
+index 12c15aa..27e76f9 100644
+--- a/skills/engineering/database-engineer/metadata.yaml
++++ b/skills/engineering/database-engineer/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/engineering/database-engineer/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: engineering.database-engineer
+   name: Database Engineer
+@@ -42,4 +39,3 @@ skill:
+     - query-optimization
+     - migrations
+     
+-    ```
+\ No newline at end of file
+diff --git a/skills/engineering/senior-debugger/metadata.yaml b/skills/engineering/senior-debugger/metadata.yaml
+index 9effd88..472790f 100644
+--- a/skills/engineering/senior-debugger/metadata.yaml
++++ b/skills/engineering/senior-debugger/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/engineering/senior-debugger/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: engineering.senior-debugger
+   name: Senior Debugger
+@@ -45,4 +42,3 @@ skill:
+     - incident-response
+     - troubleshooting
+     - regression
+-```
+\ No newline at end of file
+diff --git a/skills/engineering/senior-developer/metadata.yaml b/skills/engineering/senior-developer/metadata.yaml
+index 7b44350..0f730da 100644
+--- a/skills/engineering/senior-developer/metadata.yaml
++++ b/skills/engineering/senior-developer/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/engineering/senior-developer/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: engineering.senior-developer
+   name: Senior Developer
+@@ -40,4 +37,3 @@ skill:
+     - database
+     - api
+     - code-review
+-```
+diff --git a/skills/engineering/software-architect/metadata.yaml b/skills/engineering/software-architect/metadata.yaml
+index 43a7a43..f7ef956 100644
+--- a/skills/engineering/software-architect/metadata.yaml
++++ b/skills/engineering/software-architect/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/engineering/software-architect/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: engineering.software-architect
+   name: Software Architect
+@@ -41,4 +38,3 @@ skill:
+     - cloud
+     - saas
+     - technical-decisions
+-```
+diff --git a/skills/infrastructure/cloud-architect/metadata.yaml b/skills/infrastructure/cloud-architect/metadata.yaml
+index cc349c5..f554b5e 100644
+--- a/skills/infrastructure/cloud-architect/metadata.yaml
++++ b/skills/infrastructure/cloud-architect/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/infrastructure/cloud-architect/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: infrastructure.cloud-architect
+   name: Cloud Architect
+@@ -46,4 +43,3 @@ skill:
+     - cost-optimization
+     - disaster-recovery
+     - observability
+-```
+diff --git a/skills/infrastructure/devops-engineer/metadata.yaml b/skills/infrastructure/devops-engineer/metadata.yaml
+index 4de1b12..5840421 100644
+--- a/skills/infrastructure/devops-engineer/metadata.yaml
++++ b/skills/infrastructure/devops-engineer/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/infrastructure/devops-engineer/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: infrastructure.devops-engineer
+   name: DevOps Engineer
+@@ -44,4 +41,3 @@ skill:
+     - observability
+     - operations
+     - rollback
+-```
+\ No newline at end of file
+diff --git a/skills/management/technical-project-manager/metadata.yaml b/skills/management/technical-project-manager/metadata.yaml
+index 0a0d495..3f58c4b 100644
+--- a/skills/management/technical-project-manager/metadata.yaml
++++ b/skills/management/technical-project-manager/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/management/technical-project-manager/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: management.technical-project-manager
+   name: Technical Project Manager
+@@ -43,4 +40,4 @@ skill:
+     - dependency-management
+     - status-reporting
+     - release-planning
+-    - stakeholder-management
+\ No newline at end of file
++    - stakeholder-management
+diff --git a/skills/product/business-analyst/metadata.yaml b/skills/product/business-analyst/metadata.yaml
+index f93eae9..1e43ac5 100644
+--- a/skills/product/business-analyst/metadata.yaml
++++ b/skills/product/business-analyst/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/product/business-analyst/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: product.business-analyst
+   name: Business Analyst
+@@ -41,5 +38,3 @@ skill:
+     - stakeholder-analysis
+     - gap-analysis
+     - product
+-```
+-
+diff --git a/skills/product/product-manager-saas/metadata.yaml b/skills/product/product-manager-saas/metadata.yaml
+index fa19921..dae99ae 100644
+--- a/skills/product/product-manager-saas/metadata.yaml
++++ b/skills/product/product-manager-saas/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/product/product-manager-saas/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: product.product-manager-saas
+   name: Product Manager SaaS
+@@ -41,4 +38,3 @@ skill:
+     - discovery
+     - prioritization
+     - metrics
+-```
+\ No newline at end of file
+diff --git a/skills/security/security-engineer/metadata.yaml b/skills/security/security-engineer/metadata.yaml
+index d78f2f5..7c715b4 100644
+--- a/skills/security/security-engineer/metadata.yaml
++++ b/skills/security/security-engineer/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `skills/security/security-engineer/metadata.yaml`
+-
+-```yaml
+ skill:
+   id: security.security-engineer
+   name: Security Engineer
+@@ -45,4 +42,3 @@ skill:
+     - secrets
+     - vulnerability-management
+     - incident-response
+-```
+diff --git a/templates/architecture/architecture-decision-record-template/metadata.yaml b/templates/architecture/architecture-decision-record-template/metadata.yaml
+index fad0c6a..29b072d 100644
+--- a/templates/architecture/architecture-decision-record-template/metadata.yaml
++++ b/templates/architecture/architecture-decision-record-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/architecture/architecture-decision-record-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: architecture.architecture-decision-record-template
+   name: Architecture Decision Record Template
+@@ -59,4 +56,3 @@ template:
+     - trade-offs
+     - documentation
+     - governance
+-```
+diff --git a/templates/business/go-to-market-plan-template/metadata.yaml b/templates/business/go-to-market-plan-template/metadata.yaml
+index db132a0..ff2d30f 100644
+--- a/templates/business/go-to-market-plan-template/metadata.yaml
++++ b/templates/business/go-to-market-plan-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/business/go-to-market-plan-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: business.go-to-market-plan-template
+   name: Go-To-Market Plan Template
+@@ -62,4 +59,3 @@ template:
+     - acquisition
+     - sales
+     - marketing
+-```
+diff --git a/templates/business/pricing-strategy-template/metadata.yaml b/templates/business/pricing-strategy-template/metadata.yaml
+index 348624a..27f592e 100644
+--- a/templates/business/pricing-strategy-template/metadata.yaml
++++ b/templates/business/pricing-strategy-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/business/pricing-strategy-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: business.pricing-strategy-template
+   name: Pricing Strategy Template
+@@ -60,4 +57,3 @@ template:
+     - packaging
+     - value-metric
+     - paid-pilot
+-```
+diff --git a/templates/design/ux-flow-template/metadata.yaml b/templates/design/ux-flow-template/metadata.yaml
+index c20b871..fdd3fe9 100644
+--- a/templates/design/ux-flow-template/metadata.yaml
++++ b/templates/design/ux-flow-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/design/ux-flow-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: design.ux-flow-template
+   name: UX Flow Template
+@@ -61,4 +58,3 @@ template:
+     - screens
+     - states
+     - product
+-```
+diff --git a/templates/engineering/api-contract-template/metadata.yaml b/templates/engineering/api-contract-template/metadata.yaml
+index 5e17200..b3f9177 100644
+--- a/templates/engineering/api-contract-template/metadata.yaml
++++ b/templates/engineering/api-contract-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/engineering/api-contract-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: engineering.api-contract-template
+   name: API Contract Template
+@@ -60,4 +57,3 @@ template:
+     - errors
+     - security
+     - testing
+-```
+diff --git a/templates/engineering/data-model-template/metadata.yaml b/templates/engineering/data-model-template/metadata.yaml
+index 3ff2698..d0723d8 100644
+--- a/templates/engineering/data-model-template/metadata.yaml
++++ b/templates/engineering/data-model-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/engineering/data-model-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: engineering.data-model-template
+   name: Data Model Template
+@@ -62,4 +59,3 @@ template:
+     - relationships
+     - tenant-isolation
+     - saas
+-```
+diff --git a/templates/engineering/test-plan-template/metadata.yaml b/templates/engineering/test-plan-template/metadata.yaml
+index 054ca74..4705028 100644
+--- a/templates/engineering/test-plan-template/metadata.yaml
++++ b/templates/engineering/test-plan-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/engineering/test-plan-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: engineering.test-plan-template
+   name: Test Plan Template
+@@ -59,4 +56,3 @@ template:
+     - api
+     - security
+     - release
+-```
+\ No newline at end of file
+diff --git a/templates/management/rfc-template/metadata.yaml b/templates/management/rfc-template/metadata.yaml
+index abf8ac3..c507558 100644
+--- a/templates/management/rfc-template/metadata.yaml
++++ b/templates/management/rfc-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/management/rfc-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: management.rfc-template
+   name: RFC Template
+@@ -60,4 +57,3 @@ template:
+     - architecture
+     - product
+     - change-management
+-```
+diff --git a/templates/operations/incident-report-template/metadata.yaml b/templates/operations/incident-report-template/metadata.yaml
+index 21cf2c6..026e400 100644
+--- a/templates/operations/incident-report-template/metadata.yaml
++++ b/templates/operations/incident-report-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/operations/incident-report-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: operations.incident-report-template
+   name: Incident Report Template
+@@ -60,4 +57,3 @@ template:
+     - outage
+     - communication
+     - production
+-```
+diff --git a/templates/operations/postmortem-template/metadata.yaml b/templates/operations/postmortem-template/metadata.yaml
+index 3493ba1..37a6b77 100644
+--- a/templates/operations/postmortem-template/metadata.yaml
++++ b/templates/operations/postmortem-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/operations/postmortem-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: operations.postmortem-template
+   name: Postmortem Template
+@@ -60,4 +57,3 @@ template:
+     - root-cause
+     - corrective-actions
+     - production
+-```
+diff --git a/templates/operations/release-plan-template/metadata.yaml b/templates/operations/release-plan-template/metadata.yaml
+index 7257dc3..3a1cc11 100644
+--- a/templates/operations/release-plan-template/metadata.yaml
++++ b/templates/operations/release-plan-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/operations/release-plan-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: operations.release-plan-template
+   name: Release Plan Template
+@@ -64,4 +61,3 @@ template:
+     - operations
+     - saas
+     - production
+-```
+\ No newline at end of file
+diff --git a/templates/operations/runbook-template/metadata.yaml b/templates/operations/runbook-template/metadata.yaml
+index 32ddab5..6c18cba 100644
+--- a/templates/operations/runbook-template/metadata.yaml
++++ b/templates/operations/runbook-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/operations/runbook-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: operations.runbook-template
+   name: Runbook Template
+@@ -63,4 +60,3 @@ template:
+     - recovery
+     - maintenance
+     - production
+-```
+\ No newline at end of file
+diff --git a/templates/product/prd-template/metadata.yaml b/templates/product/prd-template/metadata.yaml
+index 02eb9d2..630a728 100644
+--- a/templates/product/prd-template/metadata.yaml
++++ b/templates/product/prd-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/product/prd-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: product.prd-template
+   name: PRD Template
+@@ -60,4 +57,3 @@ template:
+     - feature
+     - mvp
+     - delivery
+-```
+diff --git a/templates/security/security-review-template/metadata.yaml b/templates/security/security-review-template/metadata.yaml
+index 948effe..6732934 100644
+--- a/templates/security/security-review-template/metadata.yaml
++++ b/templates/security/security-review-template/metadata.yaml
+@@ -1,6 +1,3 @@
+-## FILE: `templates/security/security-review-template/metadata.yaml`
+-
+-```yaml
+ template:
+   id: security.security-review-template
+   name: Security Review Template
+@@ -63,4 +60,3 @@ template:
+     - audit
+     - api
+     - saas
+-```

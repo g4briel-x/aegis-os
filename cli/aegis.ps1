@@ -80,6 +80,8 @@ $commandMap = @{
     "runtime:registry-list" = "runtime-registry-list.ps1"
     "runtime:asset-show" = "runtime-asset-show.ps1"
     "runtime:asset-find" = "runtime-asset-find.ps1"
+    "runtime:execution-plan" = "runtime-execution-plan.ps1"
+    "runtime:execution-dry-run" = "runtime-execution-dry-run.ps1"
 
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"

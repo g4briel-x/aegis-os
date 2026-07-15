@@ -14,6 +14,9 @@ from .config import AegisConfig
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .validator import RegistryValidator
+from .execution import ExecutionMode
+from .execution.planner import ExecutionPlanner
+from .execution.runner import ExecutionRunner
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -45,6 +48,27 @@ def _build_parser() -> argparse.ArgumentParser:
     asset_domain.add_argument("domain")
     asset_tag = asset_commands.add_parser("tag", help="List assets with a tag.")
     asset_tag.add_argument("tag")
+
+    execution = commands.add_parser(
+        "execution",
+        help="Execution planning operations.",
+    )
+    execution_commands = execution.add_subparsers(
+        dest="execution_command",
+        required=True,
+    )
+
+    execution_plan = execution_commands.add_parser(
+        "plan",
+        help="Create an execution plan for an asset.",
+    )
+    execution_plan.add_argument("asset_id")
+
+    execution_dry_run = execution_commands.add_parser(
+        "dry-run",
+        help="Create a safe dry-run report for an asset.",
+    )
+    execution_dry_run.add_argument("asset_id")
 
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
@@ -86,6 +110,42 @@ def _print_asset_list(assets: list[Asset], *, as_json: bool) -> None:
             details.append(f"type={asset.type}")
         print(" | ".join(details))
     print(f"Total assets: {len(assets)}")
+
+
+def _print_execution_plan(plan, *, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(plan.to_dict(), indent=2, ensure_ascii=False))
+        return
+
+    print("Aegis OS Execution Plan")
+    print(f"Target: {plan.target_asset_id}")
+    print(f"Mode: {plan.mode.value}")
+    print("")
+
+    for step in plan.steps:
+        print(f"{step.index}. {step.title}")
+        print(f"   Action: {step.action}")
+        print(f"   Status: {step.status.value}")
+        if step.asset_id:
+            print(f"   Asset: {step.asset_id}")
+        if step.asset_type:
+            print(f"   Type: {step.asset_type}")
+        print("")
+
+    print(f"Total steps: {len(plan.steps)}")
+
+
+def _print_execution_report(report, *, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        return
+
+    print("Aegis OS Execution Dry Run")
+    print(f"Status: {report.status.value}")
+    print(f"Message: {report.message}")
+    print("")
+
+    _print_execution_plan(report.plan, as_json=False)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -168,6 +228,28 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.asset_command == "tag":
             _print_asset_list(resolver.by_tag(args.tag), as_json=args.json)
             return EXIT_OK
+
+    if args.command == "execution":
+        planner = ExecutionPlanner(resolver)
+
+        try:
+            if args.execution_command == "plan":
+                plan = planner.create_plan(
+                    args.asset_id,
+                    mode=ExecutionMode.PLAN,
+                )
+                _print_execution_plan(plan, as_json=args.json)
+                return EXIT_OK
+
+            if args.execution_command == "dry-run":
+                runner = ExecutionRunner(planner)
+                report = runner.dry_run(args.asset_id)
+                _print_execution_report(report, as_json=args.json)
+                return EXIT_OK
+
+        except KeyError as exc:
+            print(str(exc), file=sys.stderr)
+            return EXIT_NOT_FOUND
 
     if args.command == "validate":
         validator = RegistryValidator(

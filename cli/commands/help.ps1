@@ -63,7 +63,8 @@ Write-Host "  runtime:validate              Validate registries with Python runt
 Write-Host "  runtime:registry-list         List registries with Python runtime"
 Write-Host "  runtime:asset-find <keyword>  Search assets with Python runtime"
 Write-Host "  runtime:asset-show <id>       Show one asset with Python runtime"
-Write-Host ""
+Write-Host "  runtime:execution-plan <id>     Create execution plan with Python runtime"
+Write-Host "  runtime:execution-dry-run <id>  Simulate execution without running actions"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -79,6 +80,7 @@ Write-Host "  .\cli\aegis.ps1 runtime:registry-list"
 Write-Host "  .\cli\aegis.ps1 runtime:asset-find security"
 Write-Host "  .\cli\aegis.ps1 runtime:asset-show security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:validate"
-Write-Host ""
+Write-Host "  .\cli\aegis.ps1 runtime:execution-plan security.review-api-security"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-dry-run security.review-api-security"
 
 exit 0

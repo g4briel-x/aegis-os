@@ -23,6 +23,8 @@ $commands = @(
     @('runtime:registry-list', ''),
     @('runtime:asset-find', 'security'),
     @('runtime:asset-show', 'security.review-api-security'),
+    @('runtime:execution-plan', 'security.review-api-security'),
+    @('runtime:execution-dry-run', 'security.review-api-security'),
     @('runtime:validate', '')
 )
 

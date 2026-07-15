@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
 Shows Aegis OS CLI help.
@@ -20,6 +19,7 @@ Write-Host ""
 Write-Host "  version                    Show CLI version"
 Write-Host "  info                       Show project information"
 Write-Host "  status                     Show lightweight repository status"
+Write-Host ""
 
 Write-Host "Registry Commands:" -ForegroundColor Yellow
 Write-Host "  registry:list              List registry YAML files"
@@ -41,9 +41,14 @@ Write-Host "  asset:path <id>            Show asset repository path"
 Write-Host "  asset:open <id>            Open asset path in file explorer"
 Write-Host "  domain:assets <name>       List assets by domain"
 Write-Host "  tag:assets <tag>           List assets by tag"
-Write-Host "  config:show             Show example configuration"
-Write-Host "  config:path             Show configuration file paths"
-Write-Host "  config:check            Check required configuration files"
+Write-Host ""
+
+# Fix: section Config ajoutée avec titre et alignement correct (manquait dans l'original)
+Write-Host "Config Commands:" -ForegroundColor Yellow
+Write-Host "  config:show                Show example configuration"
+Write-Host "  config:path                Show configuration file paths"
+Write-Host "  config:check               Check required configuration files"
+Write-Host ""
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"

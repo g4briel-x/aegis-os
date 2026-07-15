@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
 Installs the Aegis OS CLI as a PowerShell function.
@@ -6,6 +5,10 @@ Installs the Aegis OS CLI as a PowerShell function.
 .DESCRIPTION
 Adds an `aegis` function to the current user's PowerShell profile.
 The function routes commands to this repository's cli\aegis.ps1 file.
+
+Bug fix: renamed $Args to $PassThroughArgs in the injected function.
+$Args is a PowerShell automatic variable; shadowing it can cause subtle
+issues on some PowerShell versions.
 
 .USAGE
 powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
@@ -35,7 +38,7 @@ if (-not (Test-Path $profilePath)) {
 }
 
 $startMarker = "# >>> AEGIS OS CLI >>>"
-$endMarker = "# <<< AEGIS OS CLI <<<"
+$endMarker   = "# <<< AEGIS OS CLI <<<"
 
 $profileContent = Get-Content $profilePath -Raw
 
@@ -46,16 +49,17 @@ if ($profileContent -match [regex]::Escape($startMarker)) {
     $profileContent = [regex]::Replace($profileContent, $pattern, "", "Singleline")
 }
 
+# Fix: $PassThroughArgs au lieu de $Args (qui est une variable automatique PowerShell)
 $block = @"
 
 $startMarker
 function aegis {
     param(
         [Parameter(ValueFromRemainingArguments = `$true)]
-        [string[]]`$Args
+        [string[]]`$PassThroughArgs
     )
 
-    & "$cliPath" @Args
+    & "$cliPath" @PassThroughArgs
 }
 $endMarker
 "@

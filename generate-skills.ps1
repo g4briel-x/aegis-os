@@ -1,6 +1,10 @@
 # ==========================================
 # Aegis OS - Skills Generator
 # ==========================================
+# Quality fix: $template uses [ordered]@{} instead of @{} to guarantee
+# deterministic file creation order across executions.
+# PowerShell hashtables do NOT guarantee key iteration order.
+# ==========================================
 
 $SkillsRoot = "skills"
 
@@ -22,7 +26,8 @@ $skills = @(
     "management/technical-project-manager"
 )
 
-$template = @{
+# Fix: [ordered]@{} garantit l'ordre d'itération des clés
+$template = [ordered]@{
     "README.md" = @"
 # Aegis OS Skill
 
@@ -120,7 +125,7 @@ foreach ($skill in $skills) {
 
     $path = Join-Path $SkillsRoot $skill
 
-    New-Item -ItemType Directory -Path "$path/examples" -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $path "examples") -Force | Out-Null
 
     foreach ($file in $template.Keys) {
 
@@ -133,7 +138,7 @@ foreach ($skill in $skills) {
     }
 
     Set-Content `
-        -Path "$path/examples/examples.md" `
+        -Path (Join-Path $path "examples\examples.md") `
         -Value "# Examples`n`nPractical examples for this Skill." `
         -Encoding UTF8
 

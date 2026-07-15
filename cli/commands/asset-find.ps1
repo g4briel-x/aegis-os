@@ -4,9 +4,11 @@ Searches Aegis OS registry files by keyword.
 
 .DESCRIPTION
 Searches all YAML registry files and displays matching lines.
+Perf fix: replaced $results += [PSCustomObject] (O(n²) array copy) with
+Generic.List (O(1) Add).
 
 .USAGE
-.\cli\aegis.ps1 asset:find security
+.\cli\aegis.ps1 asset:find <keyword>
 #>
 
 param(
@@ -39,7 +41,8 @@ if ($files.Count -eq 0) {
     exit 0
 }
 
-$results = @()
+# Utilisation de Generic.List pour éviter la copie O(n²) de $results += item
+$results = [System.Collections.Generic.List[PSCustomObject]]::new()
 $escapedArgument = [regex]::Escape($Argument)
 
 foreach ($file in $files) {
@@ -53,11 +56,11 @@ foreach ($file in $files) {
             $relativePath = Resolve-Path -Path $file.FullName -Relative
             $relativePath = $relativePath -replace '^\.[\\/]', ''
 
-            $results += [PSCustomObject]@{
+            $results.Add([PSCustomObject]@{
                 File = $relativePath
                 Line = $lineNumber
                 Text = $line.Trim()
-            }
+            })
         }
     }
 }

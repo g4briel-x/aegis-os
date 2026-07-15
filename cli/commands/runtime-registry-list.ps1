@@ -1,9 +1,9 @@
 ﻿<#
 .SYNOPSIS
-Validates Aegis registries through the Python runtime.
+Lists Aegis registries through the Python runtime.
 
 .ROLE
-Delegates advanced registry validation to the Python runtime.
+Uses the Python runtime to list registry files, asset counts and YAML errors.
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -29,5 +29,5 @@ else {
     $pythonExe = $pythonCommand.Source
 }
 
-& $pythonExe -m aegis_runtime --repo-root $repoRoot validate
+& $pythonExe -m aegis_runtime --repo-root $repoRoot registry list
 exit $LASTEXITCODE

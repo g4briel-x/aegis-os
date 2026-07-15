@@ -1,12 +1,21 @@
 ﻿<#
 .SYNOPSIS
-Validates Aegis registries through the Python runtime.
+Shows one Aegis asset through the Python runtime.
 
 .ROLE
-Delegates advanced registry validation to the Python runtime.
+Uses the Python runtime resolver to display an asset by ID.
 #>
 
+param(
+    [string]$Argument = ''
+)
+
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($Argument)) {
+    Write-Host 'Usage: .\cli\aegis.ps1 runtime:asset-show <asset-id>' -ForegroundColor Yellow
+    exit 2
+}
 
 $commandRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $commandRoot '..\..')
@@ -29,5 +38,5 @@ else {
     $pythonExe = $pythonCommand.Source
 }
 
-& $pythonExe -m aegis_runtime --repo-root $repoRoot validate
+& $pythonExe -m aegis_runtime --repo-root $repoRoot asset show $Argument
 exit $LASTEXITCODE

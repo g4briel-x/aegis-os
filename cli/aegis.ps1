@@ -75,6 +75,12 @@ $commandMap = @{
     "domain:assets" = "domain-assets.ps1"
     "tag:assets" = "tag-assets.ps1"
 
+    "runtime:status" = "runtime-status.ps1"
+    "runtime:validate" = "runtime-validate.ps1"
+    "runtime:registry-list" = "runtime-registry-list.ps1"
+    "runtime:asset-show" = "runtime-asset-show.ps1"
+    "runtime:asset-find" = "runtime-asset-find.ps1"
+
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"
     "config:check" = "config-check.ps1"

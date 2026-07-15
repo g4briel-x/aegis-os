@@ -1,12 +1,21 @@
 ﻿<#
 .SYNOPSIS
-Validates Aegis registries through the Python runtime.
+Searches Aegis assets through the Python runtime.
 
 .ROLE
-Delegates advanced registry validation to the Python runtime.
+Uses the Python runtime resolver to search assets by keyword.
 #>
 
+param(
+    [string]$Argument = ''
+)
+
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($Argument)) {
+    Write-Host 'Usage: .\cli\aegis.ps1 runtime:asset-find <keyword>' -ForegroundColor Yellow
+    exit 2
+}
 
 $commandRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $commandRoot '..\..')
@@ -29,5 +38,5 @@ else {
     $pythonExe = $pythonCommand.Source
 }
 
-& $pythonExe -m aegis_runtime --repo-root $repoRoot validate
+& $pythonExe -m aegis_runtime --repo-root $repoRoot asset find $Argument
 exit $LASTEXITCODE

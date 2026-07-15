@@ -1,6 +1,3 @@
-## FILE: `skills/engineering/database-engineer/metadata.yaml`
-
-```yaml
 skill:
   id: engineering.database-engineer
   name: Database Engineer
@@ -42,4 +39,3 @@ skill:
     - query-optimization
     - migrations
     
-    ```

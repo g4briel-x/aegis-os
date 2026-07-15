@@ -1,6 +1,3 @@
-## FILE: `playbooks/security/design-auth-rbac/metadata.yaml`
-
-```yaml
 playbook:
   id: security.design-auth-rbac
   name: Design Auth RBAC
@@ -48,4 +45,3 @@ playbook:
     - tenant-isolation
     - security
     - access-control
-```

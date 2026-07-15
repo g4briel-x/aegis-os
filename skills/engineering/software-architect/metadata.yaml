@@ -1,6 +1,3 @@
-## FILE: `skills/engineering/software-architect/metadata.yaml`
-
-```yaml
 skill:
   id: engineering.software-architect
   name: Software Architect
@@ -41,4 +38,3 @@ skill:
     - cloud
     - saas
     - technical-decisions
-```

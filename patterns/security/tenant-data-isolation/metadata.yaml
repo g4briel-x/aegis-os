@@ -1,6 +1,3 @@
-## FILE: `patterns/security/tenant-data-isolation/metadata.yaml`
-
-```yaml
 pattern:
   id: security.tenant-data-isolation
   name: Tenant Data Isolation
@@ -55,4 +52,3 @@ pattern:
     - authorization
     - data-boundaries
     - privacy
-```

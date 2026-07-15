@@ -37,6 +37,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+
+# Resolve the exact PowerShell host currently running this script
+# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
+# instead of hardcoding a binary name that may not exist on this machine.
+$PSExe = (Get-Process -Id $PID).Path
 $CliRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = Resolve-Path (Join-Path $CliRoot "..")
 $CommandsRoot = Join-Path $CliRoot "commands"
@@ -87,7 +92,7 @@ function Show-UnknownCommand {
 
     Write-Host "Unknown command: $CommandName" -ForegroundColor Red
     Write-Host ""
-    & powershell -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
+    & $PSExe -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
 }
 
 function Invoke-AegisCommand {
@@ -110,10 +115,10 @@ function Invoke-AegisCommand {
     }
 
     if ([string]::IsNullOrWhiteSpace($ArgumentValue)) {
-        & powershell -ExecutionPolicy Bypass -File $scriptPath
+        & $PSExe -ExecutionPolicy Bypass -File $scriptPath
     }
     else {
-        & powershell -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
+        & $PSExe -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
     }
 
     exit $LASTEXITCODE

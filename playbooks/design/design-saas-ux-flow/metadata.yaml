@@ -1,6 +1,3 @@
-## FILE: `playbooks/design/design-saas-ux-flow/metadata.yaml`
-
-```yaml
 playbook:
   id: design.design-saas-ux-flow
   name: Design SaaS UX Flow
@@ -45,4 +42,3 @@ playbook:
     - product-design
     - screen-states
     - handoff
-```

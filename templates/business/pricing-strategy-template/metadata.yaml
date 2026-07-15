@@ -1,6 +1,3 @@
-## FILE: `templates/business/pricing-strategy-template/metadata.yaml`
-
-```yaml
 template:
   id: business.pricing-strategy-template
   name: Pricing Strategy Template
@@ -60,4 +57,3 @@ template:
     - packaging
     - value-metric
     - paid-pilot
-```

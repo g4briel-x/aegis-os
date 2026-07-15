@@ -1,6 +1,3 @@
-## FILE: `playbooks/product/create-prd/metadata.yaml`
-
-```yaml
 playbook:
   id: product.create-prd
   name: Create PRD
@@ -46,4 +43,3 @@ playbook:
     - product
     - saas
     - specification
-```

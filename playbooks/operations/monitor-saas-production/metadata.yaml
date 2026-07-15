@@ -1,6 +1,3 @@
-## FILE: `playbooks/operations/monitor-saas-production/metadata.yaml`
-
-```yaml
 playbook:
   id: operations.monitor-saas-production
   name: Monitor SaaS Production
@@ -45,4 +42,3 @@ playbook:
     - metrics
     - latency
     - operations
-```

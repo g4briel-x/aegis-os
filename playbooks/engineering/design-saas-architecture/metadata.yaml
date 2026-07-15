@@ -1,6 +1,3 @@
-## FILE: `playbooks/engineering/design-saas-architecture/metadata.yaml`
-
-```yaml
 playbook:
   id: engineering.design-saas-architecture
   name: Design SaaS Architecture
@@ -51,4 +48,3 @@ playbook:
     - infrastructure
     - security
     - scalability
-```

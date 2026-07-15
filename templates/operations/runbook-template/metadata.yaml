@@ -1,6 +1,3 @@
-## FILE: `templates/operations/runbook-template/metadata.yaml`
-
-```yaml
 template:
   id: operations.runbook-template
   name: Runbook Template
@@ -63,4 +60,3 @@ template:
     - recovery
     - maintenance
     - production
-```

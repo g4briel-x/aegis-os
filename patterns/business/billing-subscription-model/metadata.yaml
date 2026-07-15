@@ -1,6 +1,3 @@
-## FILE: `patterns/business/billing-subscription-model/metadata.yaml`
-
-```yaml
 pattern:
   id: business.billing-subscription-model
   name: Billing Subscription Model
@@ -66,4 +63,3 @@ pattern:
     - monetization
     - entitlements
     - invoices
-```

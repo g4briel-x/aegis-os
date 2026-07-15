@@ -1,6 +1,3 @@
-## FILE: `playbooks/engineering/debug-production-issue/metadata.yaml`
-
-```yaml
 playbook:
   id: engineering.debug-production-issue
   name: Debug Production Issue
@@ -41,4 +38,3 @@ playbook:
     - rollback
     - recovery
     - root-cause-analysis
-```

@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-core-commands.
 
 $ErrorActionPreference = "Stop"
 
+
+# Resolve the exact PowerShell host currently running this script
+# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
+# instead of hardcoding a binary name that may not exist on this machine.
+$PSExe = (Get-Process -Id $PID).Path
 Write-Host "Aegis OS - CLI Core Command Test" -ForegroundColor Cyan
 
 $commands = @(
@@ -28,12 +33,12 @@ foreach ($commandSpec in $commands) {
     if ([string]::IsNullOrWhiteSpace($argument)) {
         Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
 
-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+        & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
     }
     else {
         Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
 
-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
+        & $PSExe -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
     }
 
     if ($LASTEXITCODE -ne 0) {

@@ -1,6 +1,3 @@
-## FILE: `templates/engineering/data-model-template/metadata.yaml`
-
-```yaml
 template:
   id: engineering.data-model-template
   name: Data Model Template
@@ -62,4 +59,3 @@ template:
     - relationships
     - tenant-isolation
     - saas
-```

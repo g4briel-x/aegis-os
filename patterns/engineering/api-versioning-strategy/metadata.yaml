@@ -1,6 +1,3 @@
-## FILE: `patterns/engineering/api-versioning-strategy/metadata.yaml`
-
-```yaml
 pattern:
   id: engineering.api-versioning-strategy
   name: API Versioning Strategy
@@ -63,4 +60,3 @@ pattern:
     - contracts
     - migration
     - saas
-```

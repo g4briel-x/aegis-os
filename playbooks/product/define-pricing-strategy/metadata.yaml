@@ -1,6 +1,3 @@
-## FILE: `playbooks/product/define-pricing-strategy/metadata.yaml`
-
-```yaml
 playbook:
   id: product.define-pricing-strategy
   name: Define Pricing Strategy
@@ -48,4 +45,3 @@ playbook:
     - revenue
     - go-to-market
     - validation
-```

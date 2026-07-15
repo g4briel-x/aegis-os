@@ -1,6 +1,3 @@
-## FILE: `skills/engineering/senior-developer/metadata.yaml`
-
-```yaml
 skill:
   id: engineering.senior-developer
   name: Senior Developer
@@ -40,4 +37,3 @@ skill:
     - database
     - api
     - code-review
-```

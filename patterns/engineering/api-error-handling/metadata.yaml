@@ -1,6 +1,3 @@
-## FILE: `patterns/engineering/api-error-handling/metadata.yaml`
-
-```yaml
 pattern:
   id: engineering.api-error-handling
   name: API Error Handling
@@ -52,4 +49,3 @@ pattern:
     - security
     - observability
     - frontend
-```

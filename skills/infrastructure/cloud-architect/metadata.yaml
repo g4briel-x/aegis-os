@@ -1,6 +1,3 @@
-## FILE: `skills/infrastructure/cloud-architect/metadata.yaml`
-
-```yaml
 skill:
   id: infrastructure.cloud-architect
   name: Cloud Architect
@@ -46,4 +43,3 @@ skill:
     - cost-optimization
     - disaster-recovery
     - observability
-```

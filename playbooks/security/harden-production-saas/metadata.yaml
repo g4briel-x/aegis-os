@@ -1,6 +1,3 @@
-## FILE: `playbooks/security/harden-production-saas/metadata.yaml`
-
-```yaml
 playbook:
   id: security.harden-production-saas
   name: Harden Production SaaS
@@ -50,4 +47,3 @@ playbook:
     - secrets
     - api-security
     - monitoring
-```

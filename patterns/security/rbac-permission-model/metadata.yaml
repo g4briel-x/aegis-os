@@ -1,6 +1,3 @@
-## FILE: `patterns/security/rbac-permission-model/metadata.yaml`
-
-```yaml
 pattern:
   id: security.rbac-permission-model
   name: RBAC Permission Model
@@ -55,4 +52,3 @@ pattern:
     - tenant-isolation
     - security
     - saas
-```

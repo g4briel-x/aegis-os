@@ -1,6 +1,3 @@
-## FILE: `config/aegis.config.local.example.yaml`
-
-```yaml
 aegis:
   environment: local
 
@@ -16,4 +13,3 @@ paths:
 cli:
   default_output: text
   allow_open_file_explorer: true
-```

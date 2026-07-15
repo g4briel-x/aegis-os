@@ -1,6 +1,3 @@
-## FILE: `patterns/product/saas-mvp-scope/metadata.yaml`
-
-```yaml
 pattern:
   id: product.saas-mvp-scope
   name: SaaS MVP Scope
@@ -59,4 +56,3 @@ pattern:
     - prioritization
     - validation
     - launch
-```

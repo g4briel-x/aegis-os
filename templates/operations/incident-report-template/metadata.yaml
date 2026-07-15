@@ -1,6 +1,3 @@
-## FILE: `templates/operations/incident-report-template/metadata.yaml`
-
-```yaml
 template:
   id: operations.incident-report-template
   name: Incident Report Template
@@ -60,4 +57,3 @@ template:
     - outage
     - communication
     - production
-```

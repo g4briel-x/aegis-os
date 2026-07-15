@@ -1,6 +1,3 @@
-## FILE: `playbooks/product/prepare-saas-launch/metadata.yaml`
-
-```yaml
 playbook:
   id: product.prepare-saas-launch
   name: Prepare SaaS Launch
@@ -53,4 +50,3 @@ playbook:
     - positioning
     - analytics
     - release-readiness
-```

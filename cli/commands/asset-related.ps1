@@ -1,18 +1,18 @@
 <#
 .SYNOPSIS
-Shows assets related to a given Aegis OS asset.
+Shows related assets for an Aegis OS asset.
 
 .DESCRIPTION
-Bug fix: the original used the same regex pattern for both top-level entries
-("  - id:") and related asset entries ("      - id:"), causing the state machine
-to reset $insideTarget before collecting any related IDs. Fix: match top-level
-entries by exact 2-space indentation and related assets by 6+ spaces.
+Finds an asset by ID inside registry YAML files and displays the values
+declared under related_assets.
 
 .USAGE
-.\cli\aegis.ps1 asset:related <asset-id>
+.\cli\aegis.ps1 asset:related security.security-review-template
 #>
 
-param([string]$Argument = "")
+param(
+    [string]$Argument = ""
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -21,76 +21,134 @@ if ([string]::IsNullOrWhiteSpace($Argument)) {
     exit 2
 }
 
-$files = Get-ChildItem -Path "registry" -Recurse -File -Include *.yaml, *.yml
-$found = $false
-$related = [System.Collections.Generic.List[string]]::new()
+$commandRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $commandRoot "..\..")
+
+Set-Location $repoRoot
+
+$registryRoot = "registry"
+
+if (-not (Test-Path $registryRoot)) {
+    Write-Host "Registry folder not found: $registryRoot" -ForegroundColor Red
+    exit 3
+}
+
+$files = @(
+    Get-ChildItem -Path $registryRoot -Recurse -File |
+    Where-Object {
+        $_.Extension -in @(".yaml", ".yml")
+    }
+)
+
+$assetFound = $false
+$sourceRegistry = $null
+$relatedAssets = [System.Collections.Generic.List[string]]::new()
 
 foreach ($file in $files) {
-    $lines = Get-Content $file.FullName
+    $lines = Get-Content -Path $file.FullName
+
     $insideTarget = $false
-    $insideRelated = $false
+    $insideRelatedAssets = $false
 
     foreach ($line in $lines) {
-
-        # Nouvelle entrée de haut niveau — exactement 2 espaces avant "-"
-        # ex: "  - id: engineering.senior-developer"
-        if ($line -match "^  -\s*id:\s*(.+)\s*$") {
-            $id = $Matches[1].Trim().Trim('"').Trim("'")
-
-            # On quitte la cible si on rencontre une autre entrée principale
-            if ($insideTarget -and $id -ne $Argument) {
-                $insideTarget = $false
-                $insideRelated = $false
+        if ($line -match '^\s*-\s*id:\s*(.+)\s*$') {
+            if ($insideTarget) {
+                break
             }
 
-            if ($id -eq $Argument) {
-                $found = $true
-                $insideTarget = $true
-                $insideRelated = $false
+            $id = $Matches[1].Trim()
+            $id = $id.Trim('"')
+            $id = $id.Trim("'")
+
+            $insideTarget = ($id -eq $Argument)
+            $insideRelatedAssets = $false
+
+            if ($insideTarget) {
+                $assetFound = $true
+                $sourceRegistry = $file.FullName
             }
+
             continue
         }
 
-        # Entrée dans le bloc related_assets
-        if ($insideTarget -and $line -match "^\s*related_assets:\s*$") {
-            $insideRelated = $true
+        if (-not $insideTarget) {
             continue
         }
 
-        # Related asset — 6 espaces ou plus avant "-"
-        # ex: "      - id: engineering.review-pull-request"
-        if ($insideTarget -and $insideRelated -and $line -match "^\s{6,}-\s*id:\s*(.+)\s*$") {
-            $relatedId = $Matches[1].Trim().Trim('"').Trim("'")
-            if (-not [string]::IsNullOrWhiteSpace($relatedId)) {
-                $related.Add($relatedId)
+        if ($line -match '^\s*related_assets:\s*(.*)\s*$') {
+            $insideRelatedAssets = $true
+            $inlineValue = $Matches[1].Trim()
+
+            if (-not [string]::IsNullOrWhiteSpace($inlineValue)) {
+                $inlineValue = $inlineValue.TrimStart('[').TrimEnd(']')
+
+                foreach ($item in ($inlineValue -split ',')) {
+                    $relatedAsset = $item.Trim()
+                    $relatedAsset = $relatedAsset.Trim('"')
+                    $relatedAsset = $relatedAsset.Trim("'")
+
+                    if (-not [string]::IsNullOrWhiteSpace($relatedAsset)) {
+                        $relatedAssets.Add($relatedAsset)
+                    }
+                }
+
+                $insideRelatedAssets = $false
             }
+
             continue
         }
 
-        # Fin du bloc related_assets : une clé sans "-" au niveau 4 espaces
-        if ($insideRelated -and $line -match "^    [A-Za-z0-9_-]+:\s*") {
-            $insideRelated = $false
+        if ($insideRelatedAssets -and $line -match '^\s{6,}-\s*(.+)\s*$') {
+            $relatedAsset = $Matches[1].Trim()
+            $relatedAsset = $relatedAsset.Trim('"')
+            $relatedAsset = $relatedAsset.Trim("'")
+
+            if (-not [string]::IsNullOrWhiteSpace($relatedAsset)) {
+                $relatedAssets.Add($relatedAsset)
+            }
+
+            continue
+        }
+
+        if ($insideRelatedAssets -and $line -match '^\s{4}[A-Za-z0-9_-]+:\s*') {
+            $insideRelatedAssets = $false
         }
     }
 
-    if ($found) { break }
+    if ($assetFound) {
+        break
+    }
 }
 
-if (-not $found) {
+if (-not $assetFound) {
     Write-Host "Asset not found: $Argument" -ForegroundColor Red
-    exit 1
+    exit 5
 }
 
-Write-Host "Related assets for $Argument:" -ForegroundColor Cyan
+Write-Host ('Related assets for {0}:' -f $Argument) -ForegroundColor Cyan
 Write-Host ""
 
-if ($related.Count -eq 0) {
-    Write-Host "No related assets found." -ForegroundColor Yellow
+if ($relatedAssets.Count -eq 0) {
+    Write-Host "No related assets declared." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Registry:" -ForegroundColor Yellow
+    Write-Host $sourceRegistry
     exit 0
 }
 
-$related | Sort-Object -Unique | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
+$uniqueRelatedAssets = @(
+    $relatedAssets |
+    Sort-Object -Unique
+)
+
+foreach ($relatedAsset in $uniqueRelatedAssets) {
+    Write-Host $relatedAsset -ForegroundColor Yellow
+}
 
 Write-Host ""
-Write-Host "Total: $($related.Count) related asset(s)" -ForegroundColor Green
+Write-Host ('Total related assets: {0}' -f $uniqueRelatedAssets.Count) -ForegroundColor Green
+Write-Host ""
+Write-Host "Registry:" -ForegroundColor Cyan
+Write-Host $sourceRegistry
+
 exit 0

@@ -1,5 +1,3 @@
-## FILE: `config/aegis.config.example.yaml`
-
 aegis:
   name: Aegis OS
   version: 0.1.0

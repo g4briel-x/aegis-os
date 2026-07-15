@@ -17,11 +17,11 @@ $skills = @(
     "product/product-manager-saas",
     "product/business-analyst",
 
-    "design/ux-ui-designer",
+    "design/ux-ui-designer-saas",
 
     "infrastructure/devops-engineer",
     "infrastructure/cloud-architect",
-    "infrastructure/security-engineer",
+    "security/security-engineer",
 
     "management/technical-project-manager"
 )

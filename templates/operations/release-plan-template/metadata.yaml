@@ -1,6 +1,3 @@
-## FILE: `templates/operations/release-plan-template/metadata.yaml`
-
-```yaml
 template:
   id: operations.release-plan-template
   name: Release Plan Template
@@ -64,4 +61,3 @@ template:
     - operations
     - saas
     - production
-```

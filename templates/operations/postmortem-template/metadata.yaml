@@ -1,6 +1,3 @@
-## FILE: `templates/operations/postmortem-template/metadata.yaml`
-
-```yaml
 template:
   id: operations.postmortem-template
   name: Postmortem Template
@@ -60,4 +57,3 @@ template:
     - root-cause
     - corrective-actions
     - production
-```

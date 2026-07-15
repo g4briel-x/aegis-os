@@ -1,6 +1,3 @@
-## FILE: `playbooks/infrastructure/deploy-saas-application/metadata.yaml`
-
-```yaml
 playbook:
   id: infrastructure.deploy-saas-application
   name: Deploy SaaS Application
@@ -47,4 +44,3 @@ playbook:
     - smoke-test
     - monitoring
     - infrastructure
-```

@@ -1,6 +1,3 @@
-## FILE: `skills/design/ux-ui-designer-saas/metadata.yaml`
-
-```yaml
 skill:
   id: design.ux-ui-designer-saas
   name: UX/UI Designer SaaS
@@ -42,4 +39,3 @@ skill:
     - usability
     - accessibility
     - design-system
-```

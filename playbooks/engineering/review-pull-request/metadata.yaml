@@ -1,6 +1,3 @@
-## FILE: `playbooks/engineering/review-pull-request/metadata.yaml`
-
-```yaml
 playbook:
   id: engineering.review-pull-request
   name: Review Pull Request
@@ -46,4 +43,3 @@ playbook:
     - security
     - architecture
     - quality
-```

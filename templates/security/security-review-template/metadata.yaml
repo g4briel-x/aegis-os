@@ -1,6 +1,3 @@
-## FILE: `templates/security/security-review-template/metadata.yaml`
-
-```yaml
 template:
   id: security.security-review-template
   name: Security Review Template
@@ -63,4 +60,3 @@ template:
     - audit
     - api
     - saas
-```

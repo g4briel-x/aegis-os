@@ -1,6 +1,3 @@
-## FILE: `patterns/engineering/database-migration-safety/metadata.yaml`
-
-```yaml
 pattern:
   id: engineering.database-migration-safety
   name: Database Migration Safety
@@ -65,4 +62,3 @@ pattern:
     - production
     - saas
     - safety
-```

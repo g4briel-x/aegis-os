@@ -1,6 +1,3 @@
-## FILE: `playbooks/operations/create-runbook/metadata.yaml`
-
-```yaml
 playbook:
   id: operations.create-runbook
   name: Create Runbook
@@ -50,4 +47,3 @@ playbook:
     - rollback
     - verification
     - documentation
-```

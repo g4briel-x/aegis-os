@@ -1,6 +1,3 @@
-## FILE: `playbooks/management/plan-saas-mvp-delivery/metadata.yaml`
-
-```yaml
 playbook:
   id: management.plan-saas-mvp-delivery
   name: Plan SaaS MVP Delivery
@@ -48,4 +45,3 @@ playbook:
     - backlog
     - dependencies
     - launch
-```

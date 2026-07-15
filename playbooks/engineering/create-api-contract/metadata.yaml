@@ -1,6 +1,3 @@
-## FILE: `playbooks/engineering/create-api-contract/metadata.yaml`
-
-```yaml
 playbook:
   id: engineering.create-api-contract
   name: Create API Contract
@@ -50,4 +47,3 @@ playbook:
     - schema
     - authorization
     - integration
-```

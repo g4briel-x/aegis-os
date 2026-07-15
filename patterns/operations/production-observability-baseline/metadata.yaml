@@ -1,6 +1,3 @@
-## FILE: `patterns/operations/production-observability-baseline/metadata.yaml`
-
-```yaml
 pattern:
   id: operations.production-observability-baseline
   name: Production Observability Baseline
@@ -64,4 +61,3 @@ pattern:
     - production
     - reliability
     - saas
-```

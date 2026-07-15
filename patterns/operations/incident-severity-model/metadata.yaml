@@ -1,6 +1,3 @@
-## FILE: `patterns/operations/incident-severity-model/metadata.yaml`
-
-```yaml
 pattern:
   id: operations.incident-severity-model
   name: Incident Severity Model
@@ -62,4 +59,3 @@ pattern:
     - escalation
     - communication
     - saas
-```

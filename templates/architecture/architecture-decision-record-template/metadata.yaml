@@ -1,6 +1,3 @@
-## FILE: `templates/architecture/architecture-decision-record-template/metadata.yaml`
-
-```yaml
 template:
   id: architecture.architecture-decision-record-template
   name: Architecture Decision Record Template
@@ -59,4 +56,3 @@ template:
     - trade-offs
     - documentation
     - governance
-```

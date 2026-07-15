@@ -1,6 +1,3 @@
-## FILE: `templates/business/go-to-market-plan-template/metadata.yaml`
-
-```yaml
 template:
   id: business.go-to-market-plan-template
   name: Go-To-Market Plan Template
@@ -62,4 +59,3 @@ template:
     - acquisition
     - sales
     - marketing
-```

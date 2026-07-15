@@ -1,6 +1,3 @@
-## FILE: `templates/management/rfc-template/metadata.yaml`
-
-```yaml
 template:
   id: management.rfc-template
   name: RFC Template
@@ -60,4 +57,3 @@ template:
     - architecture
     - product
     - change-management
-```

@@ -1,6 +1,3 @@
-## FILE: `templates/product/prd-template/metadata.yaml`
-
-```yaml
 template:
   id: product.prd-template
   name: PRD Template
@@ -60,4 +57,3 @@ template:
     - feature
     - mvp
     - delivery
-```

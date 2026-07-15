@@ -1,6 +1,3 @@
-## FILE: `skills/infrastructure/devops-engineer/metadata.yaml`
-
-```yaml
 skill:
   id: infrastructure.devops-engineer
   name: DevOps Engineer
@@ -44,4 +41,3 @@ skill:
     - observability
     - operations
     - rollback
-```

@@ -1,6 +1,3 @@
-## FILE: `patterns/operations/feature-flag-rollout/metadata.yaml`
-
-```yaml
 pattern:
   id: operations.feature-flag-rollout
   name: Feature Flag Rollout
@@ -57,4 +54,3 @@ pattern:
     - monitoring
     - rollback
     - saas
-```

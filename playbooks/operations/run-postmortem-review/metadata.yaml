@@ -1,6 +1,3 @@
-## FILE: `playbooks/operations/run-postmortem-review/metadata.yaml`
-
-```yaml
 playbook:
   id: operations.run-postmortem-review
   name: Run Postmortem Review
@@ -46,4 +43,3 @@ playbook:
     - reliability
     - prevention
     - follow-up
-```

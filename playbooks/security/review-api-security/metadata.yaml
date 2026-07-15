@@ -1,6 +1,3 @@
-## FILE: `playbooks/security/review-api-security/metadata.yaml`
-
-```yaml
 playbook:
   id: security.review-api-security
   name: Review API Security
@@ -44,4 +41,3 @@ playbook:
     - data-exposure
     - audit
     - owasp
-```

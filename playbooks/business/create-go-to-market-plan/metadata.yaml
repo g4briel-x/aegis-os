@@ -1,6 +1,3 @@
-## FILE: `playbooks/business/create-go-to-market-plan/metadata.yaml`
-
-```yaml
 playbook:
   id: business.create-go-to-market-plan
   name: Create Go-To-Market Plan
@@ -49,4 +46,3 @@ playbook:
     - marketing
     - saas
     - growth
-```

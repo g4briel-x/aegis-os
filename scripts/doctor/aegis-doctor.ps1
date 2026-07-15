@@ -11,6 +11,11 @@ powershell -ExecutionPolicy Bypass -File scripts\doctor\aegis-doctor.ps1
 
 $ErrorActionPreference = "Stop"
 
+
+# Resolve the exact PowerShell host currently running this script
+# (pwsh on PowerShell 7+/cross-platform, powershell.exe on Windows PowerShell 5.1)
+# instead of hardcoding a binary name that may not exist on this machine.
+$PSExe = (Get-Process -Id $PID).Path
 Write-Host "Aegis OS - Doctor" -ForegroundColor Cyan
 Write-Host "Running repository health checks..." -ForegroundColor Cyan
 
@@ -36,7 +41,7 @@ foreach ($check in $checks) {
     Write-Host ""
     Write-Host "Running $check..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $checkPath
+    & $PSExe -ExecutionPolicy Bypass -File $checkPath
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "$check failed."
@@ -50,7 +55,7 @@ if (Test-Path $validationScript) {
     Write-Host ""
     Write-Host "Running registry validation..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $validationScript
+    & $PSExe -ExecutionPolicy Bypass -File $validationScript
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Registry validation failed."
@@ -67,7 +72,7 @@ if (Test-Path $reportScript) {
     Write-Host ""
     Write-Host "Generating registry reports..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $reportScript
+    & $PSExe -ExecutionPolicy Bypass -File $reportScript
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Report generation failed."

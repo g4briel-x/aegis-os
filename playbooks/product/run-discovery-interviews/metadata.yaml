@@ -1,6 +1,3 @@
-## FILE: `playbooks/product/run-discovery-interviews/metadata.yaml`
-
-```yaml
 playbook:
   id: product.run-discovery-interviews
   name: Run Discovery Interviews
@@ -41,4 +38,3 @@ playbook:
     - validation
     - product
     - mvp
-```

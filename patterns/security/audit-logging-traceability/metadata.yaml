@@ -1,6 +1,3 @@
-## FILE: `patterns/security/audit-logging-traceability/metadata.yaml`
-
-```yaml
 pattern:
   id: security.audit-logging-traceability
   name: Audit Logging Traceability
@@ -62,4 +59,3 @@ pattern:
     - compliance
     - incident-response
     - saas
-```

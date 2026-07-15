@@ -1,14 +1,3 @@
-# Aegis OS — Domains Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des domaines Aegis OS :
-
-- `registry/domains/domains.registry.yaml`
-
----
-
-## FILE: `registry/domains/domains.registry.yaml`
-
-```yaml
 registry:
   id: registry.domains
   name: Domains Registry
@@ -332,5 +321,3 @@ domains:
       - principles
       - quality
       - reference
-
-```

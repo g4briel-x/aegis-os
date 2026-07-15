@@ -72,4 +72,4 @@ env/
 # Local CLI artifacts
 .aegis/
 aegis.local.json
-```
+```*.egg-info/

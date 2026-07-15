@@ -1,14 +1,3 @@
-# Aegis OS — Skills Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des Skills :
-
-- `registry/skills/skills.registry.yaml`
-
----
-
-## FILE: `registry/skills/skills.registry.yaml`
-
-```yaml
 registry:
   id: registry.skills
   name: Skills Registry
@@ -314,4 +303,3 @@ entries:
         relationship: uses
       - id: operations.release-plan-template
         relationship: uses
-```

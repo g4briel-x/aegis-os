@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/aegis_runtime/__init__.py
+src/aegis_runtime/__main__.py
+src/aegis_runtime/asset_resolver.py
+src/aegis_runtime/cli.py
+src/aegis_runtime/config.py
+src/aegis_runtime/models.py
+src/aegis_runtime/registry_loader.py
+src/aegis_runtime/validator.py
+src/aegis_runtime.egg-info/PKG-INFO
+src/aegis_runtime.egg-info/SOURCES.txt
+src/aegis_runtime.egg-info/dependency_links.txt
+src/aegis_runtime.egg-info/entry_points.txt
+src/aegis_runtime.egg-info/requires.txt
+src/aegis_runtime.egg-info/top_level.txt

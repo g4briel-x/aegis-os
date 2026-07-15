@@ -1,14 +1,3 @@
-# Aegis OS — Templates Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des Templates :
-
-- `registry/templates/templates.registry.yaml`
-
----
-
-## FILE: `registry/templates/templates.registry.yaml`
-
-```yaml
 registry:
   id: registry.templates
   name: Templates Registry
@@ -355,5 +344,3 @@ entries:
         relationship: related_to
       - id: operations.feature-flag-rollout
         relationship: related_to
-
-```

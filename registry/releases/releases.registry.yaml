@@ -1,14 +1,3 @@
-# Aegis OS — Releases Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des releases Aegis OS :
-
-- `registry/releases/releases.registry.yaml`
-
----
-
-## FILE: `registry/releases/releases.registry.yaml`
-
-```yaml
 registry:
   id: registry.releases
   name: Releases Registry
@@ -241,4 +230,3 @@ releases:
     release_notes:
       - Future release.
       - Should represent the first complete usable Aegis OS framework.
-```

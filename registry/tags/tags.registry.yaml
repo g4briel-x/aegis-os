@@ -1,14 +1,3 @@
-# Aegis OS — Tags Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des tags Aegis OS :
-
-- `registry/tags/tags.registry.yaml`
-
----
-
-## FILE: `registry/tags/tags.registry.yaml`
-
-```yaml
 registry:
   id: registry.tags
   name: Tags Registry
@@ -23,77 +12,77 @@ tags:
     category: domain
     status: draft
     maturity: usable
-    description: Engineering-related assets: code, APIs, database, testing, debugging and implementation.
+    description: "Engineering-related assets: code, APIs, database, testing, debugging and implementation."
 
   - id: tag.product
     name: product
     category: domain
     status: draft
     maturity: usable
-    description: Product-related assets: MVP, requirements, discovery, roadmap and SaaS product strategy.
+    description: "Product-related assets: MVP, requirements, discovery, roadmap and SaaS product strategy."
 
   - id: tag.design
     name: design
     category: domain
     status: draft
     maturity: usable
-    description: Design-related assets: UX, UI, onboarding, screens, states and accessibility.
+    description: "Design-related assets: UX, UI, onboarding, screens, states and accessibility."
 
   - id: tag.security
     name: security
     category: domain
     status: draft
     maturity: usable
-    description: Security-related assets: authentication, authorization, RBAC, tenant isolation, audit and hardening.
+    description: "Security-related assets: authentication, authorization, RBAC, tenant isolation, audit and hardening."
 
   - id: tag.infrastructure
     name: infrastructure
     category: domain
     status: draft
     maturity: usable
-    description: Infrastructure-related assets: cloud, DevOps, CI/CD, deployment and environments.
+    description: "Infrastructure-related assets: cloud, DevOps, CI/CD, deployment and environments."
 
   - id: tag.operations
     name: operations
     category: domain
     status: draft
     maturity: usable
-    description: Operations-related assets: releases, monitoring, incidents, runbooks, support and reliability.
+    description: "Operations-related assets: releases, monitoring, incidents, runbooks, support and reliability."
 
   - id: tag.business
     name: business
     category: domain
     status: draft
     maturity: usable
-    description: Business-related assets: pricing, monetization, go-to-market, launch and sales motion.
+    description: "Business-related assets: pricing, monetization, go-to-market, launch and sales motion."
 
   - id: tag.management
     name: management
     category: domain
     status: draft
     maturity: usable
-    description: Management-related assets: planning, delivery, RFCs, decisions and coordination.
+    description: "Management-related assets: planning, delivery, RFCs, decisions and coordination."
 
   - id: tag.documentation
     name: documentation
     category: domain
     status: draft
     maturity: usable
-    description: Documentation-related assets: docs, reference guides, specifications and governance material.
+    description: "Documentation-related assets: docs, reference guides, specifications and governance material."
 
   - id: tag.registry
     name: registry
     category: system
     status: draft
     maturity: usable
-    description: Registry-related assets: machine-readable catalogs, metadata, relationships and automation.
+    description: "Registry-related assets: machine-readable catalogs, metadata, relationships and automation."
 
   - id: tag.core
     name: core
     category: system
     status: draft
     maturity: usable
-    description: Core Aegis OS assets: identity, thinking, decisions, orchestration, quality and execution.
+    description: "Core Aegis OS assets: identity, thinking, decisions, orchestration, quality and execution."
 
   - id: tag.shared
     name: shared
@@ -346,5 +335,3 @@ tags:
     status: draft
     maturity: usable
     description: Assets related to packaging, publishing, trust, discovery and installation.
-
-```

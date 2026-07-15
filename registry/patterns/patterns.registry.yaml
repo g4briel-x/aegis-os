@@ -1,14 +1,3 @@
-# Aegis OS — Patterns Registry Bundle
-
-Ce fichier regroupe le registre machine-readable des Patterns :
-
-- `registry/patterns/patterns.registry.yaml`
-
----
-
-## FILE: `registry/patterns/patterns.registry.yaml`
-
-```yaml
 registry:
   id: registry.patterns
   name: Patterns Registry
@@ -354,5 +343,3 @@ entries:
         relationship: related_to
       - id: operations.run-postmortem-review
         relationship: related_to
-
-```

@@ -1,9 +1,7 @@
-## FILE: `docs/INDEX.md`
-
 # Aegis OS — Documentation Index
 
-Version: 0.1.0  
-Status: Foundation Draft
+Version: 0.6.0  
+Status: Runtime Foundation 
 
 ---
 
@@ -271,6 +269,25 @@ Defines onboarding, user personas, adoption paths, enterprise adoption, pilot pr
 
 ---
 
+## 2.18 Runtime Foundation
+
+```text
+docs/18-runtime-foundation/
+```
+Purpose:
+
+```text
+Documents the Python runtime foundation introduced in v0.6, including runtime architecture, runtime CLI commands and runtime validation behavior.
+```
+
+File:
+
+- [Runtime overview](18-runtime-foundation/RUNTIME_OVERVIEW.md)
+- [Runtime CLI commands](18-runtime-foundation/RUNTIME_CLI_COMMANDS.md)
+- [Runtime validation model](18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md)
+
+---
+
 # 3. Documentation Completion Status
 
 ```yaml
@@ -292,6 +309,7 @@ docs:
   roadmap: complete
   rfc: complete
   adoption: complete
+  runtime_foundation: complete
 ```
 
 ---

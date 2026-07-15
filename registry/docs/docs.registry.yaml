@@ -470,3 +470,68 @@ entries:
         relationship: related_to
       - id: templates.index
         relationship: related_to
+      - id: docs.runtime-overview
+        name: Runtime Overview
+        type: doc
+        domain: documentation
+        category: runtime-foundation
+        status: draft
+        maturity: usable
+        version: 0.6.0
+        path: docs/18-runtime-foundation/RUNTIME_OVERVIEW.md
+        owner: aegis-os
+        summary: Documents the purpose, scope and architecture of the Aegis OS Python runtime foundation.
+        tags:
+          - runtime
+          - python
+          - architecture
+          - v0.6
+        related_assets:
+          - id: docs.runtime-cli-commands
+            relationship: related_to
+          - id: docs.runtime-validation-model
+            relationship: related_to
+
+  - id: docs.runtime-cli-commands
+    name: Runtime CLI Commands
+    type: doc
+    domain: documentation
+    category: runtime-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/18-runtime-foundation/RUNTIME_CLI_COMMANDS.md
+    owner: aegis-os
+    summary: Documents the runtime commands available through the PowerShell CLI and the Python runtime CLI.
+    tags:
+      - runtime
+      - cli
+      - python
+      - v0.6
+    related_assets:
+      - id: docs.runtime-overview
+        relationship: related_to
+      - id: cli.runtime-commands
+        relationship: related_to    
+
+  - id: docs.runtime-validation-model
+    name: Runtime Validation Model
+    type: doc
+    domain: documentation
+    category: runtime-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md
+    owner: aegis-os
+    summary: Defines the validation model used by the Aegis OS Python runtime.
+    tags:
+      - runtime
+      - validation
+      - registry
+      - v0.6
+    related_assets:
+      - id: docs.runtime-overview
+        relationship: related_to
+      - id: docs.runtime-cli-commands
+        relationship: related_to

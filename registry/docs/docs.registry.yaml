@@ -535,3 +535,71 @@ entries:
         relationship: related_to
       - id: docs.runtime-cli-commands
         relationship: related_to
+
+  - id: docs.execution-overview
+    name: Execution Overview
+    type: doc
+    domain: documentation
+    category: execution-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/19-execution-foundation/EXECUTION_OVERVIEW.md
+    owner: aegis-os
+    summary: Documents the execution planning and dry-run foundation introduced in Aegis OS v0.6.
+    tags:
+      - execution
+      - runtime
+      - planning
+      - v0.6
+    related_assets:
+      - id: docs.execution-cli-commands
+        relationship: related_to
+      - id: docs.execution-model
+        relationship: related_to
+      - id: docs.runtime-overview
+        relationship: related_to
+
+  - id: docs.execution-cli-commands
+    name: Execution CLI Commands
+    type: doc
+    domain: documentation
+    category: execution-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/19-execution-foundation/EXECUTION_CLI_COMMANDS.md
+    owner: aegis-os
+    summary: Documents the Python and PowerShell CLI commands for execution planning and dry-run.
+    tags:
+      - execution
+      - cli
+      - runtime
+      - v0.6
+    related_assets:
+      - id: docs.execution-overview
+        relationship: related_to
+      - id: cli.execution-commands
+        relationship: related_to
+    
+  - id: docs.execution-model
+    name: Execution Model
+    type: doc
+    domain: documentation
+    category: execution-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/19-execution-foundation/EXECUTION_MODEL.md
+    owner: aegis-os
+    summary: Documents the internal execution models used by the Aegis OS Python runtime.
+    tags:
+      - execution
+      - model
+      - runtime
+      - v0.6
+    related_assets:
+      - id: docs.execution-overview
+        relationship: related_to
+      - id: docs.execution-cli-commands
+        relationship: related_to   

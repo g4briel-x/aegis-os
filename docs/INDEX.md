@@ -279,7 +279,6 @@ Purpose:
 ```text
 Documents the Python runtime foundation introduced in v0.6, including runtime architecture, runtime CLI commands and runtime validation behavior.
 ```
-
 File:
 
 - [Runtime overview](18-runtime-foundation/RUNTIME_OVERVIEW.md)
@@ -287,6 +286,27 @@ File:
 - [Runtime validation model](18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md)
 
 ---
+
+## 2.19 Execution Foundation
+
+```text
+docs/19-execution-foundation/
+```
+
+Purpose:
+
+```text
+Documents the execution planning and dry-run foundation introduced in v0.6, including execution architecture, CLI commands and execution data models.
+```
+
+Files:
+
+- [Execution overview](19-execution-foundation/EXECUTION_OVERVIEW.md)
+- [Execution CLI commands](19-execution-foundation/EXECUTION_CLI_COMMANDS.md)
+- [Execution model](19-execution-foundation/EXECUTION_MODEL.md)
+
+---
+
 
 # 3. Documentation Completion Status
 
@@ -310,6 +330,7 @@ docs:
   rfc: complete
   adoption: complete
   runtime_foundation: complete
+  execution_foundation: complete
 ```
 
 ---

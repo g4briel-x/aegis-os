@@ -103,14 +103,81 @@ It loads, resolves and validates assets, but does not yet execute playbooks or s
 
 ### Lot 3 — Execution Foundation
 
+Status: completed
+
+Delivered:
+
+```text
+execution data models
+execution planner
+execution dry-run runner
+Python execution CLI commands
+PowerShell execution bridge commands
+execution smoke tests
+```
+
+Validated:
+
+```text
+execution plan command passed
+execution dry-run command passed
+runtime smoke tests passed
+CLI smoke tests passed
+```
+
+### Lot 3B — Execution Documentation
+
+Status: in progress
+
+Delivered in this lot:
+
+```text
+execution overview documentation
+execution CLI command documentation
+execution model documentation
+CLI execution command reference
+execution validation report
+docs registry update
+docs index update
+```
+
+## Current architecture
+
+```text
+PowerShell CLI
+      |
+      v
+Python Runtime
+      |
+      v
+Execution Planner
+      |
+      v
+Execution Plan / Dry-Run Report
+      |
+      v
+Registry YAML layer
+```
+
+## Current known limitation
+
+The execution foundation is still a safe planning layer.
+
+It can create execution plans and dry-run reports, but it does not yet execute real playbooks, skills, AI calls or external actions.
+
+## Next planned lot
+
+### Lot 4 — Playbook Execution Contracts
+
 Planned scope:
 
 ```text
-execution plan model
 playbook execution contract
 skill execution contract
-run context
-run result
-execution report
-dry-run command
+execution context
+execution inputs
+execution outputs
+execution artifacts
+policy checks
+safe action boundaries
 ```

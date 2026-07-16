@@ -63,7 +63,7 @@ Git working tree clean
 
 ### Lot 2B — Runtime Documentation
 
-Status: in progress
+Status: completed
 
 Delivered in this lot:
 
@@ -127,7 +127,7 @@ CLI smoke tests passed
 
 ### Lot 3B — Execution Documentation
 
-Status: in progress
+Status: completed
 
 Delivered in this lot:
 
@@ -256,20 +256,141 @@ safety boundary declaration
 
 Real actions remain disabled.
 
-## Next planned lot
+## Completed execution context work
 
 ### Lot 5 — Execution Context and Input Resolution
+
+Status: completed
+
+Delivered:
+
+```text
+execution context models
+resolved execution input model
+execution environment metadata
+execution artifact declarations
+contract input resolver
+required input validation
+runtime parameter parsing
+execution context builder
+Python execution context command
+PowerShell execution context command
+context unit tests
+CLI command tests
+```
+
+Validated:
+
+```text
+6 execution context tests passed
+15 runtime tests passed
+required input rejection passed
+unknown parameter warning passed
+execution mode validation passed
+Python context command passed
+PowerShell context command passed
+CLI runtime command tests passed
+CLI smoke tests passed
+```
+
+### Lot 5B — Execution Context Documentation
+
+Status: completed
+
+Delivered:
+
+```text
+execution context overview
+input resolution model
+execution artifact model
+execution context validation report
+documentation index update
+documentation registry entries
+```
+
+Validated:
+
+```text
+documentation paths validated
+three documentation assets registered
+registry validation passed
+runtime validation passed
+```
+
+## Current architecture
+
+```text
+PowerShell CLI
+      |
+      v
+Python Runtime
+      |
+      v
+Execution Contract Builder
+      |
+      v
+Contract Validator
+      |
+      v
+Execution Input Resolver
+      |
+      v
+Execution Context Builder
+      |
+      v
+Execution Context
+      |
+      v
+Declared Execution Artifacts
+```
+
+## Current safety boundary
+
+Aegis OS v0.6 currently supports:
+
+```text
+asset resolution
+execution planning
+dry-run simulation
+contract generation
+contract validation
+runtime parameter parsing
+required input validation
+execution context construction
+environment metadata inspection
+artifact declaration
+serialization
+```
+
+Real actions remain disabled.
+
+The runtime does not currently:
+
+```text
+modify or delete files
+execute shell commands
+call external APIs
+send messages
+persist execution artifacts
+resolve secrets
+publish outputs
+```
+
+## Next planned lot
+
+### Lot 6 — Execution Sessions and Workspace Foundation
 
 Planned scope:
 
 ```text
-execution context model
-contract input resolution
-required input validation
-runtime parameters
-execution environment metadata
-execution output contracts
-execution artifacts
-context CLI commands
-context unit tests
+execution session identifiers
+session lifecycle states
+execution workspace model
+workspace isolation metadata
+session timestamps
+session audit metadata
+artifact workspace locations
+session inspection CLI
+session unit tests
+session documentation
 ```

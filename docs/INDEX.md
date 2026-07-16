@@ -307,7 +307,6 @@ Files:
 
 ---
 
----
 
 ## 2.20 Execution Contracts
 
@@ -326,6 +325,25 @@ Files:
 - [Execution contract overview](20-execution-contracts/EXECUTION_CONTRACT_OVERVIEW.md)
 - [Contract safety model](20-execution-contracts/CONTRACT_SAFETY_MODEL.md)
 - [Contract validation model](20-execution-contracts/CONTRACT_VALIDATION_MODEL.md)
+
+---
+## 2.21 Execution Context
+
+```text
+docs/21-execution-context/
+```
+
+Purpose:
+
+```text
+Documents execution context construction, contract input resolution, environment metadata and execution artifact declarations introduced in Aegis OS v0.6.
+```
+
+Files:
+
+- [Execution context overview](21-execution-context/EXECUTION_CONTEXT_OVERVIEW.md)
+- [Input resolution model](21-execution-context/INPUT_RESOLUTION_MODEL.md)
+- [Execution artifact model](21-execution-context/EXECUTION_ARTIFACT_MODEL.md)
 
 ---
 
@@ -354,6 +372,7 @@ docs:
   runtime_foundation: complete
   execution_foundation: complete
   execution_contracts: complete
+  execution_context: complete
 ```
 
 ---

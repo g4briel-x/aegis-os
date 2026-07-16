@@ -671,3 +671,74 @@ entries:
         relationship: related_to
       - id: docs.contract-safety-model
         relationship: related_to        
+ 
+
+  - id: docs.execution-context-overview
+    name: Execution Context Overview
+    type: doc
+    domain: documentation
+    category: execution-context
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/21-execution-context/EXECUTION_CONTEXT_OVERVIEW.md
+    owner: aegis-os
+    summary: Documents execution context construction, resolved inputs, environment metadata and declared artifacts.
+    tags:
+      - execution
+      - context
+      - runtime
+      - v0.6
+    related_assets:
+      - id: docs.input-resolution-model
+        relationship: related_to
+      - id: docs.execution-artifact-model
+        relationship: related_to
+      - id: docs.execution-contract-overview
+        relationship: related_to
+
+  - id: docs.input-resolution-model
+    name: Input Resolution Model
+    type: doc
+    domain: documentation
+    category: execution-context
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/21-execution-context/INPUT_RESOLUTION_MODEL.md
+    owner: aegis-os
+    summary: Documents runtime parameter resolution, contract defaults, required inputs and input validation issues.
+    tags:
+      - execution
+      - inputs
+      - resolution
+      - v0.6
+    related_assets:
+      - id: docs.execution-context-overview
+        relationship: related_to
+      - id: docs.execution-contract-overview
+        relationship: related_to
+
+  - id: docs.execution-artifact-model
+    name: Execution Artifact Model
+    type: doc
+    domain: documentation
+    category: execution-context
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/21-execution-context/EXECUTION_ARTIFACT_MODEL.md
+    owner: aegis-os
+    summary: Documents artifact declarations generated from execution contract outputs and attached to execution contexts.
+    tags:
+      - execution
+      - artifacts
+      - outputs
+      - v0.6
+    related_assets:
+      - id: docs.execution-context-overview
+        relationship: related_to
+      - id: docs.input-resolution-model
+        relationship: related_to
+      - id: docs.execution-contract-overview
+        relationship: related_to        

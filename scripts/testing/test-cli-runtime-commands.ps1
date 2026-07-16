@@ -26,6 +26,7 @@ $commands = @(
     @('runtime:execution-plan', 'security.review-api-security'),
     @('runtime:execution-dry-run', 'security.review-api-security'),
     @('runtime:execution-contract', 'security.review-api-security'),
+    @('runtime:execution-context', 'security.review-api-security'),
     @('runtime:validate', '')
 )
 

@@ -14,7 +14,7 @@ from .config import AegisConfig
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .validator import RegistryValidator
-from .execution import ExecutionMode
+from .execution import ExecutionContextBuilder, ExecutionMode
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .execution.contract_builder import ExecutionContractBuilder
@@ -78,6 +78,26 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     execution_contract.add_argument("asset_id")
 
+    execution_context = execution_commands.add_parser(
+        "context",
+        help="Build a resolved execution context for an asset.",
+    )
+    execution_context.add_argument("asset_id")
+    execution_context.add_argument(
+        "--mode",
+        choices=[mode.value for mode in ExecutionMode],
+        default=ExecutionMode.DRY_RUN.value,
+        help="Execution mode used to build the context.",
+    )
+    execution_context.add_argument(
+        "--input",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+        help="Runtime input parameter. May be supplied multiple times.",
+    )
+
+
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
         "--strict-related",
@@ -118,6 +138,66 @@ def _print_asset_list(assets: list[Asset], *, as_json: bool) -> None:
             details.append(f"type={asset.type}")
         print(" | ".join(details))
     print(f"Total assets: {len(assets)}")
+
+
+def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
+    """Parse repeated NAME=VALUE execution input arguments."""
+
+    parameters: dict[str, str] = {}
+
+    for item in values:
+        if "=" not in item:
+            raise ValueError(
+                f"Invalid execution input '{item}'. "
+                "Expected NAME=VALUE."
+            )
+
+        name, value = item.split("=", 1)
+        name = name.strip()
+
+        if not name:
+            raise ValueError(
+                "Execution input name cannot be empty."
+            )
+
+        if name in parameters:
+            raise ValueError(
+                f"Execution input '{name}' was provided more than once."
+            )
+
+        parameters[name] = value
+
+    return parameters
+
+
+def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
+    """Parse repeated NAME=VALUE execution input arguments."""
+
+    parameters: dict[str, str] = {}
+
+    for item in values:
+        if "=" not in item:
+            raise ValueError(
+                f"Invalid execution input '{item}'. "
+                "Expected NAME=VALUE."
+            )
+
+        name, value = item.split("=", 1)
+        name = name.strip()
+
+        if not name:
+            raise ValueError(
+                "Execution input name cannot be empty."
+            )
+
+        if name in parameters:
+            raise ValueError(
+                f"Execution input '{name}' was provided more than once."
+            )
+
+        parameters[name] = value
+
+    return parameters
 
 
 def _print_execution_plan(plan, *, as_json: bool) -> None:
@@ -209,6 +289,87 @@ def _print_execution_contract_result(result, *, as_json: bool) -> None:
 
     for issue in result.issues:
         print(f"[{issue.severity.upper()}] {issue.code}: {issue.message}")
+
+
+
+def _print_execution_context_result(
+    result,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution context build result."""
+
+    if as_json:
+        print(
+            json.dumps(
+                result.to_dict(),
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    context = result.context
+
+    print("Aegis OS Execution Context")
+    print(f"Target: {context.target_asset_id}")
+    print(f"Mode: {context.mode.value}")
+    print(f"Build: {'passed' if result.ok else 'failed'}")
+    print("")
+
+    print("Resolved inputs:")
+    if context.resolved_inputs:
+        for item in context.resolved_inputs:
+            required = "required" if item.required else "optional"
+            print(
+                f"- {item.name}={item.value} "
+                f"[source={item.source}, {required}]"
+            )
+    else:
+        print("- none")
+    print("")
+
+    print("Environment:")
+    print(f"- name: {context.environment.name}")
+    print(
+        "- working directory: "
+        f"{context.environment.working_directory}"
+    )
+    print(
+        f"- Python: {context.environment.python_version}"
+    )
+    print(f"- platform: {context.environment.platform}")
+    print("")
+
+    print("Declared artifacts:")
+    if context.artifacts:
+        for artifact in context.artifacts:
+            print(
+                f"- {artifact.name} "
+                f"[type={artifact.artifact_type}]"
+            )
+    else:
+        print("- none")
+    print("")
+
+    print(
+        f"Input resolution: "
+        f"{'passed' if result.input_resolution.ok else 'failed'}"
+    )
+    print(f"Errors: {len(result.errors)}")
+    print(f"Warnings: {len(result.warnings)}")
+
+    all_issues = [
+        *result.issues,
+        *result.input_resolution.issues,
+    ]
+
+    for issue in all_issues:
+        print(
+            f"[{issue.severity.upper()}] "
+            f"{issue.code}: {issue.message}"
+        )
+
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -318,6 +479,56 @@ def main(argv: Sequence[str] | None = None) -> int:
                 result = validator.validate(contract)
                 _print_execution_contract_result(result, as_json=args.json)
                 return EXIT_OK if result.ok else EXIT_VALIDATION
+            
+
+            if args.execution_command == "context":
+                asset = resolver.require(args.asset_id)
+
+                contract = (
+                    ExecutionContractBuilder()
+                    .build_from_asset(asset)
+                )
+
+                contract_validation = (
+                    ExecutionContractValidator()
+                    .validate(contract)
+                )
+
+                if not contract_validation.ok:
+                    _print_execution_contract_result(
+                        contract_validation,
+                        as_json=args.json,
+                    )
+                    return EXIT_VALIDATION
+
+                try:
+                    parameters = _parse_execution_inputs(
+                        args.input
+                    )
+                except ValueError as exc:
+                    print(
+                        f"Input error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_USAGE
+
+                result = ExecutionContextBuilder().build(
+                    contract=contract,
+                    mode=ExecutionMode(args.mode),
+                    parameters=parameters,
+                )
+
+                _print_execution_context_result(
+                    result,
+                    as_json=args.json,
+                )
+
+                return (
+                    EXIT_OK
+                    if result.ok
+                    else EXIT_VALIDATION
+                )
+
 
         except KeyError as exc:
             print(str(exc), file=sys.stderr)

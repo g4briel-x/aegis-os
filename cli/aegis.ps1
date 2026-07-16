@@ -84,6 +84,7 @@ $commandMap = @{
     "runtime:execution-plan" = "runtime-execution-plan.ps1"
     "runtime:execution-dry-run" = "runtime-execution-dry-run.ps1"
     "runtime:execution-contract" = "runtime-execution-contract.ps1"
+    "runtime:execution-context" = "runtime-execution-context.ps1"
 
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"

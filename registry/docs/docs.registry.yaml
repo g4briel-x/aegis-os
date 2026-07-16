@@ -603,3 +603,71 @@ entries:
         relationship: related_to
       - id: docs.execution-cli-commands
         relationship: related_to   
+
+  - id: docs.execution-contract-overview
+    name: Execution Contract Overview
+    type: doc
+    domain: documentation
+    category: execution-contracts
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/20-execution-contracts/EXECUTION_CONTRACT_OVERVIEW.md
+    owner: aegis-os
+    summary: Documents the structure, purpose and boundaries of Aegis OS execution contracts.
+    tags:
+      - execution
+      - contracts
+      - runtime
+      - v0.6
+    related_assets:
+      - id: docs.contract-safety-model
+        relationship: related_to
+      - id: docs.contract-validation-model
+        relationship: related_to
+      - id: docs.execution-overview
+        relationship: related_to
+
+  - id: docs.contract-safety-model
+    name: Contract Safety Model
+    type: doc
+    domain: documentation
+    category: execution-contracts
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/20-execution-contracts/CONTRACT_SAFETY_MODEL.md
+    owner: aegis-os
+    summary: Defines safety levels, forbidden actions and execution boundaries for Aegis OS contracts.
+    tags:
+      - execution
+      - safety
+      - contracts
+      - v0.6
+    related_assets:
+      - id: docs.execution-contract-overview
+        relationship: related_to
+      - id: docs.contract-validation-model
+        relationship: related_to
+
+  - id: docs.contract-validation-model
+    name: Contract Validation Model
+    type: doc
+    domain: documentation
+    category: execution-contracts
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/20-execution-contracts/CONTRACT_VALIDATION_MODEL.md
+    owner: aegis-os
+    summary: Documents errors, warnings and validation rules applied to execution contracts.
+    tags:
+      - execution
+      - validation
+      - contracts
+      - v0.6
+    related_assets:
+      - id: docs.execution-contract-overview
+        relationship: related_to
+      - id: docs.contract-safety-model
+        relationship: related_to        

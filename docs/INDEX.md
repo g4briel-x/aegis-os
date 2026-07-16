@@ -307,6 +307,28 @@ Files:
 
 ---
 
+---
+
+## 2.20 Execution Contracts
+
+```text
+docs/20-execution-contracts/
+```
+
+Purpose:
+
+```text
+Documents the execution contract foundation, including contract structure, safety levels, validation rules and automated contract tests.
+```
+
+Files:
+
+- [Execution contract overview](20-execution-contracts/EXECUTION_CONTRACT_OVERVIEW.md)
+- [Contract safety model](20-execution-contracts/CONTRACT_SAFETY_MODEL.md)
+- [Contract validation model](20-execution-contracts/CONTRACT_VALIDATION_MODEL.md)
+
+---
+
 
 # 3. Documentation Completion Status
 
@@ -331,6 +353,7 @@ docs:
   adoption: complete
   runtime_foundation: complete
   execution_foundation: complete
+  execution_contracts: complete
 ```
 
 ---

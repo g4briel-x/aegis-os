@@ -169,15 +169,107 @@ It can create execution plans and dry-run reports, but it does not yet execute r
 
 ### Lot 4 — Playbook Execution Contracts
 
+Status: completed
+
+Delivered:
+
+```text
+execution contract models
+playbook and skill contract types
+contract builder
+contract validator
+execution safety levels
+execution contract Python command
+execution contract PowerShell command
+runtime contract smoke tests
+```
+
+Validated:
+
+```text
+contract generation passed
+contract validation passed
+blocked contract rejection passed
+Python execution contract command passed
+PowerShell execution contract command passed
+CLI smoke tests passed
+```
+
+### Lot 4B — Contract Tests and Documentation
+
+Status: completed
+
+Delivered:
+
+```text
+execution contract unit tests
+execution contract overview
+contract safety model
+contract validation model
+contract validation report
+documentation registry entries
+documentation index update
+```
+
+Validated:
+
+```text
+execution contract tests passed
+full runtime test suite passed
+documentation paths validated
+registry validation passed
+```
+
+## Current architecture
+
+```text
+PowerShell CLI
+      |
+      v
+Python Runtime
+      |
+      v
+Execution Planner
+      |
+      v
+Execution Contract Builder
+      |
+      v
+Contract Validator
+      |
+      v
+Execution Plan / Dry-Run Report
+```
+
+## Current safety boundary
+
+Aegis OS v0.6 currently supports:
+
+```text
+asset resolution
+execution planning
+dry-run simulation
+contract generation
+contract validation
+safety boundary declaration
+```
+
+Real actions remain disabled.
+
+## Next planned lot
+
+### Lot 5 — Execution Context and Input Resolution
+
 Planned scope:
 
 ```text
-playbook execution contract
-skill execution contract
-execution context
-execution inputs
-execution outputs
+execution context model
+contract input resolution
+required input validation
+runtime parameters
+execution environment metadata
+execution output contracts
 execution artifacts
-policy checks
-safe action boundaries
+context CLI commands
+context unit tests
 ```

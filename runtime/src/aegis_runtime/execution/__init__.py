@@ -34,7 +34,25 @@ from .models import (
     ExecutionStatus,
     ExecutionStep,
 )
-
+from .session import (
+    ExecutionSession,
+    ExecutionSessionState,
+)
+from .session_builder import (
+    ExecutionSessionBuilder,
+    ExecutionSessionBuildResult,
+    SessionBuildIssue,
+)
+from .workspace import (
+    ExecutionWorkspace,
+    ExecutionWorkspaceState,
+    WorkspaceLocation,
+)
+from .workspace_store import (
+    ExecutionWorkspaceStore,
+    PersistedExecutionWorkspace,
+    StoredExecutionSession,
+)
 __all__ = [
     "ContextBuildIssue",
     "ContractValidationIssue",
@@ -55,9 +73,19 @@ __all__ = [
     "ExecutionPlan",
     "ExecutionReport",
     "ExecutionSafetyLevel",
+    "ExecutionSession",
+    "ExecutionSessionBuilder",
+    "ExecutionSessionBuildResult",
+    "ExecutionSessionState",
     "ExecutionStatus",
     "ExecutionStep",
+    "ExecutionWorkspace",
+    "ExecutionWorkspaceState",
     "InputResolutionIssue",
     "InputResolutionResult",
     "ResolvedExecutionInput",
+    "SessionBuildIssue",
+    "WorkspaceLocation",
+    "ExecutionWorkspaceStore",
+    "PersistedExecutionWorkspace",
 ]

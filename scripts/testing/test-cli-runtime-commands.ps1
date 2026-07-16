@@ -27,6 +27,7 @@ $commands = @(
     @('runtime:execution-dry-run', 'security.review-api-security'),
     @('runtime:execution-contract', 'security.review-api-security'),
     @('runtime:execution-context', 'security.review-api-security'),
+    @('runtime:execution-session', 'security.review-api-security'),
     @('runtime:validate', '')
 )
 
@@ -49,6 +50,41 @@ foreach ($commandSpec in $commands) {
         Write-Error ('CLI runtime command failed: {0} {1}' -f $command, $argument)
         exit $LASTEXITCODE
     }
+}
+
+$workspaceRoot = Join-Path $repoRoot '.aegis\workspaces'
+
+if (-not (Test-Path $workspaceRoot)) {
+    Write-Error 'No persisted execution workspace was created.'
+    exit 1
+}
+
+$latestWorkspace = Get-ChildItem $workspaceRoot -Directory |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
+
+if (-not $latestWorkspace) {
+    Write-Error 'No persisted execution workspace was found.'
+    exit 1
+}
+
+Write-Host ''
+Write-Host (
+    'Running: .\cli\aegis.ps1 runtime:session-show {0}' `
+        -f $latestWorkspace.Name
+) -ForegroundColor Yellow
+
+& powershell -ExecutionPolicy Bypass `
+    -File 'cli\aegis.ps1' `
+    'runtime:session-show' `
+    $latestWorkspace.Name
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error (
+        'CLI runtime command failed: runtime:session-show {0}' `
+            -f $latestWorkspace.Name
+    )
+    exit $LASTEXITCODE
 }
 
 Write-Host ''

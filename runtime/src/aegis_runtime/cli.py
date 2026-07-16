@@ -14,7 +14,13 @@ from .config import AegisConfig
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .validator import RegistryValidator
-from .execution import ExecutionContextBuilder, ExecutionMode
+from .execution import (
+    ExecutionContextBuilder,
+    ExecutionMode,
+    ExecutionSessionBuilder,
+    ExecutionWorkspaceStore,
+)
+
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .execution.contract_builder import ExecutionContractBuilder
@@ -97,6 +103,40 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Runtime input parameter. May be supplied multiple times.",
     )
 
+    execution_session = execution_commands.add_parser(
+        "session",
+        help=(
+            "Build an execution session with a logical workspace "
+            "for an asset."
+        ),
+    )
+    execution_session.add_argument("asset_id")
+
+    execution_session.add_argument(
+        "--mode",
+        choices=[mode.value for mode in ExecutionMode],
+        default=ExecutionMode.DRY_RUN.value,
+        help="Execution mode used to build the session.",
+    )
+    execution_session.add_argument(
+        "--input",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+        help="Runtime input parameter. May be supplied multiple times.",
+    )
+
+    execution_session_show = execution_commands.add_parser(
+        "session-show",
+        help=(
+            "Show one persisted execution session by "
+            "workspace ID or session ID."
+        ),
+    )
+    execution_session_show.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
+    )
 
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
@@ -138,36 +178,6 @@ def _print_asset_list(assets: list[Asset], *, as_json: bool) -> None:
             details.append(f"type={asset.type}")
         print(" | ".join(details))
     print(f"Total assets: {len(assets)}")
-
-
-def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
-    """Parse repeated NAME=VALUE execution input arguments."""
-
-    parameters: dict[str, str] = {}
-
-    for item in values:
-        if "=" not in item:
-            raise ValueError(
-                f"Invalid execution input '{item}'. "
-                "Expected NAME=VALUE."
-            )
-
-        name, value = item.split("=", 1)
-        name = name.strip()
-
-        if not name:
-            raise ValueError(
-                "Execution input name cannot be empty."
-            )
-
-        if name in parameters:
-            raise ValueError(
-                f"Execution input '{name}' was provided more than once."
-            )
-
-        parameters[name] = value
-
-    return parameters
 
 
 def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
@@ -371,6 +381,146 @@ def _print_execution_context_result(
         )
 
 
+def _print_execution_session_result(
+    result,
+    persisted=None,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution session build result."""
+
+    if as_json:
+        payload = result.to_dict()
+        payload["persistence"] = (
+            persisted.to_dict()
+            if persisted is not None
+            else None
+        )
+
+        print(
+            json.dumps(
+                payload,
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    session = result.session
+    workspace = result.workspace
+
+    print("Aegis OS Execution Session")
+    print(f"Session: {session.session_id}")
+    print(f"Target: {session.target_asset_id}")
+    print(f"Mode: {session.mode.value}")
+    print(f"State: {session.state.value}")
+    print(f"Build: {'passed' if result.ok else 'failed'}")
+    print("")
+
+    print("Workspace:")
+    print(f"- ID: {workspace.workspace_id}")
+    print(f"- state: {workspace.state.value}")
+    print(f"- logical path: {workspace.logical_path}")
+    print(f"- isolation key: {workspace.isolation_key}")
+    print("")
+
+    print("Reserved locations:")
+    if workspace.locations:
+        for location in workspace.locations:
+            access = (
+                "writable"
+                if location.writable
+                else "read-only"
+            )
+            print(
+                f"- {location.name}: "
+                f"{location.relative_path} [{access}]"
+            )
+    else:
+        print("- none")
+    print("")
+
+    print("Persistence:")
+
+    if persisted is not None:
+        print(f"- workspace: {persisted.workspace_path}")
+        print(f"- session: {persisted.session_manifest}")
+        print(f"- context: {persisted.context_manifest}")
+        print(f"- inputs: {persisted.inputs_manifest}")
+        print(f"- audit: {persisted.audit_manifest}")
+    else:
+        print("- not persisted")
+    print("")
+
+    print(f"Errors: {len(result.errors)}")
+    print(f"Warnings: {len(result.warnings)}")
+
+    all_issues = [
+        *result.issues,
+        *result.context_build.issues,
+        *result.context_build.input_resolution.issues,
+    ]
+
+    for issue in all_issues:
+        print(
+            f"[{issue.severity.upper()}] "
+            f"{issue.code}: {issue.message}"
+        )
+
+
+def _print_stored_execution_session(
+    record,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one persisted execution session."""
+
+    if as_json:
+        print(
+            json.dumps(
+                record.to_dict(),
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    payload = record.payload
+    session = payload.get("session", {})
+    workspace = payload.get("workspace", {})
+    build = payload.get("build", {})
+
+    print("Aegis OS Stored Execution Session")
+    print(f"Session: {record.session_id}")
+    print(f"Workspace: {record.workspace_id}")
+    print(
+        "Target: "
+        f"{session.get('target_asset_id', '-')}"
+    )
+    print(f"Mode: {session.get('mode', '-')}")
+    print(f"State: {session.get('state', '-')}")
+    print(
+        "Build: "
+        f"{'passed' if build.get('ok') else 'failed'}"
+    )
+    print("")
+
+    print("Storage:")
+    print(f"- workspace: {record.workspace_path}")
+    print(f"- session: {record.session_manifest}")
+    print(
+        "- context: "
+        f"{record.workspace_path / 'context' / 'execution-context.json'}"
+    )
+    print(
+        "- inputs: "
+        f"{record.workspace_path / 'inputs' / 'resolved-inputs.json'}"
+    )
+    print(
+        "- audit: "
+        f"{record.workspace_path / 'audit' / 'session.json'}"
+    )
+
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
@@ -479,7 +629,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 result = validator.validate(contract)
                 _print_execution_contract_result(result, as_json=args.json)
                 return EXIT_OK if result.ok else EXIT_VALIDATION
-            
 
             if args.execution_command == "context":
                 asset = resolver.require(args.asset_id)
@@ -529,6 +678,104 @@ def main(argv: Sequence[str] | None = None) -> int:
                     else EXIT_VALIDATION
                 )
 
+            if args.execution_command == "session-show":
+                store = ExecutionWorkspaceStore(
+                    config.repo_root
+                )
+
+                try:
+                    record = store.load(
+                        args.identifier
+                    )
+                except FileNotFoundError as exc:
+                    print(
+                        str(exc),
+                        file=sys.stderr,
+                    )
+                    return EXIT_NOT_FOUND
+                except ValueError as exc:
+                    print(
+                        f"Stored session validation error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_VALIDATION
+                except OSError as exc:
+                    print(
+                        f"Stored session repository error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_REPOSITORY
+
+                _print_stored_execution_session(
+                    record,
+                    as_json=args.json,
+                )
+
+                return EXIT_OK
+
+
+            if args.execution_command == "session":
+                asset = resolver.require(args.asset_id)
+
+                contract = (
+                    ExecutionContractBuilder()
+                    .build_from_asset(asset)
+                )
+
+                contract_validation = (
+                    ExecutionContractValidator()
+                    .validate(contract)
+                )
+
+                if not contract_validation.ok:
+                    _print_execution_contract_result(
+                        contract_validation,
+                        as_json=args.json,
+                    )
+                    return EXIT_VALIDATION
+
+                try:
+                    parameters = _parse_execution_inputs(
+                        args.input
+                    )
+                except ValueError as exc:
+                    print(
+                        f"Input error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_USAGE
+
+                result = ExecutionSessionBuilder().build(
+                    contract=contract,
+                    mode=ExecutionMode(args.mode),
+                    parameters=parameters,
+                )
+
+                persisted = None
+
+                if result.ok:
+                    try:
+                        persisted = ExecutionWorkspaceStore(
+                            config.repo_root
+                        ).persist(result)
+                    except (OSError, ValueError) as exc:
+                        print(
+                            f"Workspace persistence error: {exc}",
+                            file=sys.stderr,
+                        )
+                        return EXIT_REPOSITORY
+
+                _print_execution_session_result(
+                    result,
+                    persisted=persisted,
+                    as_json=args.json,
+                )
+
+                return (
+                    EXIT_OK
+                    if result.ok
+                    else EXIT_VALIDATION
+                )
 
         except KeyError as exc:
             print(str(exc), file=sys.stderr)

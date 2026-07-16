@@ -65,6 +65,7 @@ Write-Host "  runtime:asset-find <keyword>  Search assets with Python runtime"
 Write-Host "  runtime:asset-show <id>       Show one asset with Python runtime"
 Write-Host "  runtime:execution-plan <id>     Create execution plan with Python runtime"
 Write-Host "  runtime:execution-dry-run <id>  Simulate execution without running actions"
+Write-Host "  runtime:execution-contract <id> Build and validate execution contract"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -82,5 +83,6 @@ Write-Host "  .\cli\aegis.ps1 runtime:asset-show security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:validate"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-plan security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-dry-run security.review-api-security"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-contract security.review-api-security"
 
 exit 0

@@ -1,17 +1,37 @@
 """Execution foundation for Aegis OS runtime."""
 
+from .contract_builder import ExecutionContractBuilder
+from .contract_validator import ExecutionContractValidator
+from .contracts import (
+    ContractValidationIssue,
+    ContractValidationResult,
+    ExecutionContract,
+    ExecutionContractType,
+    ExecutionInput,
+    ExecutionOutput,
+    ExecutionSafetyLevel,
+)
 from .models import (
     ExecutionMode,
     ExecutionPlan,
-    ExecutionStep,
-    ExecutionStatus,
     ExecutionReport,
+    ExecutionStatus,
+    ExecutionStep,
 )
 
 __all__ = [
+    "ContractValidationIssue",
+    "ContractValidationResult",
+    "ExecutionContract",
+    "ExecutionContractBuilder",
+    "ExecutionContractType",
+    "ExecutionContractValidator",
+    "ExecutionInput",
     "ExecutionMode",
+    "ExecutionOutput",
     "ExecutionPlan",
-    "ExecutionStep",
-    "ExecutionStatus",
     "ExecutionReport",
+    "ExecutionSafetyLevel",
+    "ExecutionStatus",
+    "ExecutionStep",
 ]

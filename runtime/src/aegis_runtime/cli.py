@@ -17,6 +17,8 @@ from .validator import RegistryValidator
 from .execution import ExecutionMode
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
+from .execution.contract_builder import ExecutionContractBuilder
+from .execution.contract_validator import ExecutionContractValidator
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -69,6 +71,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Create a safe dry-run report for an asset.",
     )
     execution_dry_run.add_argument("asset_id")
+
+    execution_contract = execution_commands.add_parser(
+        "contract",
+        help="Build and validate an execution contract for an asset.",
+    )
+    execution_contract.add_argument("asset_id")
 
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
@@ -146,6 +154,61 @@ def _print_execution_report(report, *, as_json: bool) -> None:
     print("")
 
     _print_execution_plan(report.plan, as_json=False)
+
+
+def _print_execution_contract_result(result, *, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False))
+        return
+
+    contract = result.contract
+
+    print("Aegis OS Execution Contract")
+    print(f"Asset: {contract.asset_id}")
+    print(f"Type: {contract.contract_type.value}")
+    print(f"Safety: {contract.safety_level.value}")
+    print(f"Allowed modes: {', '.join(contract.allowed_modes)}")
+    print("")
+
+    print("Inputs:")
+    if contract.inputs:
+        for item in contract.inputs:
+            required = "required" if item.required else "optional"
+            print(f"- {item.name} ({required})")
+    else:
+        print("- none")
+    print("")
+
+    print("Outputs:")
+    if contract.outputs:
+        for item in contract.outputs:
+            print(f"- {item.name}")
+    else:
+        print("- none")
+    print("")
+
+    print("Required assets:")
+    if contract.required_assets:
+        for asset_id in contract.required_assets:
+            print(f"- {asset_id}")
+    else:
+        print("- none")
+    print("")
+
+    print("Forbidden actions:")
+    if contract.forbidden_actions:
+        for action in contract.forbidden_actions:
+            print(f"- {action}")
+    else:
+        print("- none")
+    print("")
+
+    print(f"Validation: {'passed' if result.ok else 'failed'}")
+    print(f"Errors: {len(result.errors)}")
+    print(f"Warnings: {len(result.warnings)}")
+
+    for issue in result.issues:
+        print(f"[{issue.severity.upper()}] {issue.code}: {issue.message}")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -246,6 +309,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                 report = runner.dry_run(args.asset_id)
                 _print_execution_report(report, as_json=args.json)
                 return EXIT_OK
+
+            if args.execution_command == "contract":
+                asset = resolver.require(args.asset_id)
+                builder = ExecutionContractBuilder()
+                validator = ExecutionContractValidator()
+                contract = builder.build_from_asset(asset)
+                result = validator.validate(contract)
+                _print_execution_contract_result(result, as_json=args.json)
+                return EXIT_OK if result.ok else EXIT_VALIDATION
 
         except KeyError as exc:
             print(str(exc), file=sys.stderr)

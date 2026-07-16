@@ -14,7 +14,12 @@ from .config import AegisConfig
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .validator import RegistryValidator
-from .execution import ExecutionContextBuilder, ExecutionMode
+from .execution import (
+    ExecutionContextBuilder,
+    ExecutionMode,
+    ExecutionSessionBuilder,
+)
+
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .execution.contract_builder import ExecutionContractBuilder
@@ -97,6 +102,28 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Runtime input parameter. May be supplied multiple times.",
     )
 
+    execution_session = execution_commands.add_parser(
+        "session",
+        help=(
+            "Build an execution session with a logical workspace "
+            "for an asset."
+        ),
+    )
+    execution_session.add_argument("asset_id")
+    execution_session.add_argument(
+        "--mode",
+        choices=[mode.value for mode in ExecutionMode],
+        default=ExecutionMode.DRY_RUN.value,
+        help="Execution mode used to build the session.",
+    )
+    execution_session.add_argument(
+        "--input",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+        help="Runtime input parameter. May be supplied multiple times.",
+    )
+
 
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
@@ -138,36 +165,6 @@ def _print_asset_list(assets: list[Asset], *, as_json: bool) -> None:
             details.append(f"type={asset.type}")
         print(" | ".join(details))
     print(f"Total assets: {len(assets)}")
-
-
-def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
-    """Parse repeated NAME=VALUE execution input arguments."""
-
-    parameters: dict[str, str] = {}
-
-    for item in values:
-        if "=" not in item:
-            raise ValueError(
-                f"Invalid execution input '{item}'. "
-                "Expected NAME=VALUE."
-            )
-
-        name, value = item.split("=", 1)
-        name = name.strip()
-
-        if not name:
-            raise ValueError(
-                "Execution input name cannot be empty."
-            )
-
-        if name in parameters:
-            raise ValueError(
-                f"Execution input '{name}' was provided more than once."
-            )
-
-        parameters[name] = value
-
-    return parameters
 
 
 def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
@@ -371,6 +368,72 @@ def _print_execution_context_result(
         )
 
 
+def _print_execution_session_result(
+    result,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution session build result."""
+
+    if as_json:
+        print(
+            json.dumps(
+                result.to_dict(),
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    session = result.session
+    workspace = result.workspace
+
+    print("Aegis OS Execution Session")
+    print(f"Session: {session.session_id}")
+    print(f"Target: {session.target_asset_id}")
+    print(f"Mode: {session.mode.value}")
+    print(f"State: {session.state.value}")
+    print(f"Build: {'passed' if result.ok else 'failed'}")
+    print("")
+
+    print("Workspace:")
+    print(f"- ID: {workspace.workspace_id}")
+    print(f"- state: {workspace.state.value}")
+    print(f"- logical path: {workspace.logical_path}")
+    print(f"- isolation key: {workspace.isolation_key}")
+    print("")
+
+    print("Reserved locations:")
+    if workspace.locations:
+        for location in workspace.locations:
+            access = (
+                "writable"
+                if location.writable
+                else "read-only"
+            )
+            print(
+                f"- {location.name}: "
+                f"{location.relative_path} [{access}]"
+            )
+    else:
+        print("- none")
+    print("")
+
+    print(f"Errors: {len(result.errors)}")
+    print(f"Warnings: {len(result.warnings)}")
+
+    all_issues = [
+        *result.issues,
+        *result.context_build.issues,
+        *result.context_build.input_resolution.issues,
+    ]
+
+    for issue in all_issues:
+        print(
+            f"[{issue.severity.upper()}] "
+            f"{issue.code}: {issue.message}"
+        )
+
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
@@ -479,7 +542,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 result = validator.validate(contract)
                 _print_execution_contract_result(result, as_json=args.json)
                 return EXIT_OK if result.ok else EXIT_VALIDATION
-            
 
             if args.execution_command == "context":
                 asset = resolver.require(args.asset_id)
@@ -529,6 +591,53 @@ def main(argv: Sequence[str] | None = None) -> int:
                     else EXIT_VALIDATION
                 )
 
+            if args.execution_command == "session":
+                asset = resolver.require(args.asset_id)
+
+                contract = (
+                    ExecutionContractBuilder()
+                    .build_from_asset(asset)
+                )
+
+                contract_validation = (
+                    ExecutionContractValidator()
+                    .validate(contract)
+                )
+
+                if not contract_validation.ok:
+                    _print_execution_contract_result(
+                        contract_validation,
+                        as_json=args.json,
+                    )
+                    return EXIT_VALIDATION
+
+                try:
+                    parameters = _parse_execution_inputs(
+                        args.input
+                    )
+                except ValueError as exc:
+                    print(
+                        f"Input error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_USAGE
+
+                result = ExecutionSessionBuilder().build(
+                    contract=contract,
+                    mode=ExecutionMode(args.mode),
+                    parameters=parameters,
+                )
+
+                _print_execution_session_result(
+                    result,
+                    as_json=args.json,
+                )
+
+                return (
+                    EXIT_OK
+                    if result.ok
+                    else EXIT_VALIDATION
+                )
 
         except KeyError as exc:
             print(str(exc), file=sys.stderr)

@@ -48,7 +48,11 @@ from .workspace import (
     ExecutionWorkspaceState,
     WorkspaceLocation,
 )
-
+from .workspace_store import (
+    ExecutionWorkspaceStore,
+    PersistedExecutionWorkspace,
+    StoredExecutionSession,
+)
 __all__ = [
     "ContextBuildIssue",
     "ContractValidationIssue",
@@ -82,4 +86,6 @@ __all__ = [
     "ResolvedExecutionInput",
     "SessionBuildIssue",
     "WorkspaceLocation",
+    "ExecutionWorkspaceStore",
+    "PersistedExecutionWorkspace",
 ]

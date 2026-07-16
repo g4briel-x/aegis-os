@@ -68,6 +68,7 @@ Write-Host "  runtime:execution-dry-run <id>  Simulate execution without running
 Write-Host "  runtime:execution-contract <id> Build and validate execution contract"
 Write-Host "  runtime:execution-context <id>  Build and inspect execution context"
 Write-Host "  runtime:execution-session <id>  Build execution session and logical workspace"
+Write-Host "  runtime:session-show <id>        Show a persisted execution session"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -88,6 +89,7 @@ Write-Host "  .\cli\aegis.ps1 runtime:execution-dry-run security.review-api-secu
 Write-Host "  .\cli\aegis.ps1 runtime:execution-contract security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-context security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-session security.review-api-security"
+Write-Host "  .\cli\aegis.ps1 runtime:session-show <session-id-or-workspace-id>"
 
 
 exit 0

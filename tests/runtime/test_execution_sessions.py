@@ -1,8 +1,14 @@
 """Tests for execution sessions and logical workspaces."""
 
 from uuid import UUID
-
+from pathlib import Path
+import json
 import pytest
+
+
+from aegis_runtime.execution.workspace_store import (
+    ExecutionWorkspaceStore,
+)
 
 from aegis_runtime.execution import (
     ExecutionContext,
@@ -309,3 +315,234 @@ def test_session_build_serialization() -> None:
         ".aegis/workspaces/"
     )
     assert payload["context_build"]["ok"] is True
+
+
+
+def test_workspace_store_persists_session_manifests(
+    tmp_path: Path,
+) -> None:
+    """A successful session must be persisted inside its workspace."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.DRY_RUN,
+        parameters={
+            "scope": "public-api",
+        },
+    )
+
+    persisted = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    ).persist(result)
+
+    assert persisted.workspace_path.is_dir()
+    assert persisted.session_manifest.is_file()
+    assert persisted.context_manifest.is_file()
+    assert persisted.inputs_manifest.is_file()
+    assert persisted.audit_manifest.is_file()
+
+    assert (
+        persisted.workspace_path
+        == (
+            tmp_path
+            / result.workspace.logical_path
+        ).resolve()
+    )
+
+    session_payload = json.loads(
+        persisted.session_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert session_payload["build"]["ok"] is True
+    assert (
+        session_payload["session"]["session_id"]
+        == result.session.session_id
+    )
+    assert (
+        session_payload["workspace"]["workspace_id"]
+        == result.workspace.workspace_id
+    )
+
+    context_payload = json.loads(
+        persisted.context_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert (
+        context_payload["target_asset_id"]
+        == "security.review-api-security"
+    )
+    assert context_payload["mode"] == "dry-run"
+
+    inputs_payload = json.loads(
+        persisted.inputs_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    resolved_values = {
+        item["name"]: item["value"]
+        for item in inputs_payload["resolved_inputs"]
+    }
+
+    assert resolved_values["scope"] == "public-api"
+    assert (
+        resolved_values["target_asset_id"]
+        == "security.review-api-security"
+    )
+
+    audit_payload = json.loads(
+        persisted.audit_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert (
+        audit_payload["session_id"]
+        == result.session.session_id
+    )
+    assert audit_payload["state"] == "context-ready"
+
+def test_workspace_store_rejects_duplicate_persistence(
+    tmp_path: Path,
+) -> None:
+    """An existing session workspace must never be overwritten."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.PLAN,
+        parameters={
+            "scope": "partner-api",
+        },
+    )
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    store.persist(result)
+
+    with pytest.raises(
+        FileExistsError,
+        match="already exists",
+    ):
+        store.persist(result)
+
+
+def test_workspace_store_rejects_failed_session(
+    tmp_path: Path,
+) -> None:
+    """A failed session must not create a physical workspace."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.DRY_RUN,
+        parameters={},
+    )
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="successful execution session",
+    ):
+        store.persist(result)
+
+    assert not (
+        tmp_path
+        / result.workspace.logical_path
+    ).exists()
+
+def test_workspace_store_loads_session_by_workspace_id(
+    tmp_path: Path,
+) -> None:
+    """A persisted session can be loaded by workspace ID."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.DRY_RUN,
+        parameters={
+            "scope": "public-api",
+        },
+    )
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    persisted = store.persist(result)
+
+    record = store.load(
+        result.workspace.workspace_id
+    )
+
+    assert record.workspace_path == persisted.workspace_path
+    assert record.session_manifest == persisted.session_manifest
+    assert record.workspace_id == result.workspace.workspace_id
+    assert record.session_id == result.session.session_id
+    assert (
+        record.payload["session"]["target_asset_id"]
+        == "security.review-api-security"
+    )
+
+def test_workspace_store_loads_session_by_session_id(
+    tmp_path: Path,
+) -> None:
+    """A persisted session can be located by session ID."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.PLAN,
+        parameters={
+            "scope": "partner-api",
+        },
+    )
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    store.persist(result)
+
+    record = store.load(
+        result.session.session_id
+    )
+
+    assert record.session_id == result.session.session_id
+    assert record.workspace_id == result.workspace.workspace_id
+    assert record.payload["session"]["mode"] == "plan"
+
+def test_workspace_store_rejects_unsafe_identifier(
+    tmp_path: Path,
+) -> None:
+    """Session lookup must reject path traversal identifiers."""
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="path separators",
+    ):
+        store.load("../outside")
+
+def test_workspace_store_reports_missing_session(
+    tmp_path: Path,
+) -> None:
+    """An unknown session identifier must return a clear error."""
+
+    store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+    )
+
+    with pytest.raises(
+        FileNotFoundError,
+        match="was not found",
+    ):
+        store.load("missing-session-id")

@@ -18,6 +18,7 @@ from .execution import (
     ExecutionContextBuilder,
     ExecutionMode,
     ExecutionSessionBuilder,
+    ExecutionWorkspaceStore,
 )
 
 from .execution.planner import ExecutionPlanner
@@ -110,6 +111,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     execution_session.add_argument("asset_id")
+
     execution_session.add_argument(
         "--mode",
         choices=[mode.value for mode in ExecutionMode],
@@ -124,6 +126,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Runtime input parameter. May be supplied multiple times.",
     )
 
+    execution_session_show = execution_commands.add_parser(
+        "session-show",
+        help=(
+            "Show one persisted execution session by "
+            "workspace ID or session ID."
+        ),
+    )
+    execution_session_show.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
+    )
 
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
@@ -370,15 +383,23 @@ def _print_execution_context_result(
 
 def _print_execution_session_result(
     result,
+    persisted=None,
     *,
     as_json: bool,
 ) -> None:
     """Print one execution session build result."""
 
     if as_json:
+        payload = result.to_dict()
+        payload["persistence"] = (
+            persisted.to_dict()
+            if persisted is not None
+            else None
+        )
+
         print(
             json.dumps(
-                result.to_dict(),
+                payload,
                 indent=2,
                 ensure_ascii=False,
             )
@@ -419,6 +440,18 @@ def _print_execution_session_result(
         print("- none")
     print("")
 
+    print("Persistence:")
+
+    if persisted is not None:
+        print(f"- workspace: {persisted.workspace_path}")
+        print(f"- session: {persisted.session_manifest}")
+        print(f"- context: {persisted.context_manifest}")
+        print(f"- inputs: {persisted.inputs_manifest}")
+        print(f"- audit: {persisted.audit_manifest}")
+    else:
+        print("- not persisted")
+    print("")
+
     print(f"Errors: {len(result.errors)}")
     print(f"Warnings: {len(result.warnings)}")
 
@@ -433,6 +466,60 @@ def _print_execution_session_result(
             f"[{issue.severity.upper()}] "
             f"{issue.code}: {issue.message}"
         )
+
+
+def _print_stored_execution_session(
+    record,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one persisted execution session."""
+
+    if as_json:
+        print(
+            json.dumps(
+                record.to_dict(),
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    payload = record.payload
+    session = payload.get("session", {})
+    workspace = payload.get("workspace", {})
+    build = payload.get("build", {})
+
+    print("Aegis OS Stored Execution Session")
+    print(f"Session: {record.session_id}")
+    print(f"Workspace: {record.workspace_id}")
+    print(
+        "Target: "
+        f"{session.get('target_asset_id', '-')}"
+    )
+    print(f"Mode: {session.get('mode', '-')}")
+    print(f"State: {session.get('state', '-')}")
+    print(
+        "Build: "
+        f"{'passed' if build.get('ok') else 'failed'}"
+    )
+    print("")
+
+    print("Storage:")
+    print(f"- workspace: {record.workspace_path}")
+    print(f"- session: {record.session_manifest}")
+    print(
+        "- context: "
+        f"{record.workspace_path / 'context' / 'execution-context.json'}"
+    )
+    print(
+        "- inputs: "
+        f"{record.workspace_path / 'inputs' / 'resolved-inputs.json'}"
+    )
+    print(
+        "- audit: "
+        f"{record.workspace_path / 'audit' / 'session.json'}"
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -591,6 +678,42 @@ def main(argv: Sequence[str] | None = None) -> int:
                     else EXIT_VALIDATION
                 )
 
+            if args.execution_command == "session-show":
+                store = ExecutionWorkspaceStore(
+                    config.repo_root
+                )
+
+                try:
+                    record = store.load(
+                        args.identifier
+                    )
+                except FileNotFoundError as exc:
+                    print(
+                        str(exc),
+                        file=sys.stderr,
+                    )
+                    return EXIT_NOT_FOUND
+                except ValueError as exc:
+                    print(
+                        f"Stored session validation error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_VALIDATION
+                except OSError as exc:
+                    print(
+                        f"Stored session repository error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_REPOSITORY
+
+                _print_stored_execution_session(
+                    record,
+                    as_json=args.json,
+                )
+
+                return EXIT_OK
+
+
             if args.execution_command == "session":
                 asset = resolver.require(args.asset_id)
 
@@ -628,8 +751,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                     parameters=parameters,
                 )
 
+                persisted = None
+
+                if result.ok:
+                    try:
+                        persisted = ExecutionWorkspaceStore(
+                            config.repo_root
+                        ).persist(result)
+                    except (OSError, ValueError) as exc:
+                        print(
+                            f"Workspace persistence error: {exc}",
+                            file=sys.stderr,
+                        )
+                        return EXIT_REPOSITORY
+
                 _print_execution_session_result(
                     result,
+                    persisted=persisted,
                     as_json=args.json,
                 )
 

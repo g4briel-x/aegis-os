@@ -1,5 +1,10 @@
 """Execution foundation for Aegis OS runtime."""
 
+
+from .audit import (
+    ExecutionAuditEvent,
+    ExecutionAuditEventType,
+)
 from .context import (
     ExecutionArtifact,
     ExecutionContext,
@@ -34,6 +39,14 @@ from .models import (
     ExecutionStatus,
     ExecutionStep,
 )
+from .orchestrator import (
+    ExecutionOrchestrationResult,
+    ExecutionOrchestrator,
+)
+from .orchestration_store import (
+    ExecutionOrchestrationStore,
+    PersistedExecutionOrchestration,
+)
 from .session import (
     ExecutionSession,
     ExecutionSessionState,
@@ -43,6 +56,7 @@ from .session_builder import (
     ExecutionSessionBuildResult,
     SessionBuildIssue,
 )
+from .session_loader import ExecutionSessionLoader
 from .workspace import (
     ExecutionWorkspace,
     ExecutionWorkspaceState,
@@ -88,4 +102,8 @@ __all__ = [
     "WorkspaceLocation",
     "ExecutionWorkspaceStore",
     "PersistedExecutionWorkspace",
+    "ExecutionAuditEvent",
+    "ExecutionAuditEventType",
+    "ExecutionOrchestrationResult",
+    "ExecutionOrchestrator",
 ]

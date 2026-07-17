@@ -17,7 +17,10 @@ from .validator import RegistryValidator
 from .execution import (
     ExecutionContextBuilder,
     ExecutionMode,
+    ExecutionOrchestrationStore,
+    ExecutionOrchestrator,
     ExecutionSessionBuilder,
+    ExecutionSessionLoader,
     ExecutionWorkspaceStore,
 )
 
@@ -134,6 +137,17 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     execution_session_show.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
+    )
+    execution_orchestrate = execution_commands.add_parser(
+        "orchestrate",
+        help=(
+            "Orchestrate one persisted execution session "
+            "by workspace ID or session ID."
+        ),
+    )
+    execution_orchestrate.add_argument(
         "identifier",
         help="Execution workspace ID or session ID.",
     )
@@ -521,6 +535,62 @@ def _print_stored_execution_session(
         f"{record.workspace_path / 'audit' / 'session.json'}"
     )
 
+def _print_execution_orchestration_result(
+    result,
+    persisted,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one persistent orchestration result."""
+
+    if as_json:
+        payload = result.to_dict()
+        payload["persistence"] = persisted.to_dict()
+
+        print(
+            json.dumps(
+                payload,
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    session = result.session
+
+    print("Aegis OS Execution Orchestration")
+    print(f"Session: {session.session_id}")
+    print(f"Workspace: {session.workspace_id}")
+    print(f"Target: {session.target_asset_id}")
+    print(f"Mode: {session.mode.value}")
+    print(f"State: {session.state.value}")
+    print(
+        "Orchestration: "
+        f"{'passed' if result.ok else 'failed'}"
+    )
+    print("")
+
+    print("Audit events:")
+
+    for event in result.events:
+        transition = ""
+
+        if event.previous_state and event.next_state:
+            transition = (
+                f" [{event.previous_state}"
+                f" -> {event.next_state}]"
+            )
+
+        print(
+            f"- {event.event_type.value}: "
+            f"{event.message}{transition}"
+        )
+
+    print("")
+    print("Persistence:")
+    print(f"- session: {persisted.session_manifest}")
+    print(f"- audit: {persisted.audit_manifest}")
+    print(f"- events written: {persisted.event_count}")
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
@@ -677,6 +747,58 @@ def main(argv: Sequence[str] | None = None) -> int:
                     if result.ok
                     else EXIT_VALIDATION
                 )
+
+            if args.execution_command == "orchestrate":
+                workspace_store = ExecutionWorkspaceStore(
+                    config.repo_root
+                )
+
+                try:
+                    record = workspace_store.load(
+                        args.identifier
+                    )
+
+                    session = ExecutionSessionLoader().load(
+                        record
+                    )
+
+                    result = ExecutionOrchestrator().orchestrate(
+                        session
+                    )
+
+                    persisted = (
+                        ExecutionOrchestrationStore()
+                        .persist(
+                            record=record,
+                            result=result,
+                        )
+                    )
+                except FileNotFoundError as exc:
+                    print(
+                        str(exc),
+                        file=sys.stderr,
+                    )
+                    return EXIT_NOT_FOUND
+                except ValueError as exc:
+                    print(
+                        f"Orchestration validation error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_VALIDATION
+                except OSError as exc:
+                    print(
+                        f"Orchestration repository error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_REPOSITORY
+
+                _print_execution_orchestration_result(
+                    result,
+                    persisted,
+                    as_json=args.json,
+                )
+
+                return EXIT_OK
 
             if args.execution_command == "session-show":
                 store = ExecutionWorkspaceStore(

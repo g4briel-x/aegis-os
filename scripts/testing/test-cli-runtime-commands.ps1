@@ -70,6 +70,61 @@ if (-not $latestWorkspace) {
 
 Write-Host ''
 Write-Host (
+    'Running: .\cli\aegis.ps1 runtime:execution-orchestrate {0}' `
+        -f $latestWorkspace.Name
+) -ForegroundColor Yellow
+
+$orchestrationOutput = & powershell `
+    -ExecutionPolicy Bypass `
+    -File 'cli\aegis.ps1' `
+    'runtime:execution-orchestrate' `
+    $latestWorkspace.Name 2>&1
+
+$orchestrationExitCode = $LASTEXITCODE
+
+$orchestrationOutput | ForEach-Object {
+    Write-Host $_
+}
+
+if ($orchestrationExitCode -ne 0) {
+    Write-Error (
+        'CLI runtime command failed: ' `
+        + 'runtime:execution-orchestrate {0}' `
+        -f $latestWorkspace.Name
+    )
+
+    exit $orchestrationExitCode
+}
+
+$orchestrationText = (
+    $orchestrationOutput -join [Environment]::NewLine
+)
+
+if (
+    $orchestrationText -notmatch
+    'Orchestration:\s+passed'
+) {
+    Write-Error (
+        'Execution orchestration did not report success.'
+    )
+
+    exit 1
+}
+
+if (
+    $orchestrationText -notmatch
+    'State:\s+dry-run-ready'
+) {
+    Write-Error (
+        'Execution orchestration did not reach ' `
+        + 'the dry-run-ready state.'
+    )
+
+    exit 1
+}
+
+Write-Host ''
+Write-Host (
     'Running: .\cli\aegis.ps1 runtime:session-show {0}' `
         -f $latestWorkspace.Name
 ) -ForegroundColor Yellow

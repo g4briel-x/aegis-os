@@ -251,6 +251,81 @@ if (
 
 Write-Host ''
 Write-Host (
+    'Running: .\cli\aegis.ps1 runtime:execution-audit-history {0} actor=test:cli-runtime limit=2 reverse' `
+        -f $latestWorkspace.Name
+) -ForegroundColor Yellow
+
+$auditHistoryOutput = & powershell `
+    -ExecutionPolicy Bypass `
+    -File 'cli\aegis.ps1' `
+    'runtime:execution-audit-history' `
+    $latestWorkspace.Name `
+    'actor=test:cli-runtime' `
+    'limit=2' `
+    'reverse' 2>&1
+
+$auditHistoryExitCode = $LASTEXITCODE
+
+$auditHistoryOutput | ForEach-Object {
+    Write-Host $_
+}
+
+if ($auditHistoryExitCode -ne 0) {
+    Write-Error (
+        'CLI runtime command failed: runtime:execution-audit-history {0}' `
+            -f $latestWorkspace.Name
+    )
+
+    exit $auditHistoryExitCode
+}
+
+$auditHistoryText = (
+    $auditHistoryOutput -join [Environment]::NewLine
+)
+
+if (
+    $auditHistoryText -notmatch
+    'Aegis OS Execution Audit History'
+) {
+    Write-Error `
+        'Execution audit history did not display its expected heading.'
+
+    exit 1
+}
+
+if (
+    $auditHistoryText -notmatch
+    'State:\s+completed'
+) {
+    Write-Error `
+        'Execution audit history did not retain the completed state.'
+
+    exit 1
+}
+
+if (
+    $auditHistoryText -notmatch
+    'Events:\s+2 selected\s+/\s+7 total'
+) {
+    Write-Error `
+        'Execution audit history did not apply the expected event selection.'
+
+    exit 1
+}
+
+if (
+    $auditHistoryText -notmatch
+    'actor=test:cli-runtime'
+) {
+    Write-Error `
+        'Execution audit history did not preserve the actor filter.'
+
+    exit 1
+}
+
+
+Write-Host ''
+Write-Host (
     'Running: .\cli\aegis.ps1 runtime:session-show {0}' `
         -f $latestWorkspace.Name
 ) -ForegroundColor Yellow

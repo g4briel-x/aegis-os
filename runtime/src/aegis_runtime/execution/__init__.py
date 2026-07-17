@@ -5,6 +5,10 @@ from .audit import (
     ExecutionAuditEvent,
     ExecutionAuditEventType,
 )
+from .audit_history import (
+    ExecutionAuditHistory,
+    ExecutionAuditHistoryReader,
+)
 from .context import (
     ExecutionArtifact,
     ExecutionContext,
@@ -113,6 +117,8 @@ __all__ = [
     "PersistedExecutionWorkspace",
     "ExecutionAuditEvent",
     "ExecutionAuditEventType",
+    "ExecutionAuditHistory",
+    "ExecutionAuditHistoryReader",
     "ExecutionOrchestrationResult",
     "ExecutionOrchestrator",
     "ExecutionLifecycleAction",

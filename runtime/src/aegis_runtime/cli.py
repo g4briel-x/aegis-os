@@ -6,31 +6,32 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 from . import __version__
 from .asset_resolver import AssetResolver
 from .config import AegisConfig
-from .models import Asset
-from .registry_loader import RegistryLoader
-from .validator import RegistryValidator
 from .execution import (
+    ExecutionAuditEventType,
+    ExecutionAuditHistoryReader,
     ExecutionContextBuilder,
+    ExecutionLifecycleAction,
+    ExecutionLifecycleManager,
+    ExecutionLifecycleStore,
     ExecutionMode,
     ExecutionOrchestrationStore,
     ExecutionOrchestrator,
     ExecutionSessionBuilder,
     ExecutionSessionLoader,
     ExecutionWorkspaceStore,
-    ExecutionLifecycleAction,
-    ExecutionLifecycleManager,
-    ExecutionLifecycleStore,
 )
-
-from .execution.planner import ExecutionPlanner
-from .execution.runner import ExecutionRunner
 from .execution.contract_builder import ExecutionContractBuilder
 from .execution.contract_validator import ExecutionContractValidator
+from .execution.planner import ExecutionPlanner
+from .execution.runner import ExecutionRunner
+from .models import Asset
+from .registry_loader import RegistryLoader
+from .validator import RegistryValidator
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -40,27 +41,81 @@ EXIT_NOT_FOUND = 5
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="aegis-runtime", description="Aegis OS Python runtime")
-    parser.add_argument("--repo-root", type=Path, help="Path to the Aegis OS repository root.")
-    parser.add_argument("--json", action="store_true", help="Render JSON output.")
-    commands = parser.add_subparsers(dest="command", required=True)
+    """Build the Aegis runtime command-line parser."""
 
-    commands.add_parser("version", help="Show runtime version.")
-    commands.add_parser("status", help="Show repository runtime status.")
+    parser = argparse.ArgumentParser(
+        prog="aegis-runtime",
+        description="Aegis OS Python runtime",
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        help="Path to the Aegis OS repository root.",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Render JSON output.",
+    )
 
-    registry = commands.add_parser("registry", help="Registry operations.")
-    registry_commands = registry.add_subparsers(dest="registry_command", required=True)
-    registry_commands.add_parser("list", help="List registry files.")
+    commands = parser.add_subparsers(
+        dest="command",
+        required=True,
+    )
 
-    asset = commands.add_parser("asset", help="Asset operations.")
-    asset_commands = asset.add_subparsers(dest="asset_command", required=True)
-    asset_show = asset_commands.add_parser("show", help="Show one asset.")
+    commands.add_parser(
+        "version",
+        help="Show runtime version.",
+    )
+    commands.add_parser(
+        "status",
+        help="Show repository runtime status.",
+    )
+
+    registry = commands.add_parser(
+        "registry",
+        help="Registry operations.",
+    )
+    registry_commands = registry.add_subparsers(
+        dest="registry_command",
+        required=True,
+    )
+    registry_commands.add_parser(
+        "list",
+        help="List registry files.",
+    )
+
+    asset = commands.add_parser(
+        "asset",
+        help="Asset operations.",
+    )
+    asset_commands = asset.add_subparsers(
+        dest="asset_command",
+        required=True,
+    )
+
+    asset_show = asset_commands.add_parser(
+        "show",
+        help="Show one asset.",
+    )
     asset_show.add_argument("asset_id")
-    asset_find = asset_commands.add_parser("find", help="Search assets.")
+
+    asset_find = asset_commands.add_parser(
+        "find",
+        help="Search assets.",
+    )
     asset_find.add_argument("query")
-    asset_domain = asset_commands.add_parser("domain", help="List assets in a domain.")
+
+    asset_domain = asset_commands.add_parser(
+        "domain",
+        help="List assets in a domain.",
+    )
     asset_domain.add_argument("domain")
-    asset_tag = asset_commands.add_parser("tag", help="List assets with a tag.")
+
+    asset_tag = asset_commands.add_parser(
+        "tag",
+        help="List assets with a tag.",
+    )
     asset_tag.add_argument("tag")
 
     execution = commands.add_parser(
@@ -106,7 +161,10 @@ def _build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         metavar="NAME=VALUE",
-        help="Runtime input parameter. May be supplied multiple times.",
+        help=(
+            "Runtime input parameter. "
+            "May be supplied multiple times."
+        ),
     )
 
     execution_session = execution_commands.add_parser(
@@ -117,7 +175,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     execution_session.add_argument("asset_id")
-
     execution_session.add_argument(
         "--mode",
         choices=[mode.value for mode in ExecutionMode],
@@ -129,7 +186,10 @@ def _build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         metavar="NAME=VALUE",
-        help="Runtime input parameter. May be supplied multiple times.",
+        help=(
+            "Runtime input parameter. "
+            "May be supplied multiple times."
+        ),
     )
 
     execution_session_show = execution_commands.add_parser(
@@ -143,6 +203,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "identifier",
         help="Execution workspace ID or session ID.",
     )
+
     execution_orchestrate = execution_commands.add_parser(
         "orchestrate",
         help=(
@@ -154,6 +215,44 @@ def _build_parser() -> argparse.ArgumentParser:
         "identifier",
         help="Execution workspace ID or session ID.",
     )
+
+    execution_audit_history = execution_commands.add_parser(
+        "audit-history",
+        help=(
+            "Inspect the validated audit history of one "
+            "persisted execution session."
+        ),
+    )
+    execution_audit_history.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
+    )
+    execution_audit_history.add_argument(
+        "--event-type",
+        choices=[
+            event_type.value
+            for event_type in ExecutionAuditEventType
+        ],
+        default="",
+        help="Filter events by audit event type.",
+    )
+    execution_audit_history.add_argument(
+        "--actor",
+        default="",
+        help="Filter events by exact actor identity.",
+    )
+    execution_audit_history.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Maximum number of events to display.",
+    )
+    execution_audit_history.add_argument(
+        "--reverse",
+        action="store_true",
+        help="Display the most recent events first.",
+    )
+
     execution_lifecycle = execution_commands.add_parser(
         "lifecycle",
         help=(
@@ -186,49 +285,109 @@ def _build_parser() -> argparse.ArgumentParser:
         default="aegis-runtime",
         help="Identity responsible for the transition.",
     )
-    validate = commands.add_parser("validate", help="Validate registries.")
+
+    validate = commands.add_parser(
+        "validate",
+        help="Validate registries.",
+    )
     validate.add_argument(
         "--strict-related",
         action="store_true",
         help="Treat unresolved related assets as errors.",
     )
+
     return parser
 
 
 def _config_from_args(args: argparse.Namespace) -> AegisConfig:
-    return AegisConfig.discover(args.repo_root if args.repo_root else None)
+    """Discover runtime configuration from CLI arguments."""
+
+    return AegisConfig.discover(
+        args.repo_root
+        if args.repo_root
+        else None
+    )
 
 
-def _print_asset(asset: Asset, *, as_json: bool) -> None:
+def _print_json(payload: Any) -> None:
+    """Print one JSON-compatible payload."""
+
+    print(
+        json.dumps(
+            payload,
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
+
+
+def _print_asset(
+    asset: Asset,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one registry asset."""
+
     if as_json:
-        print(json.dumps(asset.to_dict(), indent=2, ensure_ascii=False))
+        _print_json(asset.to_dict())
         return
+
     print(f"ID: {asset.id}")
     print(f"Name: {asset.name or '-'}")
     print(f"Type: {asset.type or '-'}")
     print(f"Domain: {asset.domain or '-'}")
     print(f"Path: {asset.path or '-'}")
-    print(f"Tags: {', '.join(asset.tags) if asset.tags else '-'}")
-    print("Related assets: " + (", ".join(asset.related_assets) if asset.related_assets else "-"))
+    print(
+        "Tags: "
+        + (
+            ", ".join(asset.tags)
+            if asset.tags
+            else "-"
+        )
+    )
+    print(
+        "Related assets: "
+        + (
+            ", ".join(asset.related_assets)
+            if asset.related_assets
+            else "-"
+        )
+    )
+
     if asset.source_file:
         print(f"Registry: {asset.source_file}")
 
 
-def _print_asset_list(assets: list[Asset], *, as_json: bool) -> None:
+def _print_asset_list(
+    assets: list[Asset],
+    *,
+    as_json: bool,
+) -> None:
+    """Print a list of registry assets."""
+
     if as_json:
-        print(json.dumps([asset.to_dict() for asset in assets], indent=2, ensure_ascii=False))
+        _print_json(
+            [asset.to_dict() for asset in assets]
+        )
         return
+
     for asset in assets:
         details = [asset.id]
+
         if asset.domain:
             details.append(f"domain={asset.domain}")
+
         if asset.type:
             details.append(f"type={asset.type}")
+
         print(" | ".join(details))
+
     print(f"Total assets: {len(assets)}")
 
 
-def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
+def _parse_execution_inputs(
+    values: list[str],
+) -> dict[str, str]:
     """Parse repeated NAME=VALUE execution input arguments."""
 
     parameters: dict[str, str] = {}
@@ -250,7 +409,8 @@ def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
 
         if name in parameters:
             raise ValueError(
-                f"Execution input '{name}' was provided more than once."
+                f"Execution input '{name}' "
+                "was provided more than once."
             )
 
         parameters[name] = value
@@ -258,9 +418,15 @@ def _parse_execution_inputs(values: list[str]) -> dict[str, str]:
     return parameters
 
 
-def _print_execution_plan(plan, *, as_json: bool) -> None:
+def _print_execution_plan(
+    plan,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution plan."""
+
     if as_json:
-        print(json.dumps(plan.to_dict(), indent=2, ensure_ascii=False))
+        _print_json(plan.to_dict())
         return
 
     print("Aegis OS Execution Plan")
@@ -272,18 +438,27 @@ def _print_execution_plan(plan, *, as_json: bool) -> None:
         print(f"{step.index}. {step.title}")
         print(f"   Action: {step.action}")
         print(f"   Status: {step.status.value}")
+
         if step.asset_id:
             print(f"   Asset: {step.asset_id}")
+
         if step.asset_type:
             print(f"   Type: {step.asset_type}")
+
         print("")
 
     print(f"Total steps: {len(plan.steps)}")
 
 
-def _print_execution_report(report, *, as_json: bool) -> None:
+def _print_execution_report(
+    report,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution dry-run report."""
+
     if as_json:
-        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        _print_json(report.to_dict())
         return
 
     print("Aegis OS Execution Dry Run")
@@ -291,12 +466,21 @@ def _print_execution_report(report, *, as_json: bool) -> None:
     print(f"Message: {report.message}")
     print("")
 
-    _print_execution_plan(report.plan, as_json=False)
+    _print_execution_plan(
+        report.plan,
+        as_json=False,
+    )
 
 
-def _print_execution_contract_result(result, *, as_json: bool) -> None:
+def _print_execution_contract_result(
+    result,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one execution contract validation result."""
+
     if as_json:
-        print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False))
+        _print_json(result.to_dict())
         return
 
     contract = result.contract
@@ -305,49 +489,65 @@ def _print_execution_contract_result(result, *, as_json: bool) -> None:
     print(f"Asset: {contract.asset_id}")
     print(f"Type: {contract.contract_type.value}")
     print(f"Safety: {contract.safety_level.value}")
-    print(f"Allowed modes: {', '.join(contract.allowed_modes)}")
+    print(
+        "Allowed modes: "
+        + ", ".join(contract.allowed_modes)
+    )
     print("")
 
     print("Inputs:")
+
     if contract.inputs:
         for item in contract.inputs:
-            required = "required" if item.required else "optional"
+            required = (
+                "required"
+                if item.required
+                else "optional"
+            )
             print(f"- {item.name} ({required})")
     else:
         print("- none")
-    print("")
 
+    print("")
     print("Outputs:")
+
     if contract.outputs:
         for item in contract.outputs:
             print(f"- {item.name}")
     else:
         print("- none")
-    print("")
 
+    print("")
     print("Required assets:")
+
     if contract.required_assets:
         for asset_id in contract.required_assets:
             print(f"- {asset_id}")
     else:
         print("- none")
-    print("")
 
+    print("")
     print("Forbidden actions:")
+
     if contract.forbidden_actions:
         for action in contract.forbidden_actions:
             print(f"- {action}")
     else:
         print("- none")
-    print("")
 
-    print(f"Validation: {'passed' if result.ok else 'failed'}")
+    print("")
+    print(
+        "Validation: "
+        f"{'passed' if result.ok else 'failed'}"
+    )
     print(f"Errors: {len(result.errors)}")
     print(f"Warnings: {len(result.warnings)}")
 
     for issue in result.issues:
-        print(f"[{issue.severity.upper()}] {issue.code}: {issue.message}")
-
+        print(
+            f"[{issue.severity.upper()}] "
+            f"{issue.code}: {issue.message}"
+        )
 
 
 def _print_execution_context_result(
@@ -358,13 +558,7 @@ def _print_execution_context_result(
     """Print one execution context build result."""
 
     if as_json:
-        print(
-            json.dumps(
-                result.to_dict(),
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
+        _print_json(result.to_dict())
         return
 
     context = result.context
@@ -372,21 +566,29 @@ def _print_execution_context_result(
     print("Aegis OS Execution Context")
     print(f"Target: {context.target_asset_id}")
     print(f"Mode: {context.mode.value}")
-    print(f"Build: {'passed' if result.ok else 'failed'}")
+    print(
+        "Build: "
+        f"{'passed' if result.ok else 'failed'}"
+    )
     print("")
 
     print("Resolved inputs:")
+
     if context.resolved_inputs:
         for item in context.resolved_inputs:
-            required = "required" if item.required else "optional"
+            required = (
+                "required"
+                if item.required
+                else "optional"
+            )
             print(
                 f"- {item.name}={item.value} "
                 f"[source={item.source}, {required}]"
             )
     else:
         print("- none")
-    print("")
 
+    print("")
     print("Environment:")
     print(f"- name: {context.environment.name}")
     print(
@@ -394,12 +596,14 @@ def _print_execution_context_result(
         f"{context.environment.working_directory}"
     )
     print(
-        f"- Python: {context.environment.python_version}"
+        f"- Python: "
+        f"{context.environment.python_version}"
     )
     print(f"- platform: {context.environment.platform}")
     print("")
 
     print("Declared artifacts:")
+
     if context.artifacts:
         for artifact in context.artifacts:
             print(
@@ -408,10 +612,10 @@ def _print_execution_context_result(
             )
     else:
         print("- none")
-    print("")
 
+    print("")
     print(
-        f"Input resolution: "
+        "Input resolution: "
         f"{'passed' if result.input_resolution.ok else 'failed'}"
     )
     print(f"Errors: {len(result.errors)}")
@@ -444,14 +648,7 @@ def _print_execution_session_result(
             if persisted is not None
             else None
         )
-
-        print(
-            json.dumps(
-                payload,
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
+        _print_json(payload)
         return
 
     session = result.session
@@ -462,7 +659,10 @@ def _print_execution_session_result(
     print(f"Target: {session.target_asset_id}")
     print(f"Mode: {session.mode.value}")
     print(f"State: {session.state.value}")
-    print(f"Build: {'passed' if result.ok else 'failed'}")
+    print(
+        "Build: "
+        f"{'passed' if result.ok else 'failed'}"
+    )
     print("")
 
     print("Workspace:")
@@ -473,6 +673,7 @@ def _print_execution_session_result(
     print("")
 
     print("Reserved locations:")
+
     if workspace.locations:
         for location in workspace.locations:
             access = (
@@ -486,8 +687,8 @@ def _print_execution_session_result(
             )
     else:
         print("- none")
-    print("")
 
+    print("")
     print("Persistence:")
 
     if persisted is not None:
@@ -498,8 +699,8 @@ def _print_execution_session_result(
         print(f"- audit: {persisted.audit_manifest}")
     else:
         print("- not persisted")
-    print("")
 
+    print("")
     print(f"Errors: {len(result.errors)}")
     print(f"Warnings: {len(result.warnings)}")
 
@@ -524,18 +725,11 @@ def _print_stored_execution_session(
     """Print one persisted execution session."""
 
     if as_json:
-        print(
-            json.dumps(
-                record.to_dict(),
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
+        _print_json(record.to_dict())
         return
 
     payload = record.payload
     session = payload.get("session", {})
-    workspace = payload.get("workspace", {})
     build = payload.get("build", {})
 
     print("Aegis OS Stored Execution Session")
@@ -569,6 +763,7 @@ def _print_stored_execution_session(
         f"{record.workspace_path / 'audit' / 'session.json'}"
     )
 
+
 def _print_execution_orchestration_result(
     result,
     persisted,
@@ -580,14 +775,7 @@ def _print_execution_orchestration_result(
     if as_json:
         payload = result.to_dict()
         payload["persistence"] = persisted.to_dict()
-
-        print(
-            json.dumps(
-                payload,
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
+        _print_json(payload)
         return
 
     session = result.session
@@ -626,6 +814,75 @@ def _print_execution_orchestration_result(
     print(f"- audit: {persisted.audit_manifest}")
     print(f"- events written: {persisted.event_count}")
 
+
+def _print_execution_audit_history(
+    history,
+    events,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one validated execution audit history."""
+
+    if as_json:
+        payload = history.to_dict()
+        payload["selected_event_count"] = len(events)
+        payload["events"] = [
+            event.to_dict()
+            for event in events
+        ]
+        _print_json(payload)
+        return
+
+    print("Aegis OS Execution Audit History")
+    print(f"Session: {history.session_id}")
+    print(f"Workspace: {history.workspace_id}")
+    print(f"Target: {history.target_asset_id}")
+    print(f"Mode: {history.mode.value}")
+    print(f"State: {history.state.value}")
+    print(
+        "Events: "
+        f"{len(events)} selected / "
+        f"{history.event_count} total"
+    )
+    print(f"Audit: {history.audit_manifest}")
+    print("")
+
+    if not events:
+        print("No audit events matched the selection.")
+        return
+
+    for index, event in enumerate(
+        events,
+        start=1,
+    ):
+        transition = ""
+
+        if event.previous_state and event.next_state:
+            transition = (
+                f" [{event.previous_state}"
+                f" -> {event.next_state}]"
+            )
+
+        print(
+            f"{index}. {event.timestamp} "
+            f"| {event.event_type.value} "
+            f"| actor={event.actor}"
+        )
+        print(
+            f"   {event.message}{transition}"
+        )
+
+        if event.metadata:
+            print(
+                "   Metadata: "
+                + json.dumps(
+                    event.metadata,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+            )
+
+
 def _print_execution_lifecycle_result(
     result,
     persisted,
@@ -637,14 +894,7 @@ def _print_execution_lifecycle_result(
     if as_json:
         payload = result.to_dict()
         payload["persistence"] = persisted.to_dict()
-
-        print(
-            json.dumps(
-                payload,
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
+        _print_json(payload)
         return
 
     session = result.session
@@ -687,23 +937,449 @@ def _print_execution_lifecycle_result(
     print(f"- events written: {persisted.event_count}")
     print(f"- terminal state: {persisted.terminal_state}")
 
-def main(argv: Sequence[str] | None = None) -> int:
+
+def _handle_execution_context(
+    args: argparse.Namespace,
+    resolver: AssetResolver,
+) -> int:
+    """Build and print one execution context."""
+
+    asset = resolver.require(args.asset_id)
+    contract = (
+        ExecutionContractBuilder()
+        .build_from_asset(asset)
+    )
+    contract_validation = (
+        ExecutionContractValidator()
+        .validate(contract)
+    )
+
+    if not contract_validation.ok:
+        _print_execution_contract_result(
+            contract_validation,
+            as_json=args.json,
+        )
+        return EXIT_VALIDATION
+
+    try:
+        parameters = _parse_execution_inputs(
+            args.input
+        )
+    except ValueError as exc:
+        print(
+            f"Input error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+
+    result = ExecutionContextBuilder().build(
+        contract=contract,
+        mode=ExecutionMode(args.mode),
+        parameters=parameters,
+    )
+
+    _print_execution_context_result(
+        result,
+        as_json=args.json,
+    )
+
+    return (
+        EXIT_OK
+        if result.ok
+        else EXIT_VALIDATION
+    )
+
+
+def _handle_execution_session(
+    args: argparse.Namespace,
+    resolver: AssetResolver,
+    config: AegisConfig,
+) -> int:
+    """Build, persist, and print one execution session."""
+
+    asset = resolver.require(args.asset_id)
+    contract = (
+        ExecutionContractBuilder()
+        .build_from_asset(asset)
+    )
+    contract_validation = (
+        ExecutionContractValidator()
+        .validate(contract)
+    )
+
+    if not contract_validation.ok:
+        _print_execution_contract_result(
+            contract_validation,
+            as_json=args.json,
+        )
+        return EXIT_VALIDATION
+
+    try:
+        parameters = _parse_execution_inputs(
+            args.input
+        )
+    except ValueError as exc:
+        print(
+            f"Input error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+
+    result = ExecutionSessionBuilder().build(
+        contract=contract,
+        mode=ExecutionMode(args.mode),
+        parameters=parameters,
+    )
+
+    persisted = None
+
+    if result.ok:
+        try:
+            persisted = ExecutionWorkspaceStore(
+                config.repo_root
+            ).persist(result)
+        except (OSError, ValueError) as exc:
+            print(
+                f"Workspace persistence error: {exc}",
+                file=sys.stderr,
+            )
+            return EXIT_REPOSITORY
+
+    _print_execution_session_result(
+        result,
+        persisted=persisted,
+        as_json=args.json,
+    )
+
+    return (
+        EXIT_OK
+        if result.ok
+        else EXIT_VALIDATION
+    )
+
+
+def _handle_session_show(
+    args: argparse.Namespace,
+    config: AegisConfig,
+) -> int:
+    """Load and print one persisted execution session."""
+
+    store = ExecutionWorkspaceStore(
+        config.repo_root
+    )
+
+    try:
+        record = store.load(
+            args.identifier
+        )
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+    except ValueError as exc:
+        print(
+            f"Stored session validation error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_VALIDATION
+    except OSError as exc:
+        print(
+            f"Stored session repository error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_REPOSITORY
+
+    _print_stored_execution_session(
+        record,
+        as_json=args.json,
+    )
+
+    return EXIT_OK
+
+
+def _handle_orchestration(
+    args: argparse.Namespace,
+    config: AegisConfig,
+) -> int:
+    """Orchestrate and persist one stored execution session."""
+
+    workspace_store = ExecutionWorkspaceStore(
+        config.repo_root
+    )
+
+    try:
+        record = workspace_store.load(
+            args.identifier
+        )
+        session = ExecutionSessionLoader().load(
+            record
+        )
+        result = ExecutionOrchestrator().orchestrate(
+            session
+        )
+        persisted = ExecutionOrchestrationStore().persist(
+            record=record,
+            result=result,
+        )
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+    except ValueError as exc:
+        print(
+            f"Orchestration validation error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_VALIDATION
+    except OSError as exc:
+        print(
+            f"Orchestration repository error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_REPOSITORY
+
+    _print_execution_orchestration_result(
+        result,
+        persisted,
+        as_json=args.json,
+    )
+
+    return EXIT_OK
+
+
+def _handle_audit_history(
+    args: argparse.Namespace,
+    config: AegisConfig,
+) -> int:
+    """Load, select, and print one execution audit history."""
+
+    workspace_store = ExecutionWorkspaceStore(
+        config.repo_root
+    )
+
+    try:
+        record = workspace_store.load(
+            args.identifier
+        )
+        history = ExecutionAuditHistoryReader().load(
+            record
+        )
+        selected_event_type = (
+            ExecutionAuditEventType(
+                args.event_type
+            )
+            if args.event_type
+            else None
+        )
+        events = history.select(
+            event_type=selected_event_type,
+            actor=args.actor,
+            limit=args.limit,
+            reverse=args.reverse,
+        )
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+    except ValueError as exc:
+        print(
+            f"Audit history validation error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_VALIDATION
+    except OSError as exc:
+        print(
+            f"Audit history repository error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_REPOSITORY
+
+    _print_execution_audit_history(
+        history,
+        events,
+        as_json=args.json,
+    )
+
+    return EXIT_OK
+
+
+def _handle_lifecycle(
+    args: argparse.Namespace,
+    config: AegisConfig,
+) -> int:
+    """Apply and persist one terminal lifecycle transition."""
+
+    workspace_store = ExecutionWorkspaceStore(
+        config.repo_root
+    )
+
+    try:
+        record = workspace_store.load(
+            args.identifier
+        )
+        session = ExecutionSessionLoader().load(
+            record
+        )
+        result = ExecutionLifecycleManager().transition(
+            session=session,
+            action=ExecutionLifecycleAction(
+                args.action
+            ),
+            reason=args.reason,
+            actor=args.actor,
+        )
+        persisted = ExecutionLifecycleStore().persist(
+            record=record,
+            result=result,
+        )
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+    except ValueError as exc:
+        print(
+            f"Lifecycle validation error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_VALIDATION
+    except OSError as exc:
+        print(
+            f"Lifecycle repository error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_REPOSITORY
+
+    _print_execution_lifecycle_result(
+        result,
+        persisted,
+        as_json=args.json,
+    )
+
+    return EXIT_OK
+
+
+def _handle_execution(
+    args: argparse.Namespace,
+    resolver: AssetResolver,
+    config: AegisConfig,
+) -> int:
+    """Dispatch execution subcommands."""
+
+    planner = ExecutionPlanner(resolver)
+
+    try:
+        if args.execution_command == "plan":
+            plan = planner.create_plan(
+                args.asset_id,
+                mode=ExecutionMode.PLAN,
+            )
+            _print_execution_plan(
+                plan,
+                as_json=args.json,
+            )
+            return EXIT_OK
+
+        if args.execution_command == "dry-run":
+            report = ExecutionRunner(planner).dry_run(
+                args.asset_id
+            )
+            _print_execution_report(
+                report,
+                as_json=args.json,
+            )
+            return EXIT_OK
+
+        if args.execution_command == "contract":
+            asset = resolver.require(
+                args.asset_id
+            )
+            contract = (
+                ExecutionContractBuilder()
+                .build_from_asset(asset)
+            )
+            result = (
+                ExecutionContractValidator()
+                .validate(contract)
+            )
+            _print_execution_contract_result(
+                result,
+                as_json=args.json,
+            )
+            return (
+                EXIT_OK
+                if result.ok
+                else EXIT_VALIDATION
+            )
+
+        if args.execution_command == "context":
+            return _handle_execution_context(
+                args,
+                resolver,
+            )
+
+        if args.execution_command == "session":
+            return _handle_execution_session(
+                args,
+                resolver,
+                config,
+            )
+
+        if args.execution_command == "session-show":
+            return _handle_session_show(
+                args,
+                config,
+            )
+
+        if args.execution_command == "orchestrate":
+            return _handle_orchestration(
+                args,
+                config,
+            )
+
+        if args.execution_command == "audit-history":
+            return _handle_audit_history(
+                args,
+                config,
+            )
+
+        if args.execution_command == "lifecycle":
+            return _handle_lifecycle(
+                args,
+                config,
+            )
+
+    except KeyError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+
+    return EXIT_USAGE
+
+
+def main(
+    argv: Sequence[str] | None = None,
+) -> int:
+    """Run the Aegis runtime CLI."""
+
     parser = _build_parser()
     args = parser.parse_args(argv)
 
     if args.command == "version":
-        payload = {"name": "Aegis Runtime", "version": __version__}
+        payload = {
+            "name": "Aegis Runtime",
+            "version": __version__,
+        }
+
         if args.json:
-            print(json.dumps(payload, indent=2))
+            _print_json(payload)
         else:
             print("Aegis OS Runtime")
             print(f"Version: {__version__}")
+
         return EXIT_OK
 
     try:
         config = _config_from_args(args)
     except (FileNotFoundError, ValueError) as exc:
-        print(f"Repository error: {exc}", file=sys.stderr)
+        print(
+            f"Repository error: {exc}",
+            file=sys.stderr,
+        )
         return EXIT_REPOSITORY
 
     loader = RegistryLoader(config.repo_root)
@@ -717,19 +1393,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             "registry_root": str(config.registry_root),
             "registry_count": len(documents),
             "asset_count": len(resolver.assets),
-            "loaded_config_files": [str(path) for path in config.loaded_files],
+            "loaded_config_files": [
+                str(path)
+                for path in config.loaded_files
+            ],
         }
+
         if args.json:
-            print(json.dumps(payload, indent=2, ensure_ascii=False))
+            _print_json(payload)
         else:
             print("Aegis OS Runtime Status")
             print(f"Version: {payload['version']}")
             print(f"Repository: {payload['repo_root']}")
             print(f"Registries: {payload['registry_count']}")
             print(f"Assets: {payload['asset_count']}")
+
         return EXIT_OK
 
-    if args.command == "registry" and args.registry_command == "list":
+    if (
+        args.command == "registry"
+        and args.registry_command == "list"
+    ):
         payload = [
             {
                 "name": document.name,
@@ -739,347 +1423,117 @@ def main(argv: Sequence[str] | None = None) -> int:
             }
             for document in documents
         ]
+
         if args.json:
-            print(json.dumps(payload, indent=2, ensure_ascii=False))
+            _print_json(payload)
         else:
             for item in payload:
                 print(
-                    f"{item['name']} | assets={item['assets']} | "
-                    f"errors={item['errors']} | {item['path']}"
+                    f"{item['name']} "
+                    f"| assets={item['assets']} "
+                    f"| errors={item['errors']} "
+                    f"| {item['path']}"
                 )
+
             print(f"Total registries: {len(payload)}")
+
         return EXIT_OK
 
     if args.command == "asset":
         if args.asset_command == "show":
             asset = resolver.by_id(args.asset_id)
+
             if asset is None:
-                print(f"Asset not found: {args.asset_id}", file=sys.stderr)
+                print(
+                    f"Asset not found: {args.asset_id}",
+                    file=sys.stderr,
+                )
                 return EXIT_NOT_FOUND
-            _print_asset(asset, as_json=args.json)
+
+            _print_asset(
+                asset,
+                as_json=args.json,
+            )
             return EXIT_OK
+
         if args.asset_command == "find":
-            _print_asset_list(resolver.find(args.query), as_json=args.json)
+            _print_asset_list(
+                resolver.find(args.query),
+                as_json=args.json,
+            )
             return EXIT_OK
+
         if args.asset_command == "domain":
-            _print_asset_list(resolver.by_domain(args.domain), as_json=args.json)
+            _print_asset_list(
+                resolver.by_domain(args.domain),
+                as_json=args.json,
+            )
             return EXIT_OK
+
         if args.asset_command == "tag":
-            _print_asset_list(resolver.by_tag(args.tag), as_json=args.json)
+            _print_asset_list(
+                resolver.by_tag(args.tag),
+                as_json=args.json,
+            )
             return EXIT_OK
 
     if args.command == "execution":
-        planner = ExecutionPlanner(resolver)
-
-        try:
-            if args.execution_command == "plan":
-                plan = planner.create_plan(
-                    args.asset_id,
-                    mode=ExecutionMode.PLAN,
-                )
-                _print_execution_plan(plan, as_json=args.json)
-                return EXIT_OK
-
-            if args.execution_command == "dry-run":
-                runner = ExecutionRunner(planner)
-                report = runner.dry_run(args.asset_id)
-                _print_execution_report(report, as_json=args.json)
-                return EXIT_OK
-
-            if args.execution_command == "contract":
-                asset = resolver.require(args.asset_id)
-                builder = ExecutionContractBuilder()
-                validator = ExecutionContractValidator()
-                contract = builder.build_from_asset(asset)
-                result = validator.validate(contract)
-                _print_execution_contract_result(result, as_json=args.json)
-                return EXIT_OK if result.ok else EXIT_VALIDATION
-
-            if args.execution_command == "context":
-                asset = resolver.require(args.asset_id)
-
-                contract = (
-                    ExecutionContractBuilder()
-                    .build_from_asset(asset)
-                )
-
-                contract_validation = (
-                    ExecutionContractValidator()
-                    .validate(contract)
-                )
-
-                if not contract_validation.ok:
-                    _print_execution_contract_result(
-                        contract_validation,
-                        as_json=args.json,
-                    )
-                    return EXIT_VALIDATION
-
-                try:
-                    parameters = _parse_execution_inputs(
-                        args.input
-                    )
-                except ValueError as exc:
-                    print(
-                        f"Input error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_USAGE
-
-                result = ExecutionContextBuilder().build(
-                    contract=contract,
-                    mode=ExecutionMode(args.mode),
-                    parameters=parameters,
-                )
-
-                _print_execution_context_result(
-                    result,
-                    as_json=args.json,
-                )
-
-                return (
-                    EXIT_OK
-                    if result.ok
-                    else EXIT_VALIDATION
-                )
-            if args.execution_command == "lifecycle":
-                workspace_store = ExecutionWorkspaceStore(
-                    config.repo_root
-                )
-
-                try:
-                    record = workspace_store.load(
-                        args.identifier
-                    )
-
-                    session = ExecutionSessionLoader().load(
-                        record
-                    )
-
-                    result = (
-                        ExecutionLifecycleManager()
-                        .transition(
-                            session=session,
-                            action=ExecutionLifecycleAction(
-                                args.action
-                            ),
-                            reason=args.reason,
-                            actor=args.actor,
-                        )
-                    )
-
-                    persisted = (
-                        ExecutionLifecycleStore()
-                        .persist(
-                            record=record,
-                            result=result,
-                        )
-                    )
-                except FileNotFoundError as exc:
-                    print(
-                        str(exc),
-                        file=sys.stderr,
-                    )
-                    return EXIT_NOT_FOUND
-                except ValueError as exc:
-                    print(
-                        f"Lifecycle validation error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_VALIDATION
-                except OSError as exc:
-                    print(
-                        f"Lifecycle repository error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_REPOSITORY
-
-                _print_execution_lifecycle_result(
-                    result,
-                    persisted,
-                    as_json=args.json,
-                )
-
-                return EXIT_OK
-
-            if args.execution_command == "orchestrate":
-                workspace_store = ExecutionWorkspaceStore(
-                    config.repo_root
-                )
-
-                try:
-                    record = workspace_store.load(
-                        args.identifier
-                    )
-
-                    session = ExecutionSessionLoader().load(
-                        record
-                    )
-
-                    result = ExecutionOrchestrator().orchestrate(
-                        session
-                    )
-
-                    persisted = (
-                        ExecutionOrchestrationStore()
-                        .persist(
-                            record=record,
-                            result=result,
-                        )
-                    )
-                except FileNotFoundError as exc:
-                    print(
-                        str(exc),
-                        file=sys.stderr,
-                    )
-                    return EXIT_NOT_FOUND
-                except ValueError as exc:
-                    print(
-                        f"Orchestration validation error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_VALIDATION
-                except OSError as exc:
-                    print(
-                        f"Orchestration repository error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_REPOSITORY
-
-                _print_execution_orchestration_result(
-                    result,
-                    persisted,
-                    as_json=args.json,
-                )
-
-                return EXIT_OK
-
-            if args.execution_command == "session-show":
-                store = ExecutionWorkspaceStore(
-                    config.repo_root
-                )
-
-                try:
-                    record = store.load(
-                        args.identifier
-                    )
-                except FileNotFoundError as exc:
-                    print(
-                        str(exc),
-                        file=sys.stderr,
-                    )
-                    return EXIT_NOT_FOUND
-                except ValueError as exc:
-                    print(
-                        f"Stored session validation error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_VALIDATION
-                except OSError as exc:
-                    print(
-                        f"Stored session repository error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_REPOSITORY
-
-                _print_stored_execution_session(
-                    record,
-                    as_json=args.json,
-                )
-
-                return EXIT_OK
-
-
-            if args.execution_command == "session":
-                asset = resolver.require(args.asset_id)
-
-                contract = (
-                    ExecutionContractBuilder()
-                    .build_from_asset(asset)
-                )
-
-                contract_validation = (
-                    ExecutionContractValidator()
-                    .validate(contract)
-                )
-
-                if not contract_validation.ok:
-                    _print_execution_contract_result(
-                        contract_validation,
-                        as_json=args.json,
-                    )
-                    return EXIT_VALIDATION
-
-                try:
-                    parameters = _parse_execution_inputs(
-                        args.input
-                    )
-                except ValueError as exc:
-                    print(
-                        f"Input error: {exc}",
-                        file=sys.stderr,
-                    )
-                    return EXIT_USAGE
-
-                result = ExecutionSessionBuilder().build(
-                    contract=contract,
-                    mode=ExecutionMode(args.mode),
-                    parameters=parameters,
-                )
-
-                persisted = None
-
-                if result.ok:
-                    try:
-                        persisted = ExecutionWorkspaceStore(
-                            config.repo_root
-                        ).persist(result)
-                    except (OSError, ValueError) as exc:
-                        print(
-                            f"Workspace persistence error: {exc}",
-                            file=sys.stderr,
-                        )
-                        return EXIT_REPOSITORY
-
-                _print_execution_session_result(
-                    result,
-                    persisted=persisted,
-                    as_json=args.json,
-                )
-
-                return (
-                    EXIT_OK
-                    if result.ok
-                    else EXIT_VALIDATION
-                )
-
-        except KeyError as exc:
-            print(str(exc), file=sys.stderr)
-            return EXIT_NOT_FOUND
+        return _handle_execution(
+            args,
+            resolver,
+            config,
+        )
 
     if args.command == "validate":
         validator = RegistryValidator(
             config.repo_root,
-            unresolved_related_as_error=args.strict_related,
+            unresolved_related_as_error=(
+                args.strict_related
+            ),
         )
-        report = validator.validate(documents)
+        report = validator.validate(
+            documents
+        )
+
         if args.json:
-            print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+            _print_json(report.to_dict())
         else:
             print("Aegis OS Runtime Validation")
             print(f"Registries: {report.registry_count}")
             print(f"Assets: {report.asset_count}")
             print(f"Errors: {len(report.errors)}")
             print(f"Warnings: {len(report.warnings)}")
+
             for issue in report.issues:
                 location = ""
+
                 if issue.asset_id:
-                    location += f" asset={issue.asset_id}"
+                    location += (
+                        f" asset={issue.asset_id}"
+                    )
+
                 if issue.source_file:
-                    location += f" file={issue.source_file}"
-                print(f"[{issue.severity.upper()}] {issue.code}: {issue.message}{location}")
-            print("Validation passed." if report.ok else "Validation failed.")
-        return EXIT_OK if report.ok else EXIT_VALIDATION
+                    location += (
+                        f" file={issue.source_file}"
+                    )
+
+                print(
+                    f"[{issue.severity.upper()}] "
+                    f"{issue.code}: {issue.message}"
+                    f"{location}"
+                )
+
+            print(
+                "Validation passed."
+                if report.ok
+                else "Validation failed."
+            )
+
+        return (
+            EXIT_OK
+            if report.ok
+            else EXIT_VALIDATION
+        )
 
     parser.print_help()
     return EXIT_USAGE

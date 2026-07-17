@@ -92,6 +92,7 @@ $commandMap = @{
     "runtime:session-show" = "runtime-session-show.ps1"
     "runtime:execution-orchestrate" = "runtime-execution-orchestrate.ps1"
     "runtime:execution-lifecycle" = "runtime-execution-lifecycle.ps1"
+    "runtime:execution-audit-history" = "runtime-execution-audit-history.ps1"
 
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"

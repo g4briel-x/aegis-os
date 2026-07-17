@@ -72,6 +72,8 @@ Write-Host "  runtime:session-show <id>        Show a persisted execution sessio
 Write-Host "  runtime:execution-orchestrate <id> Orchestrate a persisted execution session"
 Write-Host "  runtime:execution-lifecycle <id> <action> [reason] [actor]"
 Write-Host "                         Complete, fail, or cancel a persisted session"
+Write-Host "  runtime:execution-audit-history <id> [options]"
+Write-Host "                         Inspect validated execution audit events"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -97,4 +99,8 @@ Write-Host "  .\cli\aegis.ps1 runtime:execution-orchestrate <session-id-or-works
 Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> complete"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> fail `"Validation failed.`" `"operator:name`""
 Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> cancel `"Cancelled by operator.`""
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id>"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> type=session-completed"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> actor=operator:test"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> limit=2 reverse"
 exit 0

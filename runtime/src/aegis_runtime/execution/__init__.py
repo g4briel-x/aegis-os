@@ -32,6 +32,15 @@ from .input_resolver import (
     InputResolutionIssue,
     InputResolutionResult,
 )
+from .lifecycle import (
+    ExecutionLifecycleAction,
+    ExecutionLifecycleManager,
+    ExecutionLifecycleResult,
+)
+from .lifecycle_store import (
+    ExecutionLifecycleStore,
+    PersistedExecutionLifecycle,
+)
 from .models import (
     ExecutionMode,
     ExecutionPlan,
@@ -106,4 +115,13 @@ __all__ = [
     "ExecutionAuditEventType",
     "ExecutionOrchestrationResult",
     "ExecutionOrchestrator",
+    "ExecutionLifecycleAction",
+    "ExecutionLifecycleManager",
+    "ExecutionLifecycleResult",
+    "ExecutionLifecycleStore",
+    "PersistedExecutionLifecycle",
+    "ExecutionOrchestrationStore",
+    "ExecutionSessionLoader",
+    "PersistedExecutionOrchestration",
+    "StoredExecutionSession",
 ]

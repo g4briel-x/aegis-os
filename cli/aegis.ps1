@@ -30,9 +30,12 @@ Central command router for Aegis OS local repository operations.
 param(
     [Parameter(Position = 0)]
     [string]$Command = "Help",
-    
-    [Parameter(Position = 1)]
-    [string]$Argument = ""
+
+    [Parameter(
+        Position = 1,
+        ValueFromRemainingArguments = $true
+    )]
+    [string[]]$CommandArguments = @()
 )
 
 $ErrorActionPreference = "Stop"
@@ -88,6 +91,7 @@ $commandMap = @{
     "runtime:execution-session" = "runtime-execution-session.ps1"
     "runtime:session-show" = "runtime-session-show.ps1"
     "runtime:execution-orchestrate" = "runtime-execution-orchestrate.ps1"
+    "runtime:execution-lifecycle" = "runtime-execution-lifecycle.ps1"
 
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"
@@ -112,7 +116,7 @@ function Show-UnknownCommand {
 function Invoke-AegisCommand {
     param(
         [string]$CommandName,
-        [string]$ArgumentValue
+        [string[]]$ArgumentValues = @()
     )
 
     if (-not $commandMap.ContainsKey($CommandName)) {
@@ -124,18 +128,28 @@ function Invoke-AegisCommand {
     $scriptPath = Join-Path $CommandsRoot $scriptName
 
     if (-not (Test-Path $scriptPath)) {
-        Write-Host "Command script missing: $scriptPath" -ForegroundColor Red
+        Write-Host `
+            "Command script missing: $scriptPath" `
+            -ForegroundColor Red
+
         exit 1
     }
 
-    if ([string]::IsNullOrWhiteSpace($ArgumentValue)) {
-        & $PSExe -ExecutionPolicy Bypass -File $scriptPath
+    if ($ArgumentValues.Count -eq 0) {
+        & $PSExe `
+            -ExecutionPolicy Bypass `
+            -File $scriptPath
     }
     else {
-        & $PSExe -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
+        & $PSExe `
+            -ExecutionPolicy Bypass `
+            -File $scriptPath `
+            @ArgumentValues
     }
 
     exit $LASTEXITCODE
 }
 
-Invoke-AegisCommand -CommandName $Command -ArgumentValue $Argument
+Invoke-AegisCommand `
+    -CommandName $Command `
+    -ArgumentValues $CommandArguments

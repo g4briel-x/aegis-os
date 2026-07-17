@@ -22,6 +22,9 @@ from .execution import (
     ExecutionSessionBuilder,
     ExecutionSessionLoader,
     ExecutionWorkspaceStore,
+    ExecutionLifecycleAction,
+    ExecutionLifecycleManager,
+    ExecutionLifecycleStore,
 )
 
 from .execution.planner import ExecutionPlanner
@@ -151,7 +154,38 @@ def _build_parser() -> argparse.ArgumentParser:
         "identifier",
         help="Execution workspace ID or session ID.",
     )
-
+    execution_lifecycle = execution_commands.add_parser(
+        "lifecycle",
+        help=(
+            "Apply a terminal lifecycle action to one "
+            "persisted execution session."
+        ),
+    )
+    execution_lifecycle.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
+    )
+    execution_lifecycle.add_argument(
+        "action",
+        choices=[
+            action.value
+            for action in ExecutionLifecycleAction
+        ],
+        help="Terminal lifecycle action.",
+    )
+    execution_lifecycle.add_argument(
+        "--reason",
+        default="",
+        help=(
+            "Lifecycle reason. Required for fail "
+            "and cancel actions."
+        ),
+    )
+    execution_lifecycle.add_argument(
+        "--actor",
+        default="aegis-runtime",
+        help="Identity responsible for the transition.",
+    )
     validate = commands.add_parser("validate", help="Validate registries.")
     validate.add_argument(
         "--strict-related",
@@ -592,6 +626,67 @@ def _print_execution_orchestration_result(
     print(f"- audit: {persisted.audit_manifest}")
     print(f"- events written: {persisted.event_count}")
 
+def _print_execution_lifecycle_result(
+    result,
+    persisted,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one persisted terminal lifecycle result."""
+
+    if as_json:
+        payload = result.to_dict()
+        payload["persistence"] = persisted.to_dict()
+
+        print(
+            json.dumps(
+                payload,
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    session = result.session
+
+    print("Aegis OS Execution Lifecycle")
+    print(f"Session: {session.session_id}")
+    print(f"Workspace: {session.workspace_id}")
+    print(f"Target: {session.target_asset_id}")
+    print(f"Mode: {session.mode.value}")
+    print(f"Action: {result.action.value}")
+    print(f"State: {session.state.value}")
+    print(f"Reason: {result.reason}")
+    print(f"Actor: {result.actor}")
+    print(
+        "Lifecycle: "
+        f"{'passed' if result.ok else 'failed'}"
+    )
+    print("")
+
+    print("Audit events:")
+
+    for event in result.events:
+        transition = ""
+
+        if event.previous_state and event.next_state:
+            transition = (
+                f" [{event.previous_state}"
+                f" -> {event.next_state}]"
+            )
+
+        print(
+            f"- {event.event_type.value}: "
+            f"{event.message}{transition}"
+        )
+
+    print("")
+    print("Persistence:")
+    print(f"- session: {persisted.session_manifest}")
+    print(f"- audit: {persisted.audit_manifest}")
+    print(f"- events written: {persisted.event_count}")
+    print(f"- terminal state: {persisted.terminal_state}")
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
@@ -747,6 +842,65 @@ def main(argv: Sequence[str] | None = None) -> int:
                     if result.ok
                     else EXIT_VALIDATION
                 )
+            if args.execution_command == "lifecycle":
+                workspace_store = ExecutionWorkspaceStore(
+                    config.repo_root
+                )
+
+                try:
+                    record = workspace_store.load(
+                        args.identifier
+                    )
+
+                    session = ExecutionSessionLoader().load(
+                        record
+                    )
+
+                    result = (
+                        ExecutionLifecycleManager()
+                        .transition(
+                            session=session,
+                            action=ExecutionLifecycleAction(
+                                args.action
+                            ),
+                            reason=args.reason,
+                            actor=args.actor,
+                        )
+                    )
+
+                    persisted = (
+                        ExecutionLifecycleStore()
+                        .persist(
+                            record=record,
+                            result=result,
+                        )
+                    )
+                except FileNotFoundError as exc:
+                    print(
+                        str(exc),
+                        file=sys.stderr,
+                    )
+                    return EXIT_NOT_FOUND
+                except ValueError as exc:
+                    print(
+                        f"Lifecycle validation error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_VALIDATION
+                except OSError as exc:
+                    print(
+                        f"Lifecycle repository error: {exc}",
+                        file=sys.stderr,
+                    )
+                    return EXIT_REPOSITORY
+
+                _print_execution_lifecycle_result(
+                    result,
+                    persisted,
+                    as_json=args.json,
+                )
+
+                return EXIT_OK
 
             if args.execution_command == "orchestrate":
                 workspace_store = ExecutionWorkspaceStore(

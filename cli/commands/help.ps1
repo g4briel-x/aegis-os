@@ -15,7 +15,7 @@ Write-Host "Aegis OS CLI" -ForegroundColor Cyan
 Write-Host ""
 
 Write-Host "Usage:" -ForegroundColor Yellow
-Write-Host "  .\cli\aegis.ps1 <command> [argument]"
+Write-Host "  .\cli\aegis.ps1 <command> [arguments...]"
 Write-Host ""
 
 Write-Host "Core Commands:" -ForegroundColor Yellow
@@ -70,6 +70,8 @@ Write-Host "  runtime:execution-context <id>  Build and inspect execution contex
 Write-Host "  runtime:execution-session <id>  Build execution session and logical workspace"
 Write-Host "  runtime:session-show <id>        Show a persisted execution session"
 Write-Host "  runtime:execution-orchestrate <id> Orchestrate a persisted execution session"
+Write-Host "  runtime:execution-lifecycle <id> <action> [reason] [actor]"
+Write-Host "                         Complete, fail, or cancel a persisted session"
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -92,4 +94,7 @@ Write-Host "  .\cli\aegis.ps1 runtime:execution-context security.review-api-secu
 Write-Host "  .\cli\aegis.ps1 runtime:execution-session security.review-api-security"
 Write-Host "  .\cli\aegis.ps1 runtime:session-show <session-id-or-workspace-id>"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-orchestrate <session-id-or-workspace-id>"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> complete"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> fail `"Validation failed.`" `"operator:name`""
+Write-Host "  .\cli\aegis.ps1 runtime:execution-lifecycle <session-id-or-workspace-id> cancel `"Cancelled by operator.`""
 exit 0

@@ -247,6 +247,13 @@ def test_reader_loads_completed_execution_history(
     assert history.last_event_at is not None
     assert history.completed_at is not None
 
+    assert history.integrity.ok
+    assert history.integrity.algorithm == "sha256"
+    assert history.integrity.event_count == 5
+    assert len(history.integrity.root_hash) == 64
+    assert len(history.integrity.manifest_hash) == 64
+    assert len(history.integrity.journal_hash) == 64
+
     assert [
         event.event_type
         for event in history.events[-2:]
@@ -257,6 +264,15 @@ def test_reader_loads_completed_execution_history(
 
     serialized = history.to_dict()
 
+    assert serialized["integrity"]["ok"] is True
+    assert (
+        serialized["integrity"]["algorithm"]
+        == "sha256"
+    )
+    assert (
+        serialized["integrity"]["event_count"]
+        == 5
+    )
     assert serialized["event_count"] == 5
     assert serialized["state"] == "completed"
     assert len(serialized["events"]) == 5
@@ -354,6 +370,9 @@ def test_reader_loads_history_without_events(
     assert history.events == ()
     assert history.first_event_at is None
     assert history.last_event_at is None
+    assert history.integrity.ok
+    assert history.integrity.event_count == 0
+
     assert (
         history.audit_manifest
         == persisted_workspace.audit_manifest
@@ -376,6 +395,7 @@ def test_reader_rejects_session_identity_mismatch(
     payload = read_json(
         persisted_lifecycle.audit_manifest
     )
+
     payload["session_id"] = "different-session"
 
     write_json(
@@ -386,6 +406,46 @@ def test_reader_rejects_session_identity_mismatch(
     with pytest.raises(
         ValueError,
         match="Audit session ID does not match",
+    ):
+        ExecutionAuditHistoryReader().load(
+            record
+        )
+
+
+def test_reader_rejects_tampered_event_content(
+    tmp_path: Path,
+) -> None:
+    """A modified event must invalidate the integrity seal."""
+
+    (
+        record,
+        _,
+        persisted_lifecycle,
+    ) = persist_completed_plan_session(
+        tmp_path
+    )
+
+    payload = read_json(
+        persisted_lifecycle.audit_manifest
+    )
+
+    events = payload["events"]
+
+    assert isinstance(events, list)
+    assert events
+
+    events[0]["message"] = (
+        "Execution audit event was modified."
+    )
+
+    write_json(
+        persisted_lifecycle.audit_manifest,
+        payload,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="event hash",
     ):
         ExecutionAuditHistoryReader().load(
             record

@@ -9,6 +9,13 @@ from .audit_history import (
     ExecutionAuditHistory,
     ExecutionAuditHistoryReader,
 )
+from .audit_integrity import (
+    AUDIT_GENESIS_HASH,
+    AUDIT_INTEGRITY_ALGORITHM,
+    AUDIT_INTEGRITY_VERSION,
+    ExecutionAuditIntegrity,
+    ExecutionAuditIntegrityVerification,
+)
 from .context import (
     ExecutionArtifact,
     ExecutionContext,
@@ -119,6 +126,11 @@ __all__ = [
     "ExecutionAuditEventType",
     "ExecutionAuditHistory",
     "ExecutionAuditHistoryReader",
+    "AUDIT_GENESIS_HASH",
+    "AUDIT_INTEGRITY_ALGORITHM",
+    "AUDIT_INTEGRITY_VERSION",
+    "ExecutionAuditIntegrity",
+    "ExecutionAuditIntegrityVerification",
     "ExecutionOrchestrationResult",
     "ExecutionOrchestrator",
     "ExecutionLifecycleAction",

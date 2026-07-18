@@ -16,6 +16,10 @@ from .audit_integrity import (
     ExecutionAuditIntegrity,
     ExecutionAuditIntegrityVerification,
 )
+from .audit_verification import (
+    ExecutionAuditVerificationReport,
+    ExecutionAuditVerifier,
+)
 from .context import (
     ExecutionArtifact,
     ExecutionContext,
@@ -87,6 +91,7 @@ from .workspace_store import (
     PersistedExecutionWorkspace,
     StoredExecutionSession,
 )
+
 __all__ = [
     "ContextBuildIssue",
     "ContractValidationIssue",
@@ -131,6 +136,8 @@ __all__ = [
     "AUDIT_INTEGRITY_VERSION",
     "ExecutionAuditIntegrity",
     "ExecutionAuditIntegrityVerification",
+    "ExecutionAuditVerificationReport",
+    "ExecutionAuditVerifier",
     "ExecutionOrchestrationResult",
     "ExecutionOrchestrator",
     "ExecutionLifecycleAction",

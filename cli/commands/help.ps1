@@ -58,22 +58,37 @@ Write-Host "  config:check                  Check required configuration files"
 Write-Host ""
 
 Write-Host "Runtime Commands:" -ForegroundColor Yellow
-Write-Host "  runtime:status                Show Python runtime status"
-Write-Host "  runtime:validate              Validate registries with Python runtime"
-Write-Host "  runtime:registry-list         List registries with Python runtime"
-Write-Host "  runtime:asset-find <keyword>  Search assets with Python runtime"
-Write-Host "  runtime:asset-show <id>       Show one asset with Python runtime"
+Write-Host "  runtime:status                  Show Python runtime status"
+Write-Host "  runtime:validate                Validate registries with Python runtime"
+Write-Host "  runtime:registry-list           List registries with Python runtime"
+Write-Host "  runtime:asset-find <keyword>    Search assets with Python runtime"
+Write-Host "  runtime:asset-show <id>         Show one asset with Python runtime"
 Write-Host "  runtime:execution-plan <id>     Create execution plan with Python runtime"
 Write-Host "  runtime:execution-dry-run <id>  Simulate execution without running actions"
 Write-Host "  runtime:execution-contract <id> Build and validate execution contract"
 Write-Host "  runtime:execution-context <id>  Build and inspect execution context"
 Write-Host "  runtime:execution-session <id>  Build execution session and logical workspace"
 Write-Host "  runtime:session-show <id>        Show a persisted execution session"
-Write-Host "  runtime:execution-orchestrate <id> Orchestrate a persisted execution session"
+Write-Host "  runtime:execution-orchestrate <id>"
+Write-Host "                                   Orchestrate a persisted execution session"
 Write-Host "  runtime:execution-lifecycle <id> <action> [reason] [actor]"
-Write-Host "                         Complete, fail, or cancel a persisted session"
+Write-Host "                                   Complete, fail, or cancel a persisted session"
 Write-Host "  runtime:execution-audit-history <id> [options]"
-Write-Host "                         Inspect validated execution audit events"
+Write-Host "                                   Inspect validated execution audit events"
+Write-Host "  runtime:execution-audit-verify <id> [json]"
+Write-Host "                                   Verify structural and SHA-256 audit integrity"
+Write-Host ""
+
+Write-Host "Audit History Options:" -ForegroundColor Yellow
+Write-Host "  type=<event-type>               Filter by audit event type"
+Write-Host "  actor=<actor>                   Filter by exact actor identity"
+Write-Host "  limit=<number>                  Limit the displayed events"
+Write-Host "  reverse                         Display recent events first"
+Write-Host ""
+
+Write-Host "Audit Verification Options:" -ForegroundColor Yellow
+Write-Host "  json                            Render the verification report as JSON"
+Write-Host ""
 
 Write-Host "Examples:" -ForegroundColor Yellow
 Write-Host "  .\cli\aegis.ps1 validate"
@@ -103,4 +118,7 @@ Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-wor
 Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> type=session-completed"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> actor=operator:test"
 Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-history <session-id-or-workspace-id> limit=2 reverse"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-verify <session-id-or-workspace-id>"
+Write-Host "  .\cli\aegis.ps1 runtime:execution-audit-verify <session-id-or-workspace-id> json"
+
 exit 0

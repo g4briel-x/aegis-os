@@ -4,6 +4,7 @@ Aegis OS CLI entrypoint.
 
 .DESCRIPTION
 Central command router for Aegis OS local repository operations.
+
 .USAGE
 .\cli\aegis.ps1 help
 .\cli\aegis.ps1 validate
@@ -25,6 +26,8 @@ Central command router for Aegis OS local repository operations.
 .\cli\aegis.ps1 tag:assets api
 .\cli\aegis.ps1 docs:list
 .\cli\aegis.ps1 release:status
+.\cli\aegis.ps1 runtime:execution-audit-history <id>
+.\cli\aegis.ps1 runtime:execution-audit-verify <id>
 #>
 
 param(
@@ -83,7 +86,7 @@ $commandMap = @{
     "runtime:registry-list" = "runtime-registry-list.ps1"
     "runtime:asset-show" = "runtime-asset-show.ps1"
     "runtime:asset-find" = "runtime-asset-find.ps1"
-    
+
     "runtime:execution-plan" = "runtime-execution-plan.ps1"
     "runtime:execution-dry-run" = "runtime-execution-dry-run.ps1"
     "runtime:execution-contract" = "runtime-execution-contract.ps1"
@@ -93,6 +96,7 @@ $commandMap = @{
     "runtime:execution-orchestrate" = "runtime-execution-orchestrate.ps1"
     "runtime:execution-lifecycle" = "runtime-execution-lifecycle.ps1"
     "runtime:execution-audit-history" = "runtime-execution-audit-history.ps1"
+    "runtime:execution-audit-verify" = "runtime-execution-audit-verify.ps1"
 
     "config:show" = "config-show.ps1"
     "config:path" = "config-path.ps1"
@@ -101,7 +105,6 @@ $commandMap = @{
     "version" = "version.ps1"
     "info" = "info.ps1"
     "status" = "status.ps1"
-
 }
 
 function Show-UnknownCommand {
@@ -111,7 +114,10 @@ function Show-UnknownCommand {
 
     Write-Host "Unknown command: $CommandName" -ForegroundColor Red
     Write-Host ""
-    & $PSExe -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
+
+    & $PSExe `
+        -ExecutionPolicy Bypass `
+        -File (Join-Path $CommandsRoot "help.ps1")
 }
 
 function Invoke-AegisCommand {

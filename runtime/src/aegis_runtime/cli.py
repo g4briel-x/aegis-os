@@ -14,6 +14,7 @@ from .config import AegisConfig
 from .execution import (
     ExecutionAuditEventType,
     ExecutionAuditHistoryReader,
+    ExecutionAuditVerifier,
     ExecutionContextBuilder,
     ExecutionLifecycleAction,
     ExecutionLifecycleManager,
@@ -251,6 +252,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "--reverse",
         action="store_true",
         help="Display the most recent events first.",
+    )
+
+    execution_audit_verify = execution_commands.add_parser(
+        "audit-verify",
+        help=(
+            "Verify the structural and cryptographic integrity "
+            "of one persisted execution audit journal."
+        ),
+    )
+    execution_audit_verify.add_argument(
+        "identifier",
+        help="Execution workspace ID or session ID.",
     )
 
     execution_lifecycle = execution_commands.add_parser(
@@ -596,7 +609,7 @@ def _print_execution_context_result(
         f"{context.environment.working_directory}"
     )
     print(
-        f"- Python: "
+        "- Python: "
         f"{context.environment.python_version}"
     )
     print(f"- platform: {context.environment.platform}")
@@ -881,6 +894,37 @@ def _print_execution_audit_history(
                     sort_keys=True,
                 )
             )
+
+
+def _print_execution_audit_verification(
+    report,
+    *,
+    as_json: bool,
+) -> None:
+    """Print one successful audit integrity verification report."""
+
+    if as_json:
+        _print_json(report.to_dict())
+        return
+
+    integrity = report.integrity
+
+    print("Aegis OS Execution Audit Verification")
+    print(f"Status: {'passed' if report.ok else 'failed'}")
+    print(f"Session: {report.session_id}")
+    print(f"Workspace: {report.workspace_id}")
+    print(f"Target: {report.target_asset_id}")
+    print(f"Mode: {report.mode.value}")
+    print(f"State: {report.state.value}")
+    print(f"Events: {report.event_count}")
+    print(f"Audit: {report.audit_manifest}")
+    print("")
+    print("Integrity:")
+    print(f"- version: {integrity.version}")
+    print(f"- algorithm: {integrity.algorithm}")
+    print(f"- root hash: {integrity.root_hash}")
+    print(f"- manifest hash: {integrity.manifest_hash}")
+    print(f"- journal hash: {integrity.journal_hash}")
 
 
 def _print_execution_lifecycle_result(
@@ -1200,6 +1244,47 @@ def _handle_audit_history(
     return EXIT_OK
 
 
+def _handle_audit_verification(
+    args: argparse.Namespace,
+    config: AegisConfig,
+) -> int:
+    """Verify and print one persistent execution audit journal."""
+
+    workspace_store = ExecutionWorkspaceStore(
+        config.repo_root
+    )
+
+    try:
+        record = workspace_store.load(
+            args.identifier
+        )
+        report = ExecutionAuditVerifier().verify(
+            record
+        )
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_NOT_FOUND
+    except ValueError as exc:
+        print(
+            f"Audit verification error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_VALIDATION
+    except OSError as exc:
+        print(
+            f"Audit verification repository error: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_REPOSITORY
+
+    _print_execution_audit_verification(
+        report,
+        as_json=args.json,
+    )
+
+    return EXIT_OK
+
+
 def _handle_lifecycle(
     args: argparse.Namespace,
     config: AegisConfig,
@@ -1334,6 +1419,12 @@ def _handle_execution(
 
         if args.execution_command == "audit-history":
             return _handle_audit_history(
+                args,
+                config,
+            )
+
+        if args.execution_command == "audit-verify":
+            return _handle_audit_verification(
                 args,
                 config,
             )

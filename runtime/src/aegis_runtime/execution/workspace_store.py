@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from dataclasses import dataclass
+from .audit_integrity import ExecutionAuditIntegrity
 from .session_builder import ExecutionSessionBuildResult
 
 
@@ -69,6 +70,7 @@ class ExecutionWorkspaceStore:
 
     def __init__(self, repo_root: Path | str) -> None:
         self.repo_root = Path(repo_root).resolve()
+        self._audit_integrity = ExecutionAuditIntegrity()
 
         if not self.repo_root.exists():
             raise FileNotFoundError(
@@ -79,6 +81,7 @@ class ExecutionWorkspaceStore:
             raise ValueError(
                 f"Repository root is not a directory: {self.repo_root}"
             )
+        self._audit_integrity = ExecutionAuditIntegrity()
 
     def persist(
         self,
@@ -155,30 +158,39 @@ class ExecutionWorkspaceStore:
             result.context_build.input_resolution.to_dict(),
         )
 
+        audit_payload = {
+            "session_id": result.session.session_id,
+            "workspace_id": result.workspace.workspace_id,
+            "target_asset_id": result.session.target_asset_id,
+            "mode": result.session.mode.value,
+            "state": result.session.state.value,
+            "created_at": result.session.created_at.isoformat(),
+            "updated_at": result.session.updated_at.isoformat(),
+            "started_at": (
+                result.session.started_at.isoformat()
+                if result.session.started_at
+                else None
+            ),
+            "completed_at": (
+                result.session.completed_at.isoformat()
+                if result.session.completed_at
+                else None
+            ),
+            "audit_metadata": dict(
+                result.session.audit_metadata
+            ),
+            "event_count": 0,
+            "last_event_at": None,
+            "events": [],
+        }
+
+        sealed_audit_payload = self._audit_integrity.seal(
+            audit_payload
+        )
+
         self._write_json(
             audit_manifest,
-            {
-                "session_id": result.session.session_id,
-                "workspace_id": result.workspace.workspace_id,
-                "target_asset_id": result.session.target_asset_id,
-                "mode": result.session.mode.value,
-                "state": result.session.state.value,
-                "created_at": result.session.created_at.isoformat(),
-                "updated_at": result.session.updated_at.isoformat(),
-                "started_at": (
-                    result.session.started_at.isoformat()
-                    if result.session.started_at
-                    else None
-                ),
-                "completed_at": (
-                    result.session.completed_at.isoformat()
-                    if result.session.completed_at
-                    else None
-                ),
-                "audit_metadata": dict(
-                    result.session.audit_metadata
-                ),
-            },
+            sealed_audit_payload,
         )
 
         return PersistedExecutionWorkspace(

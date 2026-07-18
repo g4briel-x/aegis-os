@@ -12,6 +12,10 @@ from .audit import (
     ExecutionAuditEvent,
     ExecutionAuditEventType,
 )
+from .audit_integrity import (
+    ExecutionAuditIntegrity,
+    ExecutionAuditIntegrityVerification,
+)
 from .models import ExecutionMode
 from .session import ExecutionSessionState
 from .workspace_store import StoredExecutionSession
@@ -29,6 +33,7 @@ class ExecutionAuditHistory:
     audit_manifest: Path
     created_at: datetime
     updated_at: datetime
+    integrity: ExecutionAuditIntegrityVerification
     started_at: datetime | None = None
     completed_at: datetime | None = None
     audit_metadata: dict[str, Any] = field(
@@ -120,6 +125,7 @@ class ExecutionAuditHistory:
             "mode": self.mode.value,
             "state": self.state.value,
             "audit_manifest": str(self.audit_manifest),
+            "integrity": self.integrity.to_dict(),
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "started_at": (
@@ -147,6 +153,11 @@ class ExecutionAuditHistory:
 
 class ExecutionAuditHistoryReader:
     """Load and validate persistent execution audit history."""
+
+    def __init__(self) -> None:
+        """Initialize strict audit integrity verification."""
+
+        self._audit_integrity = ExecutionAuditIntegrity()
 
     def load(
         self,
@@ -309,6 +320,10 @@ class ExecutionAuditHistoryReader:
             events=events,
         )
 
+        integrity = self._audit_integrity.verify(
+            payload
+        )
+
         return ExecutionAuditHistory(
             session_id=session_id,
             workspace_id=workspace_id,
@@ -318,6 +333,7 @@ class ExecutionAuditHistoryReader:
             audit_manifest=audit_manifest,
             created_at=created_at,
             updated_at=updated_at,
+            integrity=integrity,
             started_at=started_at,
             completed_at=completed_at,
             audit_metadata=dict(

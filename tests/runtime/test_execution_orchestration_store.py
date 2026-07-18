@@ -178,6 +178,24 @@ def test_store_persists_plan_orchestration(
         "plan-created",
     ]
 
+    integrity = audit_payload["integrity"]
+
+    assert integrity["version"] == 1
+    assert integrity["algorithm"] == "sha256"
+    assert integrity["event_count"] == 3
+    assert len(integrity["entries"]) == 3
+    assert (
+        integrity["entries"][0]["previous_hash"]
+        == "0" * 64
+    )
+    assert (
+        integrity["root_hash"]
+        == integrity["entries"][-1]["event_hash"]
+    )
+    assert len(integrity["root_hash"]) == 64
+    assert len(integrity["manifest_hash"]) == 64
+    assert len(integrity["journal_hash"]) == 64
+
     assert (
         persisted.audit_manifest
         == persisted_workspace.audit_manifest
@@ -231,6 +249,63 @@ def test_store_persists_dry_run_orchestration(
         audit_payload["events"][-1]["event_type"]
         == "dry-run-prepared"
     )
+
+    integrity = audit_payload["integrity"]
+
+    assert integrity["algorithm"] == "sha256"
+    assert integrity["event_count"] == 5
+    assert len(integrity["entries"]) == 5
+    assert (
+        integrity["root_hash"]
+        == integrity["entries"][-1]["event_hash"]
+    )
+
+
+def test_store_rejects_tampered_existing_audit_manifest(
+    tmp_path: Path,
+) -> None:
+    """An altered audit journal must not accept new events."""
+
+    (
+        record,
+        persisted_workspace,
+        orchestration_result,
+    ) = build_orchestration(
+        tmp_path,
+        ExecutionMode.PLAN,
+    )
+
+    audit_payload = json.loads(
+        persisted_workspace.audit_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    audit_metadata = audit_payload["audit_metadata"]
+
+    assert isinstance(audit_metadata, dict)
+
+    audit_metadata["tampered"] = True
+
+    persisted_workspace.audit_manifest.write_text(
+        json.dumps(
+            audit_payload,
+            indent=2,
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="manifest hash",
+    ):
+        ExecutionOrchestrationStore().persist(
+            record=record,
+            result=orchestration_result,
+        )
 
 
 def test_store_rejects_workspace_identity_mismatch(

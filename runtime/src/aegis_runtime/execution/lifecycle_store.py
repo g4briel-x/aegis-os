@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from .audit_integrity import ExecutionAuditIntegrity
 from .lifecycle import ExecutionLifecycleResult
 from .workspace_store import StoredExecutionSession
 
@@ -36,6 +37,11 @@ class PersistedExecutionLifecycle:
 
 class ExecutionLifecycleStore:
     """Persist terminal lifecycle states and audit events."""
+
+    def __init__(self) -> None:
+        """Initialize persistent audit integrity protection."""
+
+        self._audit_integrity = ExecutionAuditIntegrity()
 
     def persist(
         self,
@@ -87,6 +93,12 @@ class ExecutionLifecycleStore:
         audit_payload = self._read_json_object(
             audit_manifest,
             "execution audit manifest",
+        )
+
+        # Refuse to append lifecycle events to a journal
+        # whose existing integrity seal is invalid.
+        self._audit_integrity.verify(
+            audit_payload
         )
 
         serialized_events = [
@@ -177,11 +189,17 @@ class ExecutionLifecycleStore:
             }
         )
 
+        # The new seal is calculated only after the
+        # lifecycle state and all events have been added.
+        sealed_audit_payload = self._audit_integrity.seal(
+            audit_payload
+        )
+
         # Audit is replaced first. The session manifest is
         # written last and acts as the committed session state.
         self._write_json_atomic(
             path=audit_manifest,
-            payload=audit_payload,
+            payload=sealed_audit_payload,
         )
 
         self._write_json_atomic(

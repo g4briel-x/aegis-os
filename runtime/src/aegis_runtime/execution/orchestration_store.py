@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from .audit_integrity import ExecutionAuditIntegrity
 from .orchestrator import ExecutionOrchestrationResult
 from .workspace_store import StoredExecutionSession
 
@@ -34,6 +35,11 @@ class PersistedExecutionOrchestration:
 
 class ExecutionOrchestrationStore:
     """Persist controlled orchestration states and audit events."""
+
+    def __init__(self) -> None:
+        """Initialize persistent audit integrity protection."""
+
+        self._audit_integrity = ExecutionAuditIntegrity()
 
     def persist(
         self,
@@ -81,9 +87,16 @@ class ExecutionOrchestrationStore:
             )
 
         session_payload = dict(record.payload)
+
         audit_payload = self._read_json_object(
             audit_manifest,
             "execution audit manifest",
+        )
+
+        # Refuse to append events to an audit journal
+        # whose existing integrity seal is invalid.
+        self._audit_integrity.verify(
+            audit_payload
         )
 
         serialized_events = [
@@ -163,11 +176,17 @@ class ExecutionOrchestrationStore:
             }
         )
 
+        # The seal must be calculated only after every
+        # protected audit field has been updated.
+        sealed_audit_payload = self._audit_integrity.seal(
+            audit_payload
+        )
+
         # Audit is written first. The session manifest is
         # replaced last and acts as the committed session state.
         self._write_json_atomic(
             path=audit_manifest,
-            payload=audit_payload,
+            payload=sealed_audit_payload,
         )
 
         self._write_json_atomic(

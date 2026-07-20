@@ -12,6 +12,7 @@ from typing import Any, Sequence
 from . import __version__
 from .asset_resolver import AssetResolver
 from .config import AegisConfig
+from .doctor import DoctorCheckResult, run_all_checks
 from .execution import (
     ExecutionAuditEventType,
     ExecutionAuditHistoryReader,
@@ -33,6 +34,7 @@ from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .models import Asset
 from .registry_loader import RegistryLoader
+from .reports import REPORT_GENERATORS, generate_all_reports, generate_report
 from .validator import RegistryValidator
 
 EXIT_OK = 0
@@ -353,6 +355,39 @@ def _build_parser() -> argparse.ArgumentParser:
         "--strict-related",
         action="store_true",
         help="Treat unresolved related assets as errors.",
+    )
+
+    doctor = commands.add_parser(
+        "doctor",
+        help="Run repository health checks.",
+    )
+    doctor.add_argument(
+        "--skip-validate",
+        action="store_true",
+        help="Skip registry validation after the health checks.",
+    )
+    doctor.add_argument(
+        "--skip-reports",
+        action="store_true",
+        help="Skip report generation after the health checks.",
+    )
+
+    report = commands.add_parser(
+        "report",
+        help="Registry report generation.",
+    )
+    report_commands = report.add_subparsers(
+        dest="report_command",
+        required=True,
+    )
+    report_generate = report_commands.add_parser(
+        "generate",
+        help="Generate one or all registry reports.",
+    )
+    report_generate.add_argument(
+        "name",
+        choices=[*REPORT_GENERATORS, "all"],
+        help="Report to generate, or 'all' for every report.",
     )
 
     return parser
@@ -1847,6 +1882,115 @@ def main(
             if report.ok
             else EXIT_VALIDATION
         )
+
+    if args.command == "doctor":
+        checks = run_all_checks(config.repo_root)
+        checks_ok = all(check.ok for check in checks)
+
+        validation_report = None
+        if not args.skip_validate:
+            validator = RegistryValidator(config.repo_root)
+            validation_report = validator.validate(documents)
+
+        generated_reports: list[str] = []
+        if not args.skip_reports and checks_ok:
+            registry_files = loader.registry_files()
+            generated_reports = [
+                item.name
+                for item in generate_all_reports(
+                    resolver,
+                    config.repo_root,
+                    registry_files,
+                )
+            ]
+
+        if args.json:
+            _print_json(
+                {
+                    "checks": [check.to_dict() for check in checks],
+                    "checks_ok": checks_ok,
+                    "validation": (
+                        validation_report.to_dict()
+                        if validation_report is not None
+                        else None
+                    ),
+                    "reports_generated": generated_reports,
+                }
+            )
+        else:
+            print("Aegis OS - Doctor")
+            print("Running repository health checks...")
+
+            for check in checks:
+                print("")
+                print(f"Running {check.name}...")
+
+                for warning in check.warnings:
+                    print(f"WARN {warning}")
+
+                if check.ok:
+                    print(f"{check.name} passed.")
+                else:
+                    print(f"{check.name} failed.")
+                    for failure in check.failures:
+                        print(f"- {failure}")
+
+            if validation_report is not None:
+                print("")
+                print("Running registry validation...")
+                print(
+                    "Registry validation passed."
+                    if validation_report.ok
+                    else "Registry validation failed."
+                )
+
+            if generated_reports:
+                print("")
+                print("Generating registry reports...")
+                for name in generated_reports:
+                    print(f"Generated: {name}")
+
+            print("")
+            if checks_ok and (
+                validation_report is None or validation_report.ok
+            ):
+                print("Aegis OS Doctor completed successfully.")
+            else:
+                print("Aegis OS Doctor found problems.")
+
+        doctor_ok = checks_ok and (
+            validation_report is None or validation_report.ok
+        )
+        return EXIT_OK if doctor_ok else EXIT_VALIDATION
+
+    if args.command == "report":
+        if args.report_command == "generate":
+            registry_files = loader.registry_files()
+
+            if args.name == "all":
+                generated = generate_all_reports(
+                    resolver,
+                    config.repo_root,
+                    registry_files,
+                )
+            else:
+                generated = [
+                    generate_report(
+                        args.name,
+                        resolver,
+                        config.repo_root,
+                        registry_files,
+                    )
+                ]
+
+            if args.json:
+                _print_json([item.to_dict() for item in generated])
+            else:
+                print("Aegis OS - Generate Reports")
+                for item in generated:
+                    print(f"Generated: {item.name} -> {item.path}")
+
+            return EXIT_OK
 
     parser.print_help()
     return EXIT_USAGE

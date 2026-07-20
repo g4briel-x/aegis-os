@@ -5,8 +5,10 @@ src/aegis_runtime/__main__.py
 src/aegis_runtime/asset_resolver.py
 src/aegis_runtime/cli.py
 src/aegis_runtime/config.py
+src/aegis_runtime/doctor.py
 src/aegis_runtime/models.py
 src/aegis_runtime/registry_loader.py
+src/aegis_runtime/reports.py
 src/aegis_runtime/validator.py
 src/aegis_runtime.egg-info/PKG-INFO
 src/aegis_runtime.egg-info/SOURCES.txt

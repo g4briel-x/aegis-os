@@ -30,3 +30,6 @@ def test_asset_resolver_filters_assets() -> None:
     assert len(resolver.find("contract")) == 1
     assert len(resolver.by_domain("security")) == 1
     assert len(resolver.by_tag("api")) == 2
+    assert len(resolver.by_type("skill")) == 1
+    assert len(resolver.by_type("template")) == 1
+    assert resolver.by_type("skill")[0].id == "security.review-api-security"

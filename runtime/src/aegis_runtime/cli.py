@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Sequence
@@ -118,6 +119,51 @@ def _build_parser() -> argparse.ArgumentParser:
         help="List assets with a tag.",
     )
     asset_tag.add_argument("tag")
+
+    asset_type = asset_commands.add_parser(
+        "type",
+        help="List assets of a given type (skill, playbook, template, pattern, docs, ...).",
+    )
+    asset_type.add_argument("type")
+
+    asset_related = asset_commands.add_parser(
+        "related",
+        help="List assets declared as related to a given asset.",
+    )
+    asset_related.add_argument("asset_id")
+
+    asset_path = asset_commands.add_parser(
+        "path",
+        help="Print the resolved filesystem path of an asset.",
+    )
+    asset_path.add_argument("asset_id")
+
+    asset_open = asset_commands.add_parser(
+        "open",
+        help="Open an asset's file with the OS default application.",
+    )
+    asset_open.add_argument("asset_id")
+
+    config = commands.add_parser(
+        "config",
+        help="Repository configuration operations.",
+    )
+    config_commands = config.add_subparsers(
+        dest="config_command",
+        required=True,
+    )
+    config_commands.add_parser(
+        "show",
+        help="Print the merged repository configuration.",
+    )
+    config_commands.add_parser(
+        "path",
+        help="Print the paths of loaded configuration files.",
+    )
+    config_commands.add_parser(
+        "check",
+        help="Verify that repository configuration can be discovered and loaded.",
+    )
 
     execution = commands.add_parser(
         "execution",
@@ -396,6 +442,27 @@ def _print_asset_list(
         print(" | ".join(details))
 
     print(f"Total assets: {len(assets)}")
+
+
+def _open_file(path: Path) -> None:
+    """Open a file with the OS default application.
+
+    Cross-platform by design (the original PowerShell asset:open command
+    only worked on Windows via Start-Process explorer.exe): tries
+    os.startfile on Windows, 'open' on macOS, and 'xdg-open' on Linux/BSD.
+    """
+
+    import platform
+    import subprocess
+
+    system = platform.system()
+
+    if system == "Windows":
+        os.startfile(path)  # type: ignore[attr-defined]
+    elif system == "Darwin":
+        subprocess.run(["open", str(path)], check=True)
+    else:
+        subprocess.run(["xdg-open", str(path)], check=True)
 
 
 def _parse_execution_inputs(
@@ -1566,6 +1633,161 @@ def main(
                 resolver.by_tag(args.tag),
                 as_json=args.json,
             )
+            return EXIT_OK
+
+        if args.asset_command == "type":
+            _print_asset_list(
+                resolver.by_type(args.type),
+                as_json=args.json,
+            )
+            return EXIT_OK
+
+        if args.asset_command == "related":
+            asset = resolver.by_id(args.asset_id)
+
+            if asset is None:
+                print(
+                    f"Asset not found: {args.asset_id}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            _print_asset_list(
+                resolver.related(args.asset_id),
+                as_json=args.json,
+            )
+            return EXIT_OK
+
+        if args.asset_command == "path":
+            asset = resolver.by_id(args.asset_id)
+
+            if asset is None:
+                print(
+                    f"Asset not found: {args.asset_id}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            if not asset.path:
+                print(
+                    f"Asset has no declared path: {args.asset_id}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            resolved_path = config.repo_root / asset.path
+
+            if args.json:
+                _print_json(
+                    {
+                        "asset_id": asset.id,
+                        "declared_path": asset.path,
+                        "resolved_path": str(resolved_path),
+                        "exists": resolved_path.exists(),
+                    }
+                )
+            else:
+                print(str(resolved_path))
+
+            return EXIT_OK
+
+        if args.asset_command == "open":
+            asset = resolver.by_id(args.asset_id)
+
+            if asset is None:
+                print(
+                    f"Asset not found: {args.asset_id}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            if not asset.path:
+                print(
+                    f"Asset has no declared path: {args.asset_id}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            resolved_path = config.repo_root / asset.path
+
+            if not resolved_path.exists():
+                print(
+                    f"Declared asset path does not exist: {resolved_path}",
+                    file=sys.stderr,
+                )
+                return EXIT_NOT_FOUND
+
+            try:
+                _open_file(resolved_path)
+            except (OSError, FileNotFoundError) as exc:
+                print(
+                    f"Could not open asset file: {exc}",
+                    file=sys.stderr,
+                )
+                return EXIT_REPOSITORY
+
+            print(f"Opened: {resolved_path}")
+            return EXIT_OK
+
+    if args.command == "config":
+        if args.config_command == "show":
+            if args.json:
+                _print_json(config.values)
+            else:
+                print(
+                    json.dumps(
+                        config.values,
+                        indent=2,
+                        ensure_ascii=False,
+                    )
+                )
+            return EXIT_OK
+
+        if args.config_command == "path":
+            payload = [str(path) for path in config.loaded_files]
+
+            if args.json:
+                _print_json(payload)
+            else:
+                if payload:
+                    for path in payload:
+                        print(path)
+                else:
+                    print("No configuration files loaded.")
+
+            return EXIT_OK
+
+        if args.config_command == "check":
+            payload = {
+                "repo_root": str(config.repo_root),
+                "registry_root": str(config.registry_root),
+                "config_root": str(config.config_root),
+                "loaded_config_files": [
+                    str(path) for path in config.loaded_files
+                ],
+                "registry_root_exists": config.registry_root.exists(),
+            }
+
+            if args.json:
+                _print_json(payload)
+            else:
+                print("Aegis OS Runtime Configuration Check")
+                print(f"Repository root: {payload['repo_root']}")
+                print(f"Registry root: {payload['registry_root']} "
+                      f"(exists: {payload['registry_root_exists']})")
+                print(f"Config root: {payload['config_root']}")
+                print(
+                    "Loaded config files: "
+                    + (
+                        ", ".join(payload["loaded_config_files"])
+                        if payload["loaded_config_files"]
+                        else "-"
+                    )
+                )
+
+            if not payload["registry_root_exists"]:
+                return EXIT_REPOSITORY
+
             return EXIT_OK
 
     if args.command == "execution":

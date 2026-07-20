@@ -43,6 +43,13 @@ class AssetResolver:
             key=lambda asset: asset.id,
         )
 
+    def by_type(self, type_name: str) -> list[Asset]:
+        normalized = type_name.strip().lower()
+        return sorted(
+            (asset for asset in self.assets if asset.type.lower() == normalized),
+            key=lambda asset: asset.id,
+        )
+
     def by_tag(self, tag: str) -> list[Asset]:
         normalized = tag.strip().lower()
         return sorted(

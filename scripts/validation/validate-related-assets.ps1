@@ -29,7 +29,7 @@ function Test-AegisRelatedAssets {
 
     # Read each file's content once and cache it, instead of calling Get-Content
     # twice per file (previously: one full pass for declared ids, one for refs).
-    $fileContents = New-Object System.Collections.Generic.Dictionary[string, string[]]
+    $fileContents = [System.Collections.Generic.Dictionary[string, string[]]]::new()
     foreach ($file in $YamlFiles) {
         $fileContents[$file.FullName] = Get-Content $file.FullName
     }

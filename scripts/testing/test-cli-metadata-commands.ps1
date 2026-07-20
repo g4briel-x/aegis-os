@@ -6,7 +6,7 @@ Runs Aegis OS CLI metadata command tests.
 Checks that version, information and status commands execute successfully.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-metadata-commands.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-metadata-commands.ps1
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -28,7 +28,7 @@ foreach ($command in $commands) {
     Write-Host ''
     Write-Host ('Running: .\cli\aegis.ps1 {0}' -f $command) -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
+    & pwsh -ExecutionPolicy Bypass -File 'cli\aegis.ps1' $command
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error ('CLI metadata command failed: {0}' -f $command)

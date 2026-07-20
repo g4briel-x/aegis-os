@@ -4,7 +4,7 @@
 Removes the Aegis OS CLI PowerShell function from the user profile.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File install\uninstall-aegis-cli.ps1
+pwsh -ExecutionPolicy Bypass -File install\uninstall-aegis-cli.ps1
 #>
 
 $ErrorActionPreference = "Stop"

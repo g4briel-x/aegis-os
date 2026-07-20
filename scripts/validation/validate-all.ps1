@@ -6,7 +6,7 @@ Runs all available Aegis OS validation checks.
 This is the main validation entrypoint for the repository.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -28,7 +28,7 @@ if (-not (Test-Path $registryValidation)) {
 Write-Host ""
 Write-Host "Running registry validation..." -ForegroundColor Yellow
 
-& powershell -ExecutionPolicy Bypass -File $registryValidation
+& pwsh -ExecutionPolicy Bypass -File $registryValidation
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Full validation failed."

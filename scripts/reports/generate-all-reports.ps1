@@ -6,7 +6,7 @@ Generates all Aegis OS registry reports.
 Runs all report generation scripts from scripts/reports.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -36,7 +36,7 @@ foreach ($report in $reports) {
     Write-Host ""
     Write-Host "Running $report..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $reportPath
+    & pwsh -ExecutionPolicy Bypass -File $reportPath
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "$report failed."

@@ -12,5 +12,5 @@ if (-not (Test-Path $scriptPath)) {
     exit 1
 }
 
-& powershell -ExecutionPolicy Bypass -File $scriptPath
+& pwsh -ExecutionPolicy Bypass -File $scriptPath
 exit $LASTEXITCODE

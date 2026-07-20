@@ -87,7 +87,7 @@ function Show-UnknownCommand {
 
     Write-Host "Unknown command: $CommandName" -ForegroundColor Red
     Write-Host ""
-    & powershell -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
+    & pwsh -ExecutionPolicy Bypass -File (Join-Path $CommandsRoot "help.ps1")
 }
 
 function Invoke-AegisCommand {
@@ -110,10 +110,10 @@ function Invoke-AegisCommand {
     }
 
     if ([string]::IsNullOrWhiteSpace($ArgumentValue)) {
-        & powershell -ExecutionPolicy Bypass -File $scriptPath
+        & pwsh -ExecutionPolicy Bypass -File $scriptPath
     }
     else {
-        & powershell -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
+        & pwsh -ExecutionPolicy Bypass -File $scriptPath -Argument $ArgumentValue
     }
 
     exit $LASTEXITCODE

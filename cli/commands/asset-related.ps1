@@ -10,7 +10,7 @@ if ([string]::IsNullOrWhiteSpace($Argument)) {
 
 $files = Get-ChildItem -Path "registry" -Recurse -File -Include *.yaml, *.yml
 $found = $false
-$related = @()
+$related = [System.Collections.Generic.List[string]]::new()
 
 foreach ($file in $files) {
     $lines = Get-Content $file.FullName
@@ -34,7 +34,7 @@ foreach ($file in $files) {
             }
 
             if ($insideTarget -and $insideRelated) {
-                $related += $id
+                $related.Add($id)
             }
         }
 

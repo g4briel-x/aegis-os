@@ -6,7 +6,7 @@ Runs all Aegis OS CLI smoke tests.
 This script validates that the CLI command layer is wired correctly.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -38,7 +38,7 @@ foreach ($test in $tests) {
     Write-Host ""
     Write-Host "Running $test..." -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File $testPath
+    & pwsh -ExecutionPolicy Bypass -File $testPath
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "$test failed."

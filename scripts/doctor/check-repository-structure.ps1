@@ -3,7 +3,7 @@
 Checks required Aegis OS repository folders.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\doctor\check-repository-structure.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\doctor\check-repository-structure.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -33,7 +33,7 @@ $requiredFolders = @(
     ".github\workflows"
 )
 
-$failures = @()
+$failures = [System.Collections.Generic.List[object]]::new()
 
 foreach ($folder in $requiredFolders) {
     if (Test-Path $folder) {
@@ -41,7 +41,7 @@ foreach ($folder in $requiredFolders) {
     }
     else {
         Write-Host "BAD $folder" -ForegroundColor Red
-        $failures += $folder
+        $failures.Add($folder)
     }
 }
 

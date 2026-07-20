@@ -23,7 +23,7 @@ $checks = @(
     @{ Name = "Smoke test script"; Path = "scripts\testing\test-cli-smoke.ps1" }
 )
 
-$failures = @()
+$failures = [System.Collections.Generic.List[object]]::new()
 
 foreach ($check in $checks) {
     if (Test-Path $check.Path) {
@@ -31,7 +31,7 @@ foreach ($check in $checks) {
     }
     else {
         Write-Host "MISS $($check.Name): $($check.Path)" -ForegroundColor Yellow
-        $failures += $check
+        $failures.Add($check)
     }
 }
 

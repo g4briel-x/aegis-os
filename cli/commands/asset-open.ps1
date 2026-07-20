@@ -8,7 +8,7 @@ if ([string]::IsNullOrWhiteSpace($Argument)) {
     exit 1
 }
 
-$pathOutput = & powershell -ExecutionPolicy Bypass -File "cli\commands\asset-path.ps1" -Argument $Argument
+$pathOutput = & pwsh -ExecutionPolicy Bypass -File "cli\commands\asset-path.ps1" -Argument $Argument
 
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE

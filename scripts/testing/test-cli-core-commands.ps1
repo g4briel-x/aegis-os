@@ -6,7 +6,7 @@ Runs basic Aegis OS CLI core commands.
 Checks that essential CLI commands execute successfully.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-core-commands.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-core-commands.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -28,12 +28,12 @@ foreach ($commandSpec in $commands) {
     if ([string]::IsNullOrWhiteSpace($argument)) {
         Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
 
-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+        & pwsh -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
     }
     else {
         Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
 
-        & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
+        & pwsh -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
     }
 
     if ($LASTEXITCODE -ne 0) {

@@ -3,7 +3,7 @@
 Checks required Aegis OS index and manifest files.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\doctor\check-required-indexes.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\doctor\check-required-indexes.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -37,7 +37,7 @@ $requiredFiles = @(
     "config\README.md"
 )
 
-$failures = @()
+$failures = [System.Collections.Generic.List[object]]::new()
 
 foreach ($file in $requiredFiles) {
     if (Test-Path $file) {
@@ -45,7 +45,7 @@ foreach ($file in $requiredFiles) {
     }
     else {
         Write-Host "BAD $file" -ForegroundColor Red
-        $failures += $file
+        $failures.Add($file)
     }
 }
 

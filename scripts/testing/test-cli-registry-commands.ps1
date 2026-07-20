@@ -6,7 +6,7 @@ Runs Aegis OS CLI registry listing commands.
 Checks that registry-related CLI commands execute successfully.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-registry-commands.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-registry-commands.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -28,7 +28,7 @@ foreach ($command in $commands) {
     Write-Host ""
     Write-Host "Running: .\cli\aegis.ps1 $command" -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
+    & pwsh -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "CLI registry command failed: $command"

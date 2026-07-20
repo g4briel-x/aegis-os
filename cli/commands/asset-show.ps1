@@ -13,7 +13,7 @@ $files = Get-ChildItem -Path "registry" -Recurse -File -Include *.yaml, *.yml
 foreach ($file in $files) {
     $lines = Get-Content $file.FullName
     $capture = $false
-    $block = @()
+    $block = [System.Collections.Generic.List[string]]::new()
 
     foreach ($line in $lines) {
         if ($line -match "^\s*-\s*id:\s*(.+)\s*$") {
@@ -23,12 +23,12 @@ foreach ($file in $files) {
 
             if ($id -eq $Argument) {
                 $capture = $true
-                $block += $line
+                $block.Add($line)
                 continue
             }
         }
         elseif ($capture) {
-            $block += $line
+            $block.Add($line)
         }
     }
 

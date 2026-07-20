@@ -6,7 +6,7 @@ Runs Aegis OS CLI asset inspection commands.
 Checks that asset-related CLI commands execute successfully.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-asset-commands.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-asset-commands.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -29,7 +29,7 @@ foreach ($commandSpec in $commands) {
     Write-Host ""
     Write-Host "Running: .\cli\aegis.ps1 $command $argument" -ForegroundColor Yellow
 
-    & powershell -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
+    & pwsh -ExecutionPolicy Bypass -File "cli\aegis.ps1" $command $argument
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "CLI asset command failed: $command $argument"

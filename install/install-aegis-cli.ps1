@@ -8,7 +8,7 @@ Adds an `aegis` function to the current user's PowerShell profile.
 The function routes commands to this repository's cli\aegis.ps1 file.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
+pwsh -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
 #>
 
 $ErrorActionPreference = "Stop"

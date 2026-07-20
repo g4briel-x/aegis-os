@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "cloud-engineer",
+  "display_name": "Cloud Engineer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "01-architecture",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Cloud Engineer role to implement and maintain cloud resources according to architecture, security, reliability, and cost standards. Use this skill for Terraform, cloud networking, managed databases, storage, IAM, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "terraform",
+    "cloud-networking",
+    "managed-databases",
+    "storage",
+    "iam",
+    "automation",
+    "cost-monitoring"
+  ],
+  "collaborates_with": [
+    "cloud-architect",
+    "devops",
+    "sre",
+    "security-engineer"
+  ],
+  "source": {
+    "legacy_path": "01-Architecture/cloud-engineer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

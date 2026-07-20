@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "mcp-architect",
+  "display_name": "MCP Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "08-ai",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the MCP Architect role to design secure, maintainable, auditable, and useful Model Context Protocol integrations for AI agents. Use this skill for MCP servers, tool contracts, auth, permissions, resource templates, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "mcp-servers",
+    "tool-contracts",
+    "auth",
+    "permissions",
+    "resource-templates",
+    "auditability",
+    "agent-tooling"
+  ],
+  "collaborates_with": [
+    "agent-architect",
+    "ai-architect",
+    "security-engineer",
+    "api-engineer",
+    "sre"
+  ],
+  "source": {
+    "legacy_path": "08-AI/mcp-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

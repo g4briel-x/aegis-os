@@ -1,0 +1,29 @@
+schema_version: '1.0'
+categories:
+- id: 00-cto
+  display_name: Technology Leadership
+  order: 0
+- id: 01-architecture
+  display_name: Architecture
+  order: 1
+- id: 02-engineering
+  display_name: Engineering
+  order: 2
+- id: 03-qa
+  display_name: Quality Assurance
+  order: 3
+- id: 04-devops
+  display_name: DevOps and Reliability
+  order: 4
+- id: 05-product
+  display_name: Product
+  order: 5
+- id: 06-design
+  display_name: Design
+  order: 6
+- id: 07-documentation
+  display_name: Documentation
+  order: 7
+- id: 08-ai
+  display_name: Artificial Intelligence
+  order: 8

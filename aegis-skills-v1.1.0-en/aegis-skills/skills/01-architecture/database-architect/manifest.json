@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "id": "database-architect",
+  "display_name": "Database Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "01-architecture",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Database Architect role to design data models, schemas, indexes, migrations, and availability strategies. Use this skill for relational modeling, PostgreSQL, MySQL, indexing, partitioning, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "modelisation-relationnelle",
+    "postgresql",
+    "mysql",
+    "indexation",
+    "partitionnement",
+    "replication",
+    "transactions",
+    "multi-tenant-data"
+  ],
+  "collaborates_with": [
+    "software-architect",
+    "senior-developer",
+    "performance-engineer",
+    "sre",
+    "data-stakeholders"
+  ],
+  "source": {
+    "legacy_path": "01-Architecture/database-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

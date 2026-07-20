@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "business-analyst",
+  "display_name": "Business Analyst",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "05-product",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Business Analyst role to clarify business needs, processes, requirements, rules, and acceptance criteria. Use this skill for requirements, BPMN, UML use cases, process mapping, gap analysis, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "requirements",
+    "bpmn",
+    "uml-use-cases",
+    "process-mapping",
+    "gap-analysis",
+    "acceptance-criteria",
+    "workshops"
+  ],
+  "collaborates_with": [
+    "product-manager",
+    "solution-architect",
+    "ux-designer",
+    "qa-engineer",
+    "cto"
+  ],
+  "source": {
+    "legacy_path": "05-Product/business-analyst.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

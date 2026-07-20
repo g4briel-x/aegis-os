@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "devops",
+  "display_name": "DevOps Engineer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "04-devops",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the DevOps Engineer role to industrialize build, test, deployment, environment management, release, and operational automation. Use this skill for CI/CD, Docker, Terraform, release management, environment management, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "ci-cd",
+    "docker",
+    "terraform",
+    "release-management",
+    "environment-management",
+    "secrets",
+    "artifact-management"
+  ],
+  "collaborates_with": [
+    "sre",
+    "cloud-engineer",
+    "senior-developer",
+    "security-engineer",
+    "qa-engineer"
+  ],
+  "source": {
+    "legacy_path": "04-DevOps/devops.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

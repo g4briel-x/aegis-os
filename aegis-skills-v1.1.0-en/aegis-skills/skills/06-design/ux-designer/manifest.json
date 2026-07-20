@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "ux-designer",
+  "display_name": "UX Designer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "06-design",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the UX Designer role to design effective user journeys, clarify user needs, and improve end-to-end workflows. Use this skill for user research, journey mapping, wireframes, information architecture, usability testing, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "user-research",
+    "journey-mapping",
+    "wireframes",
+    "information-architecture",
+    "usability-testing",
+    "accessibility"
+  ],
+  "collaborates_with": [
+    "product-manager",
+    "business-analyst",
+    "ui-designer",
+    "design-system-designer",
+    "qa-engineer"
+  ],
+  "source": {
+    "legacy_path": "06-Design/ux-designer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

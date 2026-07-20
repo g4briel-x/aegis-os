@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "ui-designer",
+  "display_name": "UI Designer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "06-design",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the UI Designer role to design readable, coherent, accessible, responsive interfaces that product and engineering teams can implement directly. Use this skill for visual hierarchy, responsive UI, components, typography, color, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "visual-hierarchy",
+    "responsive-ui",
+    "components",
+    "typography",
+    "color",
+    "interaction-states",
+    "accessibility"
+  ],
+  "collaborates_with": [
+    "ux-designer",
+    "design-system-designer",
+    "senior-developer",
+    "product-manager"
+  ],
+  "source": {
+    "legacy_path": "06-Design/ui-designer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

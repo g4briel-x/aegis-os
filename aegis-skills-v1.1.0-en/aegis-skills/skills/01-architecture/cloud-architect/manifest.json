@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "cloud-architect",
+  "display_name": "Cloud Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "01-architecture",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Cloud Architect role to design secure, scalable, cost-efficient, and operable cloud architectures. Use this skill for landing zones, networking, IAM, multi-account strategy, cloud security, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "landing-zones",
+    "networking",
+    "iam",
+    "multi-account-strategy",
+    "cloud-security",
+    "resilience",
+    "cost-optimization"
+  ],
+  "collaborates_with": [
+    "cto",
+    "sre",
+    "devops",
+    "security-engineer",
+    "software-architect"
+  ],
+  "source": {
+    "legacy_path": "01-Architecture/cloud-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

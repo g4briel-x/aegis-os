@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "id": "ai-architect",
+  "display_name": "AI Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "08-ai",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the AI Architect role to design the end-to-end AI architecture across models, data, evaluation, safety, privacy, cost, and product integration. Use this skill for AI product architecture, model selection, RAG, agents, evaluation, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "ai-product-architecture",
+    "model-selection",
+    "rag",
+    "agents",
+    "evaluation",
+    "safety",
+    "privacy",
+    "cost-control"
+  ],
+  "collaborates_with": [
+    "cto",
+    "prompt-engineer",
+    "rag-engineer",
+    "security-engineer",
+    "software-architect"
+  ],
+  "source": {
+    "legacy_path": "08-AI/ai-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

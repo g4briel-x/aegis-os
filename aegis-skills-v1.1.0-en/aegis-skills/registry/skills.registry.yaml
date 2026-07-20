@@ -1,0 +1,412 @@
+schema_version: '1.0'
+library_version: 1.1.0
+skills:
+- id: aegis-software-studio
+  display_name: Aegis Software Studio Orchestrator
+  version: 1.1.0
+  category: 00-cto
+  path: skills/00-cto/aegis-software-studio
+  entrypoint: skills/00-cto/aegis-software-studio/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Aegis Software Studio Orchestrator role to analyze a request,
+    select the relevant specialized skills, coordinate their collaboration, resolve contradictions, and consolidate
+    a traceable final response. Use this skill for multi-expert orchestration, skill routing, technical arbitration,
+    risk management, deliverable consolidation, and whenever a professional deliverable in this domain must be analyzed,
+    designed, reviewed, remediated, decided upon, or documented.
+- id: cto
+  display_name: CTO / Chief Technology Officer
+  version: 1.1.0
+  category: 00-cto
+  path: skills/00-cto/cto
+  entrypoint: skills/00-cto/cto/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the CTO / Chief Technology Officer role to orchestrate Aegis Skills,
+    select the relevant expertise, arbitrate structural decisions, and validate delivery alignment with the Aegis
+    OS strategy. Use this skill for technology strategy, enterprise architecture, engineering governance, software
+    quality, security, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: cloud-architect
+  display_name: Cloud Architect
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/cloud-architect
+  entrypoint: skills/01-architecture/cloud-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Cloud Architect role to design secure, scalable, cost-efficient,
+    and operable cloud architectures. Use this skill for landing zones, networking, IAM, multi-account strategy,
+    cloud security, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: cloud-engineer
+  display_name: Cloud Engineer
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/cloud-engineer
+  entrypoint: skills/01-architecture/cloud-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Cloud Engineer role to implement and maintain cloud resources
+    according to architecture, security, reliability, and cost standards. Use this skill for Terraform, cloud networking,
+    managed databases, storage, IAM, and whenever a professional deliverable in this domain must be analyzed, designed,
+    reviewed, remediated, decided upon, or documented.
+- id: database-administrator
+  display_name: Database Administrator
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/database-administrator
+  entrypoint: skills/01-architecture/database-administrator/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Database Administrator role to operate critical databases
+    with reliable backups, monitoring, security, maintenance, and recovery procedures. Use this skill for backup/restore,
+    replication, maintenance, access control, monitoring, and whenever a professional deliverable in this domain
+    must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: database-architect
+  display_name: Database Architect
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/database-architect
+  entrypoint: skills/01-architecture/database-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Database Architect role to design data models, schemas, indexes,
+    migrations, and availability strategies. Use this skill for relational modeling, PostgreSQL, MySQL, indexing,
+    partitioning, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: database-performance
+  display_name: Database Performance Engineer
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/database-performance
+  entrypoint: skills/01-architecture/database-performance/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Database Performance Engineer role to diagnose and optimize
+    database performance and critical queries. Use this skill for query tuning, execution plans, index design, locks,
+    deadlocks, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: software-architect
+  display_name: Software Architect
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/software-architect
+  entrypoint: skills/01-architecture/software-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Software Architect role to design software architecture, domain
+    boundaries, structural patterns, and migration paths. Use this skill for DDD, Clean Architecture, architecture
+    hexagonale, microservices, monolithe modulaire, and whenever a professional deliverable in this domain must
+    be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: solution-architect
+  display_name: Solution Architect
+  version: 1.1.0
+  category: 01-architecture
+  path: skills/01-architecture/solution-architect
+  entrypoint: skills/01-architecture/solution-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Solution Architect role to translate business requirements
+    into a coherent technical solution spanning applications, integrations, data, security, and operations. Use
+    this skill for solution architecture, enterprise integration, requirements mapping, system context, trade-off
+    analysis, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: api-engineer
+  display_name: API Engineer
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/api-engineer
+  entrypoint: skills/02-engineering/api-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the API Engineer role to design reliable, secure, versioned, documented,
+    and consumer-friendly APIs. Use this skill for REST, GraphQL, webhooks, OpenAPI, versioning, and whenever a
+    professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: legacy-modernization
+  display_name: Legacy Modernization Expert
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/legacy-modernization
+  entrypoint: skills/02-engineering/legacy-modernization/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Legacy Modernization Expert role to modernize existing systems
+    incrementally while reducing risk, technical debt, and operating cost. Use this skill for strangler fig, incremental
+    migration, legacy refactoring, test characterization, data migration, and whenever a professional deliverable
+    in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: performance-engineer
+  display_name: Performance Engineer
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/performance-engineer
+  entrypoint: skills/02-engineering/performance-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Performance Engineer role to measure, diagnose, and optimize
+    application and infrastructure performance. Use this skill for profiling, benchmarking, load testing, capacity
+    planning, caching, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: security-engineer
+  display_name: Security Engineer
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/security-engineer
+  entrypoint: skills/02-engineering/security-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Security Engineer role to reduce application and platform
+    risk by strengthening authentication, authorization, encryption, APIs, secrets, and DevSecOps controls. Use
+    this skill for OWASP Top 10, authn/authz, API security, encryption, secrets, and whenever a professional deliverable
+    in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: senior-code-reviewer
+  display_name: Senior Code Reviewer
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/senior-code-reviewer
+  entrypoint: skills/02-engineering/senior-code-reviewer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Senior Code Reviewer role to review code to identify defects,
+    anti-patterns, security risks, performance issues, and maintainability concerns. Use this skill for code review,
+    anti-patterns, technical debt, security review, performance review, and whenever a professional deliverable
+    in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: senior-debugger
+  display_name: Senior Debugger
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/senior-debugger
+  entrypoint: skills/02-engineering/senior-debugger/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Senior Debugger role to identify root causes, analyze logs,
+    dumps, traces, and profiles, correct critical defects, and produce a rigorous root-cause analysis. Use this
+    skill for RCA, low-level debugging, profiling, observability, thread dumps, and whenever a professional deliverable
+    in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: senior-developer
+  display_name: Senior Developer
+  version: 1.1.0
+  category: 02-engineering
+  path: skills/02-engineering/senior-developer
+  entrypoint: skills/02-engineering/senior-developer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Senior Developer role to deliver clean, robust, maintainable,
+    tested, enterprise-grade software. Use this skill for Clean Code, SOLID, refactoring, API design, error handling,
+    and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided
+    upon, or documented.
+- id: automation-engineer
+  display_name: Automation Engineer
+  version: 1.1.0
+  category: 03-qa
+  path: skills/03-qa/automation-engineer
+  entrypoint: skills/03-qa/automation-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Automation Engineer role to automate reliable, fast, and maintainable
+    tests to accelerate delivery without sacrificing quality. Use this skill for test automation, E2E, integration
+    tests, contract tests, fixtures, and whenever a professional deliverable in this domain must be analyzed, designed,
+    reviewed, remediated, decided upon, or documented.
+- id: penetration-tester
+  display_name: Penetration Tester
+  version: 1.1.0
+  category: 03-qa
+  path: skills/03-qa/penetration-tester
+  entrypoint: skills/03-qa/penetration-tester/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Penetration Tester role to identify and demonstrate exploitable
+    vulnerabilities, then recommend verifiable remediation. Use this skill for web pentest, API pentest, auth bypass,
+    privilege escalation, injection, and whenever a professional deliverable in this domain must be analyzed, designed,
+    reviewed, remediated, decided upon, or documented.
+- id: qa-engineer
+  display_name: QA Engineer
+  version: 1.1.0
+  category: 03-qa
+  path: skills/03-qa/qa-engineer
+  entrypoint: skills/03-qa/qa-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the QA Engineer role to define the quality strategy, identify
+    product risks, and verify that the product satisfies measurable acceptance criteria. Use this skill for test
+    strategy, risk-based testing, exploratory testing, regression, acceptance criteria, and whenever a professional
+    deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: devops
+  display_name: DevOps Engineer
+  version: 1.1.0
+  category: 04-devops
+  path: skills/04-devops/devops
+  entrypoint: skills/04-devops/devops/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the DevOps Engineer role to industrialize build, test, deployment,
+    environment management, release, and operational automation. Use this skill for CI/CD, Docker, Terraform, release
+    management, environment management, and whenever a professional deliverable in this domain must be analyzed,
+    designed, reviewed, remediated, decided upon, or documented.
+- id: kubernetes
+  display_name: Kubernetes Engineer
+  version: 1.1.0
+  category: 04-devops
+  path: skills/04-devops/kubernetes
+  entrypoint: skills/04-devops/kubernetes/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Kubernetes Engineer role to design, deploy, and operate secure,
+    observable, and resilient Kubernetes workloads. Use this skill for cluster operations, workloads, Helm, networking,
+    autoscaling, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: observability
+  display_name: Observability Engineer
+  version: 1.1.0
+  category: 04-devops
+  path: skills/04-devops/observability
+  entrypoint: skills/04-devops/observability/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Observability Engineer role to make systems observable enough
+    to diagnose incidents, performance degradation, and user-experience issues. Use this skill for structured logging,
+    metrics, distributed tracing, alert design, dashboards, and whenever a professional deliverable in this domain
+    must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: sre
+  display_name: SRE
+  version: 1.1.0
+  category: 04-devops
+  path: skills/04-devops/sre
+  entrypoint: skills/04-devops/sre/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the SRE role to protect reliability, availability, capacity, observability,
+    and incident-response readiness. Use this skill for SLO, error budgets, incident response, capacity planning,
+    runbooks, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: business-analyst
+  display_name: Business Analyst
+  version: 1.1.0
+  category: 05-product
+  path: skills/05-product/business-analyst
+  entrypoint: skills/05-product/business-analyst/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Business Analyst role to clarify business needs, processes,
+    requirements, rules, and acceptance criteria. Use this skill for requirements, BPMN, UML use cases, process
+    mapping, gap analysis, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: product-manager
+  display_name: SaaS Product Manager
+  version: 1.1.0
+  category: 05-product
+  path: skills/05-product/product-manager
+  entrypoint: skills/05-product/product-manager/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the SaaS Product Manager role to turn business objectives and
+    user needs into a prioritized roadmap, an evidence-based MVP, and measurable product outcomes. Use this skill
+    for product vision, roadmap, MVP, prioritization, KPIs, and whenever a professional deliverable in this domain
+    must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: scrum-master
+  display_name: Scrum Master
+  version: 1.1.0
+  category: 05-product
+  path: skills/05-product/scrum-master
+  entrypoint: skills/05-product/scrum-master/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Scrum Master role to facilitate team delivery, remove blockers,
+    protect flow, and improve delivery cadence and team health. Use this skill for Scrum, Kanban, facilitation,
+    retrospectives, flow metrics, and whenever a professional deliverable in this domain must be analyzed, designed,
+    reviewed, remediated, decided upon, or documented.
+- id: design-system
+  display_name: Design System Designer
+  version: 1.1.0
+  category: 06-design
+  path: skills/06-design/design-system
+  entrypoint: skills/06-design/design-system/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Design System Designer role to build and govern a coherent,
+    reusable, accessible, and maintainable design system. Use this skill for design tokens, component governance,
+    accessibility, documentation, variants, and whenever a professional deliverable in this domain must be analyzed,
+    designed, reviewed, remediated, decided upon, or documented.
+- id: ui-designer
+  display_name: UI Designer
+  version: 1.1.0
+  category: 06-design
+  path: skills/06-design/ui-designer
+  entrypoint: skills/06-design/ui-designer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the UI Designer role to design readable, coherent, accessible,
+    responsive interfaces that product and engineering teams can implement directly. Use this skill for visual hierarchy,
+    responsive UI, components, typography, color, and whenever a professional deliverable in this domain must be
+    analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: ux-designer
+  display_name: UX Designer
+  version: 1.1.0
+  category: 06-design
+  path: skills/06-design/ux-designer
+  entrypoint: skills/06-design/ux-designer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the UX Designer role to design effective user journeys, clarify
+    user needs, and improve end-to-end workflows. Use this skill for user research, journey mapping, wireframes,
+    information architecture, usability testing, and whenever a professional deliverable in this domain must be
+    analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: api-documentation
+  display_name: API Documentation Specialist
+  version: 1.1.0
+  category: 07-documentation
+  path: skills/07-documentation/api-documentation
+  entrypoint: skills/07-documentation/api-documentation/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the API Documentation Specialist role to document APIs so they
+    are understandable, testable, secure, and easy to integrate. Use this skill for OpenAPI, reference docs, tutorials,
+    authentication docs, error catalog, and whenever a professional deliverable in this domain must be analyzed,
+    designed, reviewed, remediated, decided upon, or documented.
+- id: technical-writer
+  display_name: Technical Writer
+  version: 1.1.0
+  category: 07-documentation
+  path: skills/07-documentation/technical-writer
+  entrypoint: skills/07-documentation/technical-writer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Technical Writer role to produce clear, accurate, maintainable
+    documentation tailored to its audience and operational context. Use this skill for technical docs, developer
+    guides, runbooks, ADR, RFC, and whenever a professional deliverable in this domain must be analyzed, designed,
+    reviewed, remediated, decided upon, or documented.
+- id: user-manual
+  display_name: User Manual Writer
+  version: 1.1.0
+  category: 07-documentation
+  path: skills/07-documentation/user-manual
+  entrypoint: skills/07-documentation/user-manual/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the User Manual Writer role to create task-oriented user documentation
+    that reduces friction, support demand, and usage errors. Use this skill for user guides, onboarding, help center,
+    FAQ, task-based docs, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: agent-architect
+  display_name: Agent Architect
+  version: 1.1.0
+  category: 08-ai
+  path: skills/08-ai/agent-architect
+  entrypoint: skills/08-ai/agent-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Agent Architect role to design robust, controllable, observable,
+    and secure agent architectures. Use this skill for agent orchestration, planning, tool routing, memory, state
+    machines, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated,
+    decided upon, or documented.
+- id: ai-architect
+  display_name: AI Architect
+  version: 1.1.0
+  category: 08-ai
+  path: skills/08-ai/ai-architect
+  entrypoint: skills/08-ai/ai-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the AI Architect role to design the end-to-end AI architecture
+    across models, data, evaluation, safety, privacy, cost, and product integration. Use this skill for AI product
+    architecture, model selection, RAG, agents, evaluation, and whenever a professional deliverable in this domain
+    must be analyzed, designed, reviewed, remediated, decided upon, or documented.
+- id: mcp-architect
+  display_name: MCP Architect
+  version: 1.1.0
+  category: 08-ai
+  path: skills/08-ai/mcp-architect
+  entrypoint: skills/08-ai/mcp-architect/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the MCP Architect role to design secure, maintainable, auditable,
+    and useful Model Context Protocol integrations for AI agents. Use this skill for MCP servers, tool contracts,
+    auth, permissions, resource templates, and whenever a professional deliverable in this domain must be analyzed,
+    designed, reviewed, remediated, decided upon, or documented.
+- id: prompt-engineer
+  display_name: Prompt Engineer
+  version: 1.1.0
+  category: 08-ai
+  path: skills/08-ai/prompt-engineer
+  entrypoint: skills/08-ai/prompt-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the Prompt Engineer role to optimize prompts, AI workflows, evaluations,
+    guardrails, tool use, and multi-agent orchestration. Use this skill for prompt design, tool use, agent workflows,
+    evaluation, few-shot, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed,
+    remediated, decided upon, or documented.
+- id: rag-engineer
+  display_name: RAG Engineer
+  version: 1.1.0
+  category: 08-ai
+  path: skills/08-ai/rag-engineer
+  entrypoint: skills/08-ai/rag-engineer/SKILL.md
+  status: active
+  description: Provides senior-level expertise in the RAG Engineer role to build reliable retrieval-augmented generation
+    systems covering ingestion, chunking, retrieval, reranking, grounding, evaluation, and observability. Use this
+    skill for document ingestion, chunking, embeddings, retrieval, reranking, and whenever a professional deliverable
+    in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.

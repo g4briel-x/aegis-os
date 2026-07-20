@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "agent-architect",
+  "display_name": "Agent Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "08-ai",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Agent Architect role to design robust, controllable, observable, and secure agent architectures. Use this skill for agent orchestration, planning, tool routing, memory, state machines, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "agent-orchestration",
+    "planning",
+    "tool-routing",
+    "memory",
+    "state-machines",
+    "human-approval",
+    "failure-recovery"
+  ],
+  "collaborates_with": [
+    "cto",
+    "ai-architect",
+    "prompt-engineer",
+    "security-engineer",
+    "sre"
+  ],
+  "source": {
+    "legacy_path": "08-AI/agent-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "id": "api-engineer",
+  "display_name": "API Engineer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "02-engineering",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the API Engineer role to design reliable, secure, versioned, documented, and consumer-friendly APIs. Use this skill for REST, GraphQL, webhooks, OpenAPI, versioning, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "rest",
+    "graphql",
+    "webhooks",
+    "openapi",
+    "versioning",
+    "idempotency",
+    "pagination",
+    "rate-limiting"
+  ],
+  "collaborates_with": [
+    "software-architect",
+    "security-engineer",
+    "technical-writer",
+    "senior-developer",
+    "qa-engineer"
+  ],
+  "source": {
+    "legacy_path": "02-Engineering/api-engineer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

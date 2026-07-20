@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "scrum-master",
+  "display_name": "Scrum Master",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "05-product",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Scrum Master role to facilitate team delivery, remove blockers, protect flow, and improve delivery cadence and team health. Use this skill for Scrum, Kanban, facilitation, retrospectives, flow metrics, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "scrum",
+    "kanban",
+    "facilitation",
+    "retrospectives",
+    "flow-metrics",
+    "delivery-risk",
+    "team-health"
+  ],
+  "collaborates_with": [
+    "product-manager",
+    "senior-developer",
+    "qa-engineer",
+    "cto",
+    "design-team"
+  ],
+  "source": {
+    "legacy_path": "05-Product/scrum-master.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

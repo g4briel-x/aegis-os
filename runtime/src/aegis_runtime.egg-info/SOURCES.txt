@@ -16,8 +16,11 @@ src/aegis_runtime.egg-info/requires.txt
 src/aegis_runtime.egg-info/top_level.txt
 src/aegis_runtime/execution/__init__.py
 src/aegis_runtime/execution/audit.py
+src/aegis_runtime/execution/audit_authentication.py
+src/aegis_runtime/execution/audit_authentication_config.py
 src/aegis_runtime/execution/audit_history.py
 src/aegis_runtime/execution/audit_integrity.py
+src/aegis_runtime/execution/audit_protection.py
 src/aegis_runtime/execution/audit_verification.py
 src/aegis_runtime/execution/context.py
 src/aegis_runtime/execution/context_builder.py

@@ -1,0 +1,11 @@
+{
+  "skill_name": "skill-name",
+  "evals": [
+    {
+      "id": "trigger-direct",
+      "prompt": "A realistic request that should trigger the skill.",
+      "expected_output": "The measurable characteristics expected from the response.",
+      "files": []
+    }
+  ]
+}

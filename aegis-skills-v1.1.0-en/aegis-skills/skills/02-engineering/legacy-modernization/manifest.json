@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "legacy-modernization",
+  "display_name": "Legacy Modernization Expert",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "02-engineering",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Legacy Modernization Expert role to modernize existing systems incrementally while reducing risk, technical debt, and operating cost. Use this skill for strangler fig, incremental migration, legacy refactoring, test characterization, data migration, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "strangler-fig",
+    "migration-progressive",
+    "refactoring-legacy",
+    "test-characterization",
+    "data-migration",
+    "compatibility"
+  ],
+  "collaborates_with": [
+    "cto",
+    "software-architect",
+    "senior-developer",
+    "qa-engineer",
+    "database-architect"
+  ],
+  "source": {
+    "legacy_path": "02-Engineering/legacy-modernization.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

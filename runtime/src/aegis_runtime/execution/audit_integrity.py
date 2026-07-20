@@ -15,6 +15,7 @@ AUDIT_INTEGRITY_ALGORITHM = "sha256"
 AUDIT_GENESIS_HASH = "0" * 64
 
 _INTEGRITY_FIELD = "integrity"
+_AUTHENTICATION_FIELD = "authentication"
 
 _INTEGRITY_KEYS = {
     "version",
@@ -80,9 +81,16 @@ class ExecutionAuditIntegrity:
                 "Execution audit payload must be a JSON object."
             )
 
-        sealed_payload = copy.deepcopy(payload)
+        sealed_payload = copy.deepcopy(
+            payload
+        )
+
         sealed_payload.pop(
             _INTEGRITY_FIELD,
+            None,
+        )
+        sealed_payload.pop(
+            _AUTHENTICATION_FIELD,
             None,
         )
 
@@ -223,6 +231,7 @@ class ExecutionAuditIntegrity:
         protected_payload = self._protected_payload(
             payload
         )
+
         expected_integrity = self._build_integrity(
             protected_payload
         )
@@ -318,7 +327,9 @@ class ExecutionAuditIntegrity:
                     "must be unique."
                 )
 
-            event_ids.add(event_id)
+            event_ids.add(
+                event_id
+            )
 
             event_material = {
                 "index": index,
@@ -346,6 +357,7 @@ class ExecutionAuditIntegrity:
         protected_payload = self._protected_payload(
             payload
         )
+
         manifest_hash = self._hash_value(
             protected_payload
         )
@@ -537,13 +549,18 @@ class ExecutionAuditIntegrity:
         self,
         payload: dict[str, Any],
     ) -> dict[str, Any]:
-        """Return the complete manifest excluding its seal."""
+        """Return the manifest without cryptographic metadata."""
 
         protected_payload = copy.deepcopy(
             payload
         )
+
         protected_payload.pop(
             _INTEGRITY_FIELD,
+            None,
+        )
+        protected_payload.pop(
+            _AUTHENTICATION_FIELD,
             None,
         )
 

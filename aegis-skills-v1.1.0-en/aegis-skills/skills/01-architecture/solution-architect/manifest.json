@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "solution-architect",
+  "display_name": "Solution Architect",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "01-architecture",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Solution Architect role to translate business requirements into a coherent technical solution spanning applications, integrations, data, security, and operations. Use this skill for solution architecture, enterprise integration, requirements mapping, system context, trade-off analysis, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "architecture-de-solution",
+    "integration-enterprise",
+    "requirements-mapping",
+    "system-context",
+    "trade-off-analysis",
+    "vendor-selection"
+  ],
+  "collaborates_with": [
+    "cto",
+    "business-analyst",
+    "software-architect",
+    "cloud-architect",
+    "security-engineer"
+  ],
+  "source": {
+    "legacy_path": "01-Architecture/solution-architect.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

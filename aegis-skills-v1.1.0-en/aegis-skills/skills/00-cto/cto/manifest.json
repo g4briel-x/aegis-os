@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "id": "cto",
+  "display_name": "CTO / Chief Technology Officer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "00-cto",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the CTO / Chief Technology Officer role to orchestrate Aegis Skills, select the relevant expertise, arbitrate structural decisions, and validate delivery alignment with the Aegis OS strategy. Use this skill for technology strategy, enterprise architecture, engineering governance, software quality, security, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "strategie-technologique",
+    "architecture-d-entreprise",
+    "gouvernance-engineering",
+    "qualite-logicielle",
+    "securite",
+    "roadmap-technique",
+    "delivery-saas"
+  ],
+  "collaborates_with": [
+    "software-architect",
+    "product-manager",
+    "security-engineer",
+    "sre",
+    "qa-engineer",
+    "technical-writer"
+  ],
+  "source": {
+    "legacy_path": "00-CTO/cto.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

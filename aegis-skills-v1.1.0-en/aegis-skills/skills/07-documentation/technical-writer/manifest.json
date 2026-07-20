@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "technical-writer",
+  "display_name": "Technical Writer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "07-documentation",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Technical Writer role to produce clear, accurate, maintainable documentation tailored to its audience and operational context. Use this skill for technical docs, developer guides, runbooks, ADR, RFC, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "technical-docs",
+    "developer-guides",
+    "runbooks",
+    "adr",
+    "rfc",
+    "release-notes",
+    "troubleshooting"
+  ],
+  "collaborates_with": [
+    "software-architect",
+    "api-engineer",
+    "sre",
+    "product-manager",
+    "senior-developer"
+  ],
+  "source": {
+    "legacy_path": "07-Documentation/technical-writer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

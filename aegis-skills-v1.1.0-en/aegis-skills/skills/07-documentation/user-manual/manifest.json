@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "user-manual",
+  "display_name": "User Manual Writer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "07-documentation",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the User Manual Writer role to create task-oriented user documentation that reduces friction, support demand, and usage errors. Use this skill for user guides, onboarding, help center, FAQ, task-based docs, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "user-guides",
+    "onboarding",
+    "help-center",
+    "faq",
+    "task-based-docs",
+    "screenshots",
+    "release-communication"
+  ],
+  "collaborates_with": [
+    "product-manager",
+    "ux-designer",
+    "technical-writer",
+    "customer-support"
+  ],
+  "source": {
+    "legacy_path": "07-Documentation/user-manual.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

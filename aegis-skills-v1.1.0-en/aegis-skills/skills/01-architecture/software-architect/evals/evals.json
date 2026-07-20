@@ -1,0 +1,23 @@
+{
+  "skill_name": "software-architect",
+  "evals": [
+    {
+      "id": "trigger-direct",
+      "prompt": "Act as a Software Architect and audit our approach to DDD.",
+      "expected_output": "A structured analysis with facts, assumptions, risks, a recommendation, measurable validation, and concrete next actions.",
+      "files": []
+    },
+    {
+      "id": "trigger-indirect",
+      "prompt": "We need to improve DDD without materially increasing risk. Propose a safe trajectory.",
+      "expected_output": "The skill should activate and produce a C4 diagrams with trade-offs and measurable acceptance criteria.",
+      "files": []
+    },
+    {
+      "id": "quality-review",
+      "prompt": "Review this deliverable as a senior Software Architect and identify critical defects before production.",
+      "expected_output": "A severity-ranked review with required evidence, actionable corrections, ownership, and validation criteria.",
+      "files": []
+    }
+  ]
+}

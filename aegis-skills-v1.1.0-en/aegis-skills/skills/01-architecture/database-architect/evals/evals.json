@@ -1,0 +1,23 @@
+{
+  "skill_name": "database-architect",
+  "evals": [
+    {
+      "id": "trigger-direct",
+      "prompt": "Act as a Database Architect and audit our approach to relational modeling.",
+      "expected_output": "A structured analysis with facts, assumptions, risks, a recommendation, measurable validation, and concrete next actions.",
+      "files": []
+    },
+    {
+      "id": "trigger-indirect",
+      "prompt": "We need to improve relational modeling without materially increasing risk. Propose a safe trajectory.",
+      "expected_output": "The skill should activate and produce a data schema with trade-offs and measurable acceptance criteria.",
+      "files": []
+    },
+    {
+      "id": "quality-review",
+      "prompt": "Review this deliverable as a senior Database Architect and identify critical defects before production.",
+      "expected_output": "A severity-ranked review with required evidence, actionable corrections, ownership, and validation criteria.",
+      "files": []
+    }
+  ]
+}

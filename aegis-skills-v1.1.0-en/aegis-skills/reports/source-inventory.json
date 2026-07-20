@@ -1,0 +1,227 @@
+{
+  "archive_sha256": "90f331f65acbae004a19654f35de94c1c1569f90721f7f9694e053e3303244d6",
+  "role_files": 36,
+  "total_lines": 27055,
+  "total_words": 177114,
+  "over_500": 36,
+  "no_frontmatter": 36,
+  "average_exact_common_line_ratio": 0.8497623881726981,
+  "inventory": [
+    {
+      "path": "00-CTO/cto.md",
+      "sha256": "e0213207dbd0f2c47df6f82fbc3b2a6c864348e1fb74492c469e8df0c8e8e27e",
+      "lines": 753,
+      "words": 5047
+    },
+    {
+      "path": "01-Architecture/cloud-architect.md",
+      "sha256": "bc34364ad891b198df826f4a56798dc420d181d573712ffb0737fca25aec987d",
+      "lines": 754,
+      "words": 4916
+    },
+    {
+      "path": "01-Architecture/cloud-engineer.md",
+      "sha256": "b829f506500aa85a1fc96c6e4699f3bed80fa468aa664749564bddfef21cbd37",
+      "lines": 750,
+      "words": 4894
+    },
+    {
+      "path": "01-Architecture/database-administrator.md",
+      "sha256": "e5731ea1bc1cf64828a92ced008db2e9d9aaafe7e828b22e678364a58ca9b690",
+      "lines": 751,
+      "words": 4897
+    },
+    {
+      "path": "01-Architecture/database-architect.md",
+      "sha256": "2159f83d4f68c106c639443bda16f5c449444c22168e45efc9b6b6041ce901c4",
+      "lines": 755,
+      "words": 4909
+    },
+    {
+      "path": "01-Architecture/database-performance.md",
+      "sha256": "06bb2e770d112151b01be7864a3aee20ccb7b14148f8693e12cf0bb4ff2aaff2",
+      "lines": 751,
+      "words": 4962
+    },
+    {
+      "path": "01-Architecture/software-architect.md",
+      "sha256": "d539c0227de2846f889d2af92dda6a6f182e56b2226eadd87e700d49009a5ec5",
+      "lines": 754,
+      "words": 4911
+    },
+    {
+      "path": "01-Architecture/solution-architect.md",
+      "sha256": "bb0fa731397be404d78c83dd0639d0a4576a5b4abc6a5cb10641ce9ee5c9b92c",
+      "lines": 751,
+      "words": 4924
+    },
+    {
+      "path": "02-Engineering/api-engineer.md",
+      "sha256": "da174a292bb0dc0f6e1644afcd05f06d1856e94abb392dc6f97feea4cabfe1ac",
+      "lines": 753,
+      "words": 4907
+    },
+    {
+      "path": "02-Engineering/legacy-modernization.md",
+      "sha256": "79c00c48b1b202c4761d042448f9dc0644683d77f5e3662c59f83a8f5dfd4bbf",
+      "lines": 751,
+      "words": 4970
+    },
+    {
+      "path": "02-Engineering/performance-engineer.md",
+      "sha256": "2da95acc2844a3b2f1301f90a99a6aa37b550cdccd2cfd99c020186d224aab45",
+      "lines": 755,
+      "words": 4900
+    },
+    {
+      "path": "02-Engineering/security-engineer.md",
+      "sha256": "8f6a96a0e38efca7746207e4ba4f12176c1a908a3d3d4d22e4d5c4cc64679351",
+      "lines": 754,
+      "words": 4910
+    },
+    {
+      "path": "02-Engineering/senior-code-reviewer.md",
+      "sha256": "3e7895a858c0829d1669d81101e1279bf253fedb0d759de1d31d377c46b5c245",
+      "lines": 750,
+      "words": 4964
+    },
+    {
+      "path": "02-Engineering/senior-debugger.md",
+      "sha256": "2627fae69f661c833b6ec5961304869195c5e581374905de82e6bd2e55746a6e",
+      "lines": 754,
+      "words": 4911
+    },
+    {
+      "path": "02-Engineering/senior-developer.md",
+      "sha256": "27e380606f2eae592bc93deb244186363bfedacfdf04146aa63489d306e9e0e9",
+      "lines": 754,
+      "words": 4911
+    },
+    {
+      "path": "03-QA/automation-engineer.md",
+      "sha256": "3b7da4f2c05494b6bfda54bef585030876ba469eeb29323fd6add10c4aada0bd",
+      "lines": 751,
+      "words": 4904
+    },
+    {
+      "path": "03-QA/penetration-tester.md",
+      "sha256": "ebfea99531595c6a444738f6b96039b023c0f9e25eb54387ba5575c3bde8c512",
+      "lines": 751,
+      "words": 4895
+    },
+    {
+      "path": "03-QA/qa-engineer.md",
+      "sha256": "5c307573fa09391e3fa7337754b110c1e1b96a348e2bd3af209336dc9f441f9b",
+      "lines": 751,
+      "words": 4913
+    },
+    {
+      "path": "04-DevOps/devops.md",
+      "sha256": "7d9f829870d28137afc16e47f06243e3d8ca673dbfbb8e5b51023ffbe70f5961",
+      "lines": 752,
+      "words": 4905
+    },
+    {
+      "path": "04-DevOps/kubernetes.md",
+      "sha256": "1eb12d278fd4a5d9537186ee8236f65cbf5e8b6bd95700282c5f88b6cf1f35bf",
+      "lines": 753,
+      "words": 4897
+    },
+    {
+      "path": "04-DevOps/observability.md",
+      "sha256": "57a45874c5dc9774c0e998bac494ee865d132dbf82e38c5bba76ef41d30bedf5",
+      "lines": 752,
+      "words": 4891
+    },
+    {
+      "path": "04-DevOps/sre.md",
+      "sha256": "447880428177072a96acb09f495af4d57bffccb21d8482194219770473496d75",
+      "lines": 753,
+      "words": 4848
+    },
+    {
+      "path": "05-Product/business-analyst.md",
+      "sha256": "7a302856c8571d6d9d40c57326bc9f3d852c72bd194ffa128308e4f8c20a63cf",
+      "lines": 750,
+      "words": 4901
+    },
+    {
+      "path": "05-Product/product-manager.md",
+      "sha256": "2d2985da08dae61ab31fdaaa92943131470ecf1602ada78fd19cc33b0be7c308",
+      "lines": 754,
+      "words": 4965
+    },
+    {
+      "path": "05-Product/scrum-master.md",
+      "sha256": "ad6476d184f402784918092cfe50517a746e4f5d648c4a4ac23103fb440f6617",
+      "lines": 750,
+      "words": 4905
+    },
+    {
+      "path": "06-Design/design-system.md",
+      "sha256": "145c547ae9a5017eddfe3bd60423df0cb733e39362aba7e84fe90beca4a6411d",
+      "lines": 749,
+      "words": 4963
+    },
+    {
+      "path": "06-Design/ui-designer.md",
+      "sha256": "96e6ac72816fa4e8a6d95bd3a9ef5107d89d8744d22d48235b646d2e096fb63f",
+      "lines": 749,
+      "words": 4942
+    },
+    {
+      "path": "06-Design/ux-designer.md",
+      "sha256": "85f9596320a183d367f3562bcaf3462a9754dc0d150873ab6723fa8317ad4e7a",
+      "lines": 749,
+      "words": 4948
+    },
+    {
+      "path": "07-Documentation/api-documentation.md",
+      "sha256": "9c7322f8aa3ca5ba5de2ac23f2664bbec37c7293a106061f117c5ef508e6b44c",
+      "lines": 748,
+      "words": 4946
+    },
+    {
+      "path": "07-Documentation/technical-writer.md",
+      "sha256": "f9814667950c58e40f5227d5476d3ecc6c11e3737aaf94b5127a1feef0151d4c",
+      "lines": 751,
+      "words": 4894
+    },
+    {
+      "path": "07-Documentation/user-manual.md",
+      "sha256": "eb8e62ea9a1cd5538c262ab65884ef510a732dceb137a4ba89892681ac5bb760",
+      "lines": 748,
+      "words": 4951
+    },
+    {
+      "path": "08-AI/agent-architect.md",
+      "sha256": "7bb2042eb86423f33d34ce0a7579321038c423b9eb912a48b9cf1d75528e6d75",
+      "lines": 750,
+      "words": 4902
+    },
+    {
+      "path": "08-AI/ai-architect.md",
+      "sha256": "257aa7b1e118bc3cbe0e8479a003207fcfa16ef4a68599018d40789e56a79ccd",
+      "lines": 753,
+      "words": 4907
+    },
+    {
+      "path": "08-AI/mcp-architect.md",
+      "sha256": "0cf5c709fb844f0d7f16662b492f16d31b14baf91eb57e2625ce5450eb013314",
+      "lines": 752,
+      "words": 4910
+    },
+    {
+      "path": "08-AI/prompt-engineer.md",
+      "sha256": "22ddf58c867885440f47086d06314b95159cca173224883e1b3609dab6cec342",
+      "lines": 750,
+      "words": 4902
+    },
+    {
+      "path": "08-AI/rag-engineer.md",
+      "sha256": "babaf0ec71b4ce92a864c43117921179e2081f9f5acda846ea86db04b9cc0ae6",
+      "lines": 749,
+      "words": 4892
+    }
+  ]
+}

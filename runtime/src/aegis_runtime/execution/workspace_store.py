@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from dataclasses import dataclass
-from .audit_integrity import ExecutionAuditIntegrity
+from .audit_protection import ExecutionAuditProtection
 from .session_builder import ExecutionSessionBuildResult
 
 
@@ -32,6 +32,7 @@ class PersistedExecutionWorkspace:
             "audit_manifest": str(self.audit_manifest),
         }
 
+
 @dataclass(slots=True, frozen=True)
 class StoredExecutionSession:
     """One execution session loaded from persistent storage."""
@@ -44,15 +45,33 @@ class StoredExecutionSession:
     def session_id(self) -> str:
         """Return the stored execution session identifier."""
 
-        session = self.payload.get("session", {})
-        return str(session.get("session_id", ""))
+        session = self.payload.get(
+            "session",
+            {},
+        )
+
+        return str(
+            session.get(
+                "session_id",
+                "",
+            )
+        )
 
     @property
     def workspace_id(self) -> str:
         """Return the stored execution workspace identifier."""
 
-        workspace = self.payload.get("workspace", {})
-        return str(workspace.get("workspace_id", ""))
+        workspace = self.payload.get(
+            "workspace",
+            {},
+        )
+
+        return str(
+            workspace.get(
+                "workspace_id",
+                "",
+            )
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize the stored session record."""
@@ -65,23 +84,42 @@ class StoredExecutionSession:
             "payload": self.payload,
         }
 
+
 class ExecutionWorkspaceStore:
     """Persist successful execution sessions inside the repository."""
 
-    def __init__(self, repo_root: Path | str) -> None:
-        self.repo_root = Path(repo_root).resolve()
-        self._audit_integrity = ExecutionAuditIntegrity()
+    def __init__(
+        self,
+        repo_root: Path | str,
+        *,
+        audit_protection: ExecutionAuditProtection | None = None,
+    ) -> None:
+        """Initialize persistent workspace storage."""
+
+        self.repo_root = Path(
+            repo_root
+        ).resolve()
 
         if not self.repo_root.exists():
             raise FileNotFoundError(
-                f"Repository root does not exist: {self.repo_root}"
+                "Repository root does not exist: "
+                f"{self.repo_root}"
             )
 
         if not self.repo_root.is_dir():
             raise ValueError(
-                f"Repository root is not a directory: {self.repo_root}"
+                "Repository root is not a directory: "
+                f"{self.repo_root}"
             )
-        self._audit_integrity = ExecutionAuditIntegrity()
+
+        self._audit_protection = (
+            audit_protection
+            if audit_protection is not None
+            else ExecutionAuditProtection.from_environment(
+                required=False,
+                working_directory=self.repo_root,
+            )
+        )
 
     def persist(
         self,
@@ -105,17 +143,23 @@ class ExecutionWorkspaceStore:
 
         if workspace_path.exists():
             raise FileExistsError(
-                f"Execution workspace already exists: {workspace_path}"
+                "Execution workspace already exists: "
+                f"{workspace_path}"
             )
 
-        workspace_path.mkdir(parents=True)
+        workspace_path.mkdir(
+            parents=True
+        )
 
         self._create_declared_locations(
             workspace_path=workspace_path,
             result=result,
         )
 
-        session_manifest = workspace_path / "session.json"
+        session_manifest = (
+            workspace_path
+            / "session.json"
+        )
 
         context_manifest = self._location_path(
             workspace_path=workspace_path,
@@ -164,8 +208,12 @@ class ExecutionWorkspaceStore:
             "target_asset_id": result.session.target_asset_id,
             "mode": result.session.mode.value,
             "state": result.session.state.value,
-            "created_at": result.session.created_at.isoformat(),
-            "updated_at": result.session.updated_at.isoformat(),
+            "created_at": (
+                result.session.created_at.isoformat()
+            ),
+            "updated_at": (
+                result.session.updated_at.isoformat()
+            ),
             "started_at": (
                 result.session.started_at.isoformat()
                 if result.session.started_at
@@ -184,13 +232,15 @@ class ExecutionWorkspaceStore:
             "events": [],
         }
 
-        sealed_audit_payload = self._audit_integrity.seal(
-            audit_payload
+        protected_audit_payload = (
+            self._audit_protection.seal(
+                audit_payload
+            )
         )
 
         self._write_json(
             audit_manifest,
-            sealed_audit_payload,
+            protected_audit_payload,
         )
 
         return PersistedExecutionWorkspace(
@@ -200,7 +250,7 @@ class ExecutionWorkspaceStore:
             inputs_manifest=inputs_manifest,
             audit_manifest=audit_manifest,
         )
-    
+
     def load(
         self,
         identifier: str,
@@ -225,7 +275,9 @@ class ExecutionWorkspaceStore:
             )
 
         workspace_root = (
-            self.repo_root / ".aegis" / "workspaces"
+            self.repo_root
+            / ".aegis"
+            / "workspaces"
         ).resolve()
 
         direct_manifest = (
@@ -235,17 +287,24 @@ class ExecutionWorkspaceStore:
         )
 
         if direct_manifest.is_file():
-            return self._load_record(direct_manifest)
+            return self._load_record(
+                direct_manifest
+            )
 
         if workspace_root.is_dir():
             for session_manifest in sorted(
-                workspace_root.glob("*/session.json")
+                workspace_root.glob(
+                    "*/session.json"
+                )
             ):
                 record = self._load_record(
                     session_manifest
                 )
 
-                if record.session_id == normalized_identifier:
+                if (
+                    record.session_id
+                    == normalized_identifier
+                ):
                     return record
 
         raise FileNotFoundError(
@@ -253,35 +312,41 @@ class ExecutionWorkspaceStore:
             f"{normalized_identifier}"
         )
 
-
     def _resolve_workspace_path(
         self,
         logical_path: str,
     ) -> Path:
         """Resolve and validate a repository-relative workspace path."""
 
-        relative_path = Path(logical_path)
+        relative_path = Path(
+            logical_path
+        )
 
         if relative_path.is_absolute():
             raise ValueError(
-                "Execution workspace path must be repository-relative."
+                "Execution workspace path must be "
+                "repository-relative."
             )
 
         if ".." in relative_path.parts:
             raise ValueError(
-                "Execution workspace path cannot traverse directories."
+                "Execution workspace path cannot "
+                "traverse directories."
             )
 
         workspace_path = (
-            self.repo_root / relative_path
+            self.repo_root
+            / relative_path
         ).resolve()
 
         if (
             workspace_path != self.repo_root
-            and self.repo_root not in workspace_path.parents
+            and self.repo_root
+            not in workspace_path.parents
         ):
             raise ValueError(
-                "Execution workspace resolves outside the repository."
+                "Execution workspace resolves outside "
+                "the repository."
             )
 
         return workspace_path
@@ -324,7 +389,7 @@ class ExecutionWorkspaceStore:
 
         if location is None:
             raise ValueError(
-                f"Required workspace location "
+                "Required workspace location "
                 f"'{location_name}' is not declared."
             )
 
@@ -341,14 +406,18 @@ class ExecutionWorkspaceStore:
         """Resolve a location while enforcing workspace isolation."""
 
         target = (
-            workspace_path / Path(relative_path)
+            workspace_path
+            / Path(relative_path)
         ).resolve()
 
-        resolved_workspace = workspace_path.resolve()
+        resolved_workspace = (
+            workspace_path.resolve()
+        )
 
         if (
             target != resolved_workspace
-            and resolved_workspace not in target.parents
+            and resolved_workspace
+            not in target.parents
         ):
             raise ValueError(
                 "Workspace location resolves outside "
@@ -356,7 +425,6 @@ class ExecutionWorkspaceStore:
             )
 
         return target
-    
 
     def _load_record(
         self,
@@ -382,15 +450,20 @@ class ExecutionWorkspaceStore:
                 "a JSON object."
             )
 
-        session = payload.get("session")
-        workspace = payload.get("workspace")
+        session = payload.get(
+            "session"
+        )
+        workspace = payload.get(
+            "workspace"
+        )
 
         if (
             not isinstance(session, dict)
             or not session.get("session_id")
         ):
             raise ValueError(
-                "Stored execution session has no valid session ID."
+                "Stored execution session has no valid "
+                "session ID."
             )
 
         if (
@@ -398,7 +471,8 @@ class ExecutionWorkspaceStore:
             or not workspace.get("workspace_id")
         ):
             raise ValueError(
-                "Stored execution session has no valid workspace ID."
+                "Stored execution session has no valid "
+                "workspace ID."
             )
 
         return StoredExecutionSession(
@@ -406,7 +480,6 @@ class ExecutionWorkspaceStore:
             session_manifest=session_manifest,
             payload=payload,
         )
-
 
     def _write_json(
         self,

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "id": "observability",
+  "display_name": "Observability Engineer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "04-devops",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Observability Engineer role to make systems observable enough to diagnose incidents, performance degradation, and user-experience issues. Use this skill for structured logging, metrics, distributed tracing, alert design, dashboards, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "structured-logging",
+    "metrics",
+    "distributed-tracing",
+    "alert-design",
+    "dashboards",
+    "slo-instrumentation"
+  ],
+  "collaborates_with": [
+    "sre",
+    "senior-debugger",
+    "performance-engineer",
+    "senior-developer"
+  ],
+  "source": {
+    "legacy_path": "04-DevOps/observability.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

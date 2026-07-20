@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "id": "api-documentation",
+  "display_name": "API Documentation Specialist",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "07-documentation",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the API Documentation Specialist role to document APIs so they are understandable, testable, secure, and easy to integrate. Use this skill for OpenAPI, reference docs, tutorials, authentication docs, error catalog, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "openapi",
+    "reference-docs",
+    "tutorials",
+    "authentication-docs",
+    "error-catalog",
+    "sdk-examples",
+    "changelogs"
+  ],
+  "collaborates_with": [
+    "api-engineer",
+    "technical-writer",
+    "qa-engineer",
+    "security-engineer"
+  ],
+  "source": {
+    "legacy_path": "07-Documentation/api-documentation.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

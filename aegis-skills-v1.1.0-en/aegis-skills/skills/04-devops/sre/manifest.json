@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "sre",
+  "display_name": "SRE",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "04-devops",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the SRE role to protect reliability, availability, capacity, observability, and incident-response readiness. Use this skill for SLO, error budgets, incident response, capacity planning, runbooks, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "slo",
+    "error-budgets",
+    "incident-response",
+    "capacity-planning",
+    "runbooks",
+    "toil-reduction",
+    "reliability-engineering"
+  ],
+  "collaborates_with": [
+    "cto",
+    "devops",
+    "observability-engineer",
+    "senior-debugger",
+    "cloud-architect"
+  ],
+  "source": {
+    "legacy_path": "04-DevOps/sre.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

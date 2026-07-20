@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "id": "prompt-engineer",
+  "display_name": "Prompt Engineer",
+  "version": "1.1.0",
+  "status": "active",
+  "category": "08-ai",
+  "entrypoint": "SKILL.md",
+  "description": "Provides senior-level expertise in the Prompt Engineer role to optimize prompts, AI workflows, evaluations, guardrails, tool use, and multi-agent orchestration. Use this skill for prompt design, tool use, agent workflows, evaluation, few-shot, and whenever a professional deliverable in this domain must be analyzed, designed, reviewed, remediated, decided upon, or documented.",
+  "capabilities": [
+    "prompt-design",
+    "tool-use",
+    "agent-workflows",
+    "evaluation",
+    "few-shot",
+    "guardrails",
+    "rag-prompts"
+  ],
+  "collaborates_with": [
+    "ai-architect",
+    "rag-engineer",
+    "agent-architect",
+    "product-manager",
+    "security-engineer"
+  ],
+  "source": {
+    "legacy_path": "08-AI/prompt-engineer.md",
+    "migration": "aegis-skills-1.1.0-en"
+  }
+}

@@ -4,7 +4,7 @@
 Checks whether the Aegis OS CLI profile function is installed.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File install\check-aegis-cli.ps1
+pwsh -ExecutionPolicy Bypass -File install\check-aegis-cli.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -29,7 +29,7 @@ if ($profileContent -match [regex]::Escape($startMarker)) {
 else {
     Write-Host "Aegis CLI profile block is not installed." -ForegroundColor Yellow
     Write-Host "Run:" -ForegroundColor Cyan
-    Write-Host "powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1" -ForegroundColor Yellow
+    Write-Host "pwsh -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1" -ForegroundColor Yellow
     exit 1
 }
 

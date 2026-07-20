@@ -3,7 +3,7 @@
 Checks that expected Aegis OS CLI files exist.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-files.ps1
+pwsh -ExecutionPolicy Bypass -File scripts\testing\test-cli-files.ps1
 #>
 
 $ErrorActionPreference = "Stop"
@@ -57,7 +57,7 @@ $requiredFiles = @(
     "cli\commands\status.ps1"
 )
 
-$failures = @()
+$failures = [System.Collections.Generic.List[object]]::new()
 
 foreach ($file in $requiredFiles) {
     if (Test-Path $file) {
@@ -65,7 +65,7 @@ foreach ($file in $requiredFiles) {
     }
     else {
         Write-Host "BAD $file" -ForegroundColor Red
-        $failures += $file
+        $failures.Add($file)
     }
 }
 

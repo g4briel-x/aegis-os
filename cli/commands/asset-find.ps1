@@ -4,11 +4,9 @@ Searches Aegis OS registry files by keyword.
 
 .DESCRIPTION
 Searches all YAML registry files and displays matching lines.
-Perf fix: replaced $results += [PSCustomObject] (O(n²) array copy) with
-Generic.List (O(1) Add).
 
 .USAGE
-.\cli\aegis.ps1 asset:find <keyword>
+.\cli\aegis.ps1 asset:find security
 #>
 
 param(
@@ -41,28 +39,22 @@ if ($files.Count -eq 0) {
     exit 0
 }
 
-# Utilisation de Generic.List pour éviter la copie O(n²) de $results += item
-$results = [System.Collections.Generic.List[PSCustomObject]]::new()
-$escapedArgument = [regex]::Escape($Argument)
+$results = [System.Collections.Generic.List[object]]::new()
 
-foreach ($file in $files) {
-    $content = Get-Content -Path $file.FullName
-    $lineNumber = 0
+# Select-String is a compiled cmdlet and is significantly faster than
+# reading each file with Get-Content and testing every line with -match
+# in a PowerShell-level loop, especially as the registry grows.
+$matches = $files | Select-String -Pattern $Argument -SimpleMatch
 
-    foreach ($line in $content) {
-        $lineNumber++
+foreach ($match in $matches) {
+    $relativePath = Resolve-Path -Path $match.Path -Relative
+    $relativePath = $relativePath -replace '^\.[\\/]', ''
 
-        if ($line -match $escapedArgument) {
-            $relativePath = Resolve-Path -Path $file.FullName -Relative
-            $relativePath = $relativePath -replace '^\.[\\/]', ''
-
-            $results.Add([PSCustomObject]@{
-                File = $relativePath
-                Line = $lineNumber
-                Text = $line.Trim()
-            })
-        }
-    }
+    $results.Add([PSCustomObject]@{
+        File = $relativePath
+        Line = $match.LineNumber
+        Text = $match.Line.Trim()
+    })
 }
 
 if ($results.Count -eq 0) {

@@ -11,7 +11,7 @@ $Args is a PowerShell automatic variable; shadowing it can cause subtle
 issues on some PowerShell versions.
 
 .USAGE
-powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
+pwsh -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
 #>
 
 $ErrorActionPreference = "Stop"

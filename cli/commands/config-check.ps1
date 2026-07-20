@@ -29,14 +29,14 @@ $optionalFiles = @(
     'config\aegis.config.local.yaml'
 )
 
-$failures = @()
+$failures = [System.Collections.Generic.List[object]]::new()
 
 Write-Host 'Required configuration files:' -ForegroundColor Yellow
 
 foreach ($file in $requiredFiles) {
     if (-not (Test-Path -Path $file -PathType Leaf)) {
         Write-Host ('MISS {0}' -f $file) -ForegroundColor Red
-        $failures += $file
+        $failures.Add($file)
         continue
     }
 
@@ -44,7 +44,7 @@ foreach ($file in $requiredFiles) {
 
     if ([string]::IsNullOrWhiteSpace($content)) {
         Write-Host ('EMPTY {0}' -f $file) -ForegroundColor Red
-        $failures += $file
+        $failures.Add($file)
         continue
     }
 

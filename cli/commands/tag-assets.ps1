@@ -41,7 +41,7 @@ if ($yamlFiles.Count -eq 0) {
     exit 0
 }
 
-$assetIds = @()
+$assetIds = [System.Collections.Generic.List[string]]::new()
 
 foreach ($file in $yamlFiles) {
     $lines = Get-Content -Path $file.FullName
@@ -56,7 +56,7 @@ foreach ($file in $yamlFiles) {
                 -not [string]::IsNullOrWhiteSpace($currentId) -and
                 $hasRequestedTag
             ) {
-                $assetIds += $currentId
+                $assetIds.Add($currentId)
             }
 
             $currentId = $Matches[1].Trim()
@@ -116,7 +116,7 @@ foreach ($file in $yamlFiles) {
         -not [string]::IsNullOrWhiteSpace($currentId) -and
         $hasRequestedTag
     ) {
-        $assetIds += $currentId
+        $assetIds.Add($currentId)
     }
 }
 

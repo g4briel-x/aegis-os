@@ -1,67 +1,23 @@
-## FILE: `install/README.md`
+# Install the Aegis CLI
 
-# Aegis OS — Install Scripts
+The CLI is distributed by the Python package in `runtime/`; no shell profile
+modification is required.
 
-Version: 0.1.0  
-Status: Draft
+From the repository root:
 
----
-
-# 1. Purpose
-
-This folder contains local installation scripts for Aegis OS.
-
-The first installation layer focuses on making the CLI easier to run from PowerShell.
-
----
-
-# 2. Main Goal
-
-Instead of always typing:
-
-```powershell
-.\cli\aegis.ps1 help
+```console
+python -m pip install -e "./runtime[dev]"
+aegis version
+aegis --repo-root . status
 ```
 
-The user can install a local PowerShell function and type:
+For an isolated environment, create a virtual environment with
+`python -m venv .venv`, run its Python executable directly, and install the
+package with `-m pip`. The installed `aegis` launcher is placed in that
+environment's standard scripts directory.
 
-```powershell
-aegis help
-aegis doctor
-aegis validate
-aegis asset:find security
+Uninstall with:
+
+```console
+python -m pip uninstall aegis-runtime
 ```
-
----
-
-# 3. Install Command
-
-Run from the repository root:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
-```
-
-Then restart PowerShell.
-
----
-
-# 4. Check Command
-
-```powershell
-powershell -ExecutionPolicy Bypass -File install\check-aegis-cli.ps1
-```
-
----
-
-# 5. Uninstall Command
-
-```powershell
-powershell -ExecutionPolicy Bypass -File install\uninstall-aegis-cli.ps1
-```
-
----
-
-# 6. Final Principle
-
-> Installation should make Aegis OS easier to use without hiding the repository structure.

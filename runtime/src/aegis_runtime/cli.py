@@ -32,6 +32,7 @@ from .execution.contract_builder import ExecutionContractBuilder
 from .execution.contract_validator import ExecutionContractValidator
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
+from .generators import generate_skill, generate_skills
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .reports import REPORT_GENERATORS, generate_all_reports, generate_report
@@ -48,8 +49,8 @@ def _build_parser() -> argparse.ArgumentParser:
     """Build the Aegis runtime command-line parser."""
 
     parser = argparse.ArgumentParser(
-        prog="aegis-runtime",
-        description="Aegis OS Python runtime",
+        prog="aegis",
+        description="Aegis OS command-line interface and Python runtime",
     )
     parser.add_argument(
         "--repo-root",
@@ -74,6 +75,74 @@ def _build_parser() -> argparse.ArgumentParser:
     commands.add_parser(
         "status",
         help="Show repository runtime status.",
+    )
+    commands.add_parser(
+        "info",
+        help="Show project paths and Python entrypoints.",
+    )
+
+    docs = commands.add_parser(
+        "docs",
+        help="Documentation catalog operations.",
+    )
+    docs_commands = docs.add_subparsers(
+        dest="docs_command",
+        required=True,
+    )
+    docs_commands.add_parser(
+        "list",
+        help="List registered documentation assets.",
+    )
+
+    release = commands.add_parser(
+        "release",
+        help="Release catalog operations.",
+    )
+    release_commands = release.add_subparsers(
+        dest="release_command",
+        required=True,
+    )
+    release_commands.add_parser(
+        "status",
+        help="Show registered release status and maturity.",
+    )
+
+    generate = commands.add_parser(
+        "generate",
+        help="Generate Aegis assets from YAML definitions.",
+    )
+    generate_commands = generate.add_subparsers(
+        dest="generate_command",
+        required=True,
+    )
+    generate_skill_parser = generate_commands.add_parser(
+        "skill",
+        help="Generate one skill from a YAML definition.",
+    )
+    generate_skill_parser.add_argument(
+        "definition",
+        type=Path,
+        help="Definition path, relative to the repository or absolute.",
+    )
+    generate_skill_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Allow existing generated files to be overwritten.",
+    )
+    generate_skills_parser = generate_commands.add_parser(
+        "skills",
+        help="Generate every YAML definition in a directory.",
+    )
+    generate_skills_parser.add_argument(
+        "--definitions",
+        type=Path,
+        default=Path("generators"),
+        help="Definitions directory, relative to the repository or absolute.",
+    )
+    generate_skills_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Allow existing generated files to be overwritten.",
     )
 
     registry = commands.add_parser(
@@ -490,9 +559,8 @@ def _print_asset_list(
 def _open_file(path: Path) -> None:
     """Open a file with the OS default application.
 
-    Cross-platform by design (the original PowerShell asset:open command
-    only worked on Windows via Start-Process explorer.exe): tries
-    os.startfile on Windows, 'open' on macOS, and 'xdg-open' on Linux/BSD.
+    Uses os.startfile on Windows, 'open' on macOS, and 'xdg-open' on
+    Linux/BSD.
     """
 
     import platform
@@ -1608,6 +1676,95 @@ def main(
             print(f"Repository: {payload['repo_root']}")
             print(f"Registries: {payload['registry_count']}")
             print(f"Assets: {payload['asset_count']}")
+
+        return EXIT_OK
+
+    if args.command == "info":
+        payload = {
+            "name": "Aegis OS",
+            "version": __version__,
+            "runtime": "Python",
+            "python": sys.version.split()[0],
+            "repository": str(config.repo_root),
+            "registry": str(config.registry_root),
+            "configuration": str(config.config_root),
+            "entrypoints": ["aegis", "aegis-runtime", "python -m aegis_runtime"],
+        }
+
+        if args.json:
+            _print_json(payload)
+        else:
+            print("Aegis OS Project Information")
+            print(f"Version: {payload['version']}")
+            print(f"Runtime: {payload['runtime']} {payload['python']}")
+            print(f"Repository: {payload['repository']}")
+            print(f"Registry: {payload['registry']}")
+            print(f"Configuration: {payload['configuration']}")
+            print("Entrypoints: " + ", ".join(payload["entrypoints"]))
+
+        return EXIT_OK
+
+    if args.command == "docs" and args.docs_command == "list":
+        _print_asset_list(
+            resolver.by_type("doc"),
+            as_json=args.json,
+        )
+        return EXIT_OK
+
+    if args.command == "release" and args.release_command == "status":
+        releases = sorted(
+            (
+                asset
+                for asset in resolver.assets
+                if asset.id.startswith("release.")
+            ),
+            key=lambda asset: asset.metadata.get("version", asset.id),
+        )
+
+        if args.json:
+            _print_json([asset.to_dict() for asset in releases])
+        else:
+            for asset in releases:
+                version = asset.metadata.get("version", "-")
+                status = asset.metadata.get("status", "-")
+                maturity = asset.metadata.get("maturity", "-")
+                print(
+                    f"{asset.id} | version={version} | "
+                    f"status={status} | maturity={maturity}"
+                )
+            print(f"Total releases: {len(releases)}")
+
+        return EXIT_OK
+
+    if args.command == "generate":
+        try:
+            if args.generate_command == "skill":
+                generated = [
+                    generate_skill(
+                        config.repo_root,
+                        args.definition,
+                        force=args.force,
+                    )
+                ]
+            else:
+                generated = generate_skills(
+                    config.repo_root,
+                    args.definitions,
+                    force=args.force,
+                )
+        except FileExistsError as exc:
+            print(f"Generation refused: {exc}", file=sys.stderr)
+            return EXIT_VALIDATION
+        except (FileNotFoundError, OSError, ValueError) as exc:
+            print(f"Generation error: {exc}", file=sys.stderr)
+            return EXIT_REPOSITORY
+
+        if args.json:
+            _print_json([item.to_dict() for item in generated])
+        else:
+            for item in generated:
+                print(f"Generated skill: {item.name} -> {item.output_path}")
+            print(f"Total skills generated: {len(generated)}")
 
         return EXIT_OK
 

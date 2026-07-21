@@ -2,8 +2,8 @@
 
 # Aegis OS — Reports
 
-Version: 0.1.0  
-Status: Draft
+Version: 0.7.0
+Status: Generated
 
 ---
 

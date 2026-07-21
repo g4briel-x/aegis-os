@@ -1,39 +1,10 @@
-## FILE: `scripts/reports/README.md`
+# Registry reports
 
-# Aegis OS — Report Scripts
+Generate every committed registry report with:
 
-Version: 0.1.0  
-Status: Draft
-
----
-
-# 1. Purpose
-
-This folder contains scripts that generate human-readable reports from machine-readable registry files.
-
----
-
-# 2. Main Command
-
-Run from repository root:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
+```console
+python -m aegis_runtime --repo-root . report generate all
 ```
 
----
-
-# 3. Generated Outputs
-
-```text
-reports/registry/REGISTRY_SUMMARY.md
-reports/registry/ASSET_MAP.md
-reports/registry/DOMAIN_REPORT.md
-reports/registry/RELEASE_REPORT.md
-```
-
----
-
-# 4. Final Principle
-
-> Registry reports make Aegis OS easier to inspect before deeper automation is introduced.
+Individual report names are shown by `report generate --help`. Generated files
+are written to `reports/registry/` in deterministic order.

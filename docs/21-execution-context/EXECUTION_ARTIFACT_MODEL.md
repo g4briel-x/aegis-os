@@ -196,8 +196,8 @@ context.to_dict()
 
 Declared artifacts are displayed by:
 
-```powershell
-python -m aegis_runtime execution context <asset-id>
+```console
+python -m aegis_runtime --repo-root . execution context <asset-id>
 ```
 
 Example:
@@ -210,8 +210,8 @@ Declared artifacts:
 
 JSON output:
 
-```powershell
-python -m aegis_runtime --json execution context <asset-id>
+```console
+python -m aegis_runtime --repo-root . --json execution context <asset-id>
 ```
 
 ## Automated tests

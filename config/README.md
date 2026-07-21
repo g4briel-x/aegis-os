@@ -2,8 +2,8 @@
 
 # Aegis OS — Configuration
 
-Version: 0.1.0  
-Status: Draft
+Version: 0.7.0
+Status: Usable
 
 ---
 
@@ -11,7 +11,8 @@ Status: Draft
 
 This folder contains configuration examples for Aegis OS local tooling.
 
-Configuration files define where the CLI should find registries, scripts, reports, documentation and output folders.
+Configuration files define where the Python runtime finds registries, reports,
+documentation and runtime output folders.
 
 ---
 

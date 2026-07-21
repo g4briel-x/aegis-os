@@ -294,10 +294,10 @@ entries:
     category: runtime
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: cli/CLI_RUNTIME_COMMANDS.md
     owner: aegis-os
-    summary: Documents PowerShell commands that expose the Python runtime.
+    summary: Documents the cross-platform Python runtime commands.
     tags: [cli, runtime, documentation]
     related_assets: []
 
@@ -308,7 +308,7 @@ entries:
     category: execution
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: cli/CLI_EXECUTION_COMMANDS.md
     owner: aegis-os
     summary: Documents CLI commands for execution planning and lifecycle operations.

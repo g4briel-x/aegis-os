@@ -1,6 +1,6 @@
 aegis:
   name: Aegis OS
-  version: 0.1.0
+  version: 0.7.0
   environment: development
 
 paths:
@@ -28,7 +28,7 @@ registry:
   releases: registry/releases/releases.registry.yaml
 
 validation:
-  entrypoint: scripts/validation/validate-all.ps1
+  entrypoint: python -m aegis_runtime --repo-root . validate --strict-related
   strict_paths: true
   strict_ids: true
   strict_related_assets: true
@@ -41,6 +41,6 @@ reports:
   release_report: reports/registry/RELEASE_REPORT.md
 
 cli:
-  entrypoint: cli/aegis.ps1
+  entrypoint: aegis
   default_output: text
   allow_open_file_explorer: true

@@ -1,29 +1,36 @@
 # Aegis OS Runtime Foundation
 
-Version: v0.6.0  
-Status: usable foundation  
-Branch: develop/v0.6-runtime
+Version: v0.7.0
+Status: usable
 
-## Role of this file
-
-This file documents the purpose, scope and architecture of the Aegis OS Python runtime introduced in v0.6.0.
-
-## Purpose
-
-The Aegis OS runtime is the Python execution layer responsible for reading, normalizing, resolving and validating Aegis registry assets.
-
-Before v0.6, Aegis OS was mainly a PowerShell CLI and documentation-driven framework. With v0.6, Aegis OS gains a real executable runtime layer.
-
-## Runtime architecture
+The Aegis OS runtime is the cross-platform Python layer responsible for
+configuration discovery, registry loading, asset resolution, validation,
+reporting, generation and controlled execution.
 
 ```text
-PowerShell CLI
-      |
-      v
-Python Runtime
-      |
-      v
-Registry YAML files
-      |
-      v
-Assets, docs, skills, playbooks, patterns, templates, domains, tags and releases
+Python CLI
+    |
+    v
+Runtime services
+    |
+    v
+Registry YAML and repository assets
+```
+
+The console launchers `aegis` and `aegis-runtime` both call
+`aegis_runtime.cli:main`. `python -m aegis_runtime` is the module equivalent.
+There is no secondary command bridge.
+
+Runtime modules are separated by responsibility:
+
+- `config.py`: repository discovery and configuration
+- `registry_loader.py`: YAML loading and normalization
+- `asset_resolver.py`: indexed asset queries
+- `validator.py`: integrity checks
+- `doctor.py`: repository health checks
+- `reports.py`: deterministic Markdown reports
+- `generators.py`: safe skill generation
+- `execution/`: plans, contracts, contexts, sessions, lifecycle and audits
+
+The runtime targets Python 3.11+ and uses PyYAML. Pytest is included by the
+development dependency group.

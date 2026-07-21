@@ -1,0 +1,302 @@
+diff --git a/runtime/src/aegis_runtime/cli.py b/runtime/src/aegis_runtime/cli.py
+--- a/runtime/src/aegis_runtime/cli.py
++++ b/runtime/src/aegis_runtime/cli.py
+@@ -2,5 +2,6 @@
+ 
+         return EXIT_OK
+ 
++    if args.command == "asset":
+         if args.asset_command == "show":
+             asset = resolver.by_id(args.asset_id)
+diff --git a/tests/runtime/test_cli_asset_commands.py b/tests/runtime/test_cli_asset_commands.py
+new file mode 100644
+--- /dev/null
++++ b/tests/runtime/test_cli_asset_commands.py
+@@ -0,0 +1,88 @@
++from pathlib import Path
++
++from aegis_runtime.cli import EXIT_OK, main
++
++
++def _create_repository(tmp_path: Path) -> None:
++    asset_path = tmp_path / "skills" / "security" / "review.md"
++    asset_path.parent.mkdir(parents=True)
++    asset_path.write_text("# Review API Security", encoding="utf-8")
++
++    skills_registry = tmp_path / "registry" / "skills"
++    skills_registry.mkdir(parents=True)
++    (skills_registry / "skills.registry.yaml").write_text(
++        """
++entries:
++  - id: security.review-api-security
++    name: Review API Security
++    type: skill
++    domain: security
++    path: skills/security/review.md
++    tags:
++      - api
++      - security
++""".strip(),
++        encoding="utf-8",
++    )
++
++    domains_registry = tmp_path / "registry" / "domains"
++    domains_registry.mkdir(parents=True)
++    (domains_registry / "domains.registry.yaml").write_text(
++        """
++domains:
++  - id: domain.security
++    name: Security
++    slug: security
++""".strip(),
++        encoding="utf-8",
++    )
++
++    tags_registry = tmp_path / "registry" / "tags"
++    tags_registry.mkdir(parents=True)
++    (tags_registry / "tags.registry.yaml").write_text(
++        """
++tags:
++  - id: tag.api
++    name: API
++    category: engineering
++""".strip(),
++        encoding="utf-8",
++    )
++
++
++def test_registry_catalog_commands_do_not_break_asset_show(
++    tmp_path: Path,
++    capsys,
++) -> None:
++    _create_repository(tmp_path)
++
++    domains_exit = main(
++        ["--repo-root", str(tmp_path), "registry", "domains"]
++    )
++    domains_output = capsys.readouterr().out
++
++    asset_exit = main(
++        [
++            "--repo-root",
++            str(tmp_path),
++            "asset",
++            "show",
++            "security.review-api-security",
++        ]
++    )
++    asset_output = capsys.readouterr().out
++
++    assert domains_exit == EXIT_OK
++    assert "domain.security" in domains_output
++    assert asset_exit == EXIT_OK
++    assert "ID: security.review-api-security" in asset_output
++
++
++def test_asset_find_remains_reachable(tmp_path: Path, capsys) -> None:
++    _create_repository(tmp_path)
++    exit_code = main(
++        ["--repo-root", str(tmp_path), "asset", "find", "security"]
++    )
++    output = capsys.readouterr().out
++    assert exit_code == EXIT_OK
++    assert "security.review-api-security" in output
+diff --git a/runtime/src/aegis_runtime/validator.py b/runtime/src/aegis_runtime/validator.py
+--- a/runtime/src/aegis_runtime/validator.py
++++ b/runtime/src/aegis_runtime/validator.py
+@@ -55,8 +55,35 @@
+         declared_ids = {asset.id for asset in assets if asset.id}
+         for asset in assets:
+             if asset.path:
++                declared_path = Path(asset.path)
++
++                if declared_path.is_absolute():
++                    report.add(
++                        "error",
++                        "absolute_path",
++                        (
++                            "Declared asset paths must be relative to "
++                            f"the repository root: {asset.path}"
++                        ),
++                        source_file=asset.source_file,
++                        asset_id=asset.id or None,
++                    )
++                    continue
++
+                 resolved_path = self._resolve_asset_path(asset.path)
+-                if not resolved_path.exists():
++
++                if not resolved_path.is_relative_to(self.repo_root):
++                    report.add(
++                        "error",
++                        "path_escape",
++                        (
++                            "Declared asset path escapes repository "
++                            f"root: {asset.path}"
++                        ),
++                        source_file=asset.source_file,
++                        asset_id=asset.id or None,
++                    )
++                elif not resolved_path.exists():
+                     report.add(
+                         "error",
+                         "missing_path",
+@@ -81,4 +108,4 @@
+ 
+     def _resolve_asset_path(self, declared_path: str) -> Path:
+         path = Path(declared_path)
+-        return path if path.is_absolute() else self.repo_root / path
++        return (self.repo_root / path).resolve()
+diff --git a/tests/runtime/test_validator.py b/tests/runtime/test_validator.py
+--- a/tests/runtime/test_validator.py
++++ b/tests/runtime/test_validator.py
+@@ -32,3 +32,24 @@
+     report = RegistryValidator(tmp_path).validate([document])
+     assert report.ok
+     assert not report.errors
++
++
++def test_validator_rejects_path_escape(tmp_path: Path) -> None:
++    outside = tmp_path.parent / f"{tmp_path.name}-outside.md"
++    outside.write_text("outside repository", encoding="utf-8")
++    document = RegistryDocument(
++        path=tmp_path / "registry" / "test.yaml",
++        name="test",
++        assets=[
++            Asset(
++                id="security.unsafe-path",
++                path=f"../{outside.name}",
++            )
++        ],
++    )
++
++    report = RegistryValidator(tmp_path).validate([document])
++    error_codes = {issue.code for issue in report.errors}
++
++    assert "path_escape" in error_codes
++    assert not report.ok
+diff --git a/.github/workflows/aegis-cli-smoke-tests.yml b/.github/workflows/aegis-cli-smoke-tests.yml
+--- a/.github/workflows/aegis-cli-smoke-tests.yml
++++ b/.github/workflows/aegis-cli-smoke-tests.yml
+@@ -17,6 +17,22 @@
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
++
++      - name: Set up Python
++        uses: actions/setup-python@v5
++        with:
++          python-version: "3.11"
++
++      - name: Install Python runtime
++        shell: pwsh
++        run: |
++          python -m pip install --upgrade pip
++          python -m pip install -e ".\runtime[dev]"
++
++      - name: Run Python runtime tests
++        shell: pwsh
++        run: |
++          python -m pytest
+ 
+       - name: Show PowerShell version
+         shell: pwsh
+@@ -39,17 +55,22 @@
+       - name: Run CLI smoke tests
+         shell: pwsh
+         run: |
+-          powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
++          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
++
++      - name: Run Python registry validation
++        shell: pwsh
++        run: |
++          python -m aegis_runtime --repo-root . validate
+ 
+       - name: Run registry validation after CLI tests
+         shell: pwsh
+         run: |
+-          powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
++          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+ 
+       - name: Generate registry reports
+         shell: pwsh
+         run: |
+-          powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
++          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
+ 
+       - name: CLI smoke test summary
+         shell: pwsh
+diff --git a/.github/workflows/aegis-validation.yml b/.github/workflows/aegis-validation.yml
+--- a/.github/workflows/aegis-validation.yml
++++ b/.github/workflows/aegis-validation.yml
+@@ -16,6 +16,17 @@
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
++
++      - name: Set up Python
++        uses: actions/setup-python@v5
++        with:
++          python-version: "3.11"
++
++      - name: Install Python runtime
++        shell: pwsh
++        run: |
++          python -m pip install --upgrade pip
++          python -m pip install -e ".\runtime[dev]"
+ 
+       - name: Show PowerShell version
+         shell: pwsh
+@@ -39,10 +50,15 @@
+ 
+           Write-Host "Repository structure validation passed."
+ 
++      - name: Parse and validate registries with Python
++        shell: pwsh
++        run: |
++          python -m aegis_runtime --repo-root . validate
++
+       - name: Run Aegis validation scripts
+         shell: pwsh
+         run: |
+-          powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
++          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
+ 
+       - name: Validation summary
+         shell: pwsh
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,6 +1,3 @@
+-## FILE: `.gitignore`
+-
+-```gitignore
+ # Aegis OS — Git Ignore
+ 
+ # Local configuration
+@@ -52,6 +49,7 @@
+ *.py[cod]
+ *.pyo
+ *.pyd
++*.egg-info/
+ .venv/
+ venv/
+ env/
+@@ -72,4 +70,3 @@
+ # Local CLI artifacts
+ .aegis/
+ aegis.local.json
+-```*.egg-info/
+diff --git a/runtime/pyproject.toml b/runtime/pyproject.toml
+--- a/runtime/pyproject.toml
++++ b/runtime/pyproject.toml
+@@ -8,7 +8,7 @@
+ description = "Python runtime foundation for Aegis OS"
+ readme = "README.md"
+ requires-python = ">=3.11"
+-license = { text = "MIT" }
++license = { text = "Business Source License 1.1 with Aegis Additional Use Grant" }
+ authors = [{ name = "Aegis OS Contributors" }]
+ dependencies = ["PyYAML>=6.0"]
+ 

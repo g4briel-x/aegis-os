@@ -471,26 +471,29 @@ entries:
       - id: templates.index
         relationship: related_to
       - id: docs.runtime-overview
-        name: Runtime Overview
-        type: doc
-        domain: documentation
-        category: runtime-foundation
-        status: draft
-        maturity: usable
-        version: 0.6.0
-        path: docs/18-runtime-foundation/RUNTIME_OVERVIEW.md
-        owner: aegis-os
-        summary: Documents the purpose, scope and architecture of the Aegis OS Python runtime foundation.
-        tags:
-          - runtime
-          - python
-          - architecture
-          - v0.6
-        related_assets:
-          - id: docs.runtime-cli-commands
-            relationship: related_to
-          - id: docs.runtime-validation-model
-            relationship: related_to
+        relationship: related_to
+
+  - id: docs.runtime-overview
+    name: Runtime Overview
+    type: doc
+    domain: documentation
+    category: runtime-foundation
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: docs/18-runtime-foundation/RUNTIME_OVERVIEW.md
+    owner: aegis-os
+    summary: Documents the purpose, scope and architecture of the Aegis OS Python runtime foundation.
+    tags:
+      - runtime
+      - python
+      - architecture
+      - v0.6
+    related_assets:
+      - id: docs.runtime-cli-commands
+        relationship: related_to
+      - id: docs.runtime-validation-model
+        relationship: related_to
 
   - id: docs.runtime-cli-commands
     name: Runtime CLI Commands
@@ -512,7 +515,7 @@ entries:
       - id: docs.runtime-overview
         relationship: related_to
       - id: cli.runtime-commands
-        relationship: related_to    
+        relationship: related_to
 
   - id: docs.runtime-validation-model
     name: Runtime Validation Model
@@ -581,7 +584,7 @@ entries:
         relationship: related_to
       - id: cli.execution-commands
         relationship: related_to
-    
+
   - id: docs.execution-model
     name: Execution Model
     type: doc
@@ -602,7 +605,7 @@ entries:
       - id: docs.execution-overview
         relationship: related_to
       - id: docs.execution-cli-commands
-        relationship: related_to   
+        relationship: related_to
 
   - id: docs.execution-contract-overview
     name: Execution Contract Overview
@@ -670,8 +673,8 @@ entries:
       - id: docs.execution-contract-overview
         relationship: related_to
       - id: docs.contract-safety-model
-        relationship: related_to        
- 
+        relationship: related_to
+
 
   - id: docs.execution-context-overview
     name: Execution Context Overview
@@ -741,4 +744,4 @@ entries:
       - id: docs.input-resolution-model
         relationship: related_to
       - id: docs.execution-contract-overview
-        relationship: related_to        
+        relationship: related_to

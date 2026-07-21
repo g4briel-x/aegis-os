@@ -1,0 +1,316 @@
+registry:
+  id: registry.foundation
+  name: Foundation Assets Registry
+  schema_version: 0.1.0
+  status: draft
+  owner: aegis-os
+  description: Machine-readable catalog of Aegis OS core components, asset frameworks, registry definitions, indexes and CLI documentation.
+
+entries:
+  - id: core.identity
+    name: Aegis OS Identity
+    type: core-component
+    domain: core
+    category: identity
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/identity.md
+    owner: aegis-os
+    summary: Defines the identity, purpose and boundaries of Aegis OS.
+    tags: [core, identity, foundation]
+    related_assets: []
+
+  - id: core.thinking-engine
+    name: Thinking Engine
+    type: core-component
+    domain: core
+    category: reasoning
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/thinking-engine.md
+    owner: aegis-os
+    summary: Defines the structured reasoning foundation used by Aegis OS.
+    tags: [core, reasoning, ai]
+    related_assets: []
+
+  - id: core.decision-engine
+    name: Decision Engine
+    type: core-component
+    domain: core
+    category: decision
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/decision-engine.md
+    owner: aegis-os
+    summary: Defines how Aegis OS evaluates options and records decisions.
+    tags: [core, decision, governance]
+    related_assets: []
+
+  - id: core.orchestration
+    name: Orchestration Core
+    type: core-component
+    domain: core
+    category: orchestration
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/orchestration.md
+    owner: aegis-os
+    summary: Defines orchestration principles for coordinated Aegis OS workflows.
+    tags: [core, orchestration, execution]
+    related_assets: []
+
+  - id: core.quality-gate
+    name: Quality Gate
+    type: core-component
+    domain: core
+    category: quality
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/quality-gate.md
+    owner: aegis-os
+    summary: Defines the core quality checks applied to Aegis OS work.
+    tags: [core, quality, validation]
+    related_assets: []
+
+  - id: core.execution-pipeline
+    name: Execution Pipeline
+    type: core-component
+    domain: core
+    category: execution
+    status: draft
+    maturity: usable
+    version: 0.1.0
+    path: core/execution-pipeline.md
+    owner: aegis-os
+    summary: Defines the controlled execution pipeline used by Aegis OS.
+    tags: [core, execution, runtime]
+    related_assets: []
+
+  - id: framework.skills
+    name: Skills Framework
+    type: framework
+    domain: core
+    category: skills
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: skills/_framework
+    owner: aegis-os
+    summary: Defines authoring, metadata, quality and certification rules for skills.
+    tags: [skills, framework, quality]
+    related_assets: []
+
+  - id: framework.playbooks
+    name: Playbooks Framework
+    type: framework
+    domain: core
+    category: playbooks
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: playbooks/_framework
+    owner: aegis-os
+    summary: Defines authoring, execution and quality rules for playbooks.
+    tags: [playbooks, framework, execution]
+    related_assets: []
+
+  - id: framework.patterns
+    name: Patterns Framework
+    type: framework
+    domain: core
+    category: patterns
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: patterns/_framework
+    owner: aegis-os
+    summary: Defines authoring, metadata and quality rules for reusable patterns.
+    tags: [patterns, framework, architecture]
+    related_assets: []
+
+  - id: framework.templates
+    name: Templates Framework
+    type: framework
+    domain: core
+    category: templates
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: templates/_framework
+    owner: aegis-os
+    summary: Defines authoring, variables and quality rules for reusable templates.
+    tags: [templates, framework, documentation]
+    related_assets: []
+
+  - id: registry.framework
+    name: Registry Framework
+    type: framework
+    domain: registry
+    category: registry
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/_framework
+    owner: aegis-os
+    summary: Defines schemas, authoring rules and validation models for registries.
+    tags: [registry, framework, metadata]
+    related_assets: []
+
+  - id: registry.skills
+    name: Skills Registry
+    type: registry
+    domain: registry
+    category: skills
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/skills/skills.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS skills.
+    tags: [registry, skills, metadata]
+    related_assets: []
+
+  - id: registry.playbooks
+    name: Playbooks Registry
+    type: registry
+    domain: registry
+    category: playbooks
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/playbooks/playbooks.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS playbooks.
+    tags: [registry, playbooks, metadata]
+    related_assets: []
+
+  - id: registry.patterns
+    name: Patterns Registry
+    type: registry
+    domain: registry
+    category: patterns
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/patterns/patterns.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS patterns.
+    tags: [registry, patterns, metadata]
+    related_assets: []
+
+  - id: registry.templates
+    name: Templates Registry
+    type: registry
+    domain: registry
+    category: templates
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/templates/templates.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS templates.
+    tags: [registry, templates, metadata]
+    related_assets: []
+
+  - id: registry.docs
+    name: Documentation Registry
+    type: registry
+    domain: registry
+    category: documentation
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/docs/docs.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS documentation.
+    tags: [registry, documentation, metadata]
+    related_assets: []
+
+  - id: registry.domains
+    name: Domains Registry
+    type: registry
+    domain: registry
+    category: domains
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/domains/domains.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS functional domains.
+    tags: [registry, domains, metadata]
+    related_assets: []
+
+  - id: registry.tags
+    name: Tags Registry
+    type: registry
+    domain: registry
+    category: tags
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/tags/tags.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS classification tags.
+    tags: [registry, tags, metadata]
+    related_assets: []
+
+  - id: registry.releases
+    name: Releases Registry
+    type: registry
+    domain: registry
+    category: releases
+    status: draft
+    maturity: usable
+    version: 0.3.0
+    path: registry/releases/releases.registry.yaml
+    owner: aegis-os
+    summary: Machine-readable catalog of Aegis OS releases and milestones.
+    tags: [registry, release, metadata]
+    related_assets: []
+
+  - id: templates.index
+    name: Templates Index
+    type: index
+    domain: documentation
+    category: templates
+    status: draft
+    maturity: usable
+    version: 0.2.0
+    path: templates/INDEX.md
+    owner: aegis-os
+    summary: Human-readable index of reusable Aegis OS templates.
+    tags: [templates, index, documentation]
+    related_assets: []
+
+  - id: cli.runtime-commands
+    name: Runtime CLI Commands
+    type: cli-doc
+    domain: documentation
+    category: runtime
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: cli/CLI_RUNTIME_COMMANDS.md
+    owner: aegis-os
+    summary: Documents PowerShell commands that expose the Python runtime.
+    tags: [cli, runtime, documentation]
+    related_assets: []
+
+  - id: cli.execution-commands
+    name: Execution CLI Commands
+    type: cli-doc
+    domain: documentation
+    category: execution
+    status: draft
+    maturity: usable
+    version: 0.6.0
+    path: cli/CLI_EXECUTION_COMMANDS.md
+    owner: aegis-os
+    summary: Documents CLI commands for execution planning and lifecycle operations.
+    tags: [cli, execution, documentation]
+    related_assets: []

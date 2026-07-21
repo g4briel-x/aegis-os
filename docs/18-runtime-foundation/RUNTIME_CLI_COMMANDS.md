@@ -23,7 +23,7 @@ Expected output includes:
 Aegis OS Runtime Status
 Version: 0.6.0
 Repository: <local repository path>
-Registries: 8
+Registries: 9
 Assets: <asset count>
 ```
 

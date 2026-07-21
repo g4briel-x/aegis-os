@@ -12,13 +12,15 @@ aegis-runtime report generate domain-report
 |---|---:|
 | architecture | 2 |
 | business | 4 |
+| core | 10 |
 | design | 4 |
-| documentation | 30 |
+| documentation | 34 |
 | engineering | 19 |
 | infrastructure | 4 |
 | management | 3 |
 | operations | 11 |
 | product | 9 |
+| registry | 9 |
 | security | 9 |
 
 ## Assets by Domain
@@ -39,6 +41,21 @@ aegis-runtime report generate domain-report
 | `business.go-to-market-plan-template` | Go-To-Market Plan Template | template | `templates/business/go-to-market-plan-template` |
 | `business.pricing-strategy-template` | Pricing Strategy Template | template | `templates/business/pricing-strategy-template` |
 
+### core
+
+| ID | Name | Type | Path |
+|---|---|---|---|
+| `core.decision-engine` | Decision Engine | core-component | `core/decision-engine.md` |
+| `core.execution-pipeline` | Execution Pipeline | core-component | `core/execution-pipeline.md` |
+| `core.identity` | Aegis OS Identity | core-component | `core/identity.md` |
+| `core.orchestration` | Orchestration Core | core-component | `core/orchestration.md` |
+| `core.quality-gate` | Quality Gate | core-component | `core/quality-gate.md` |
+| `core.thinking-engine` | Thinking Engine | core-component | `core/thinking-engine.md` |
+| `framework.patterns` | Patterns Framework | framework | `patterns/_framework` |
+| `framework.playbooks` | Playbooks Framework | framework | `playbooks/_framework` |
+| `framework.skills` | Skills Framework | framework | `skills/_framework` |
+| `framework.templates` | Templates Framework | framework | `templates/_framework` |
+
 ### design
 
 | ID | Name | Type | Path |
@@ -52,6 +69,8 @@ aegis-runtime report generate domain-report
 
 | ID | Name | Type | Path |
 |---|---|---|---|
+| `cli.execution-commands` | Execution CLI Commands | cli-doc | `cli/CLI_EXECUTION_COMMANDS.md` |
+| `cli.runtime-commands` | Runtime CLI Commands | cli-doc | `cli/CLI_RUNTIME_COMMANDS.md` |
 | `docs.adoption` | Adoption Documentation | doc | `docs/17-adoption` |
 | `docs.ai` | AI Documentation | doc | `docs/11-ai` |
 | `docs.architecture` | Architecture Documentation | doc | `docs/02-architecture` |
@@ -78,10 +97,12 @@ aegis-runtime report generate domain-report
 | `docs.roadmap` | Roadmap Documentation | doc | `docs/15-roadmap` |
 | `docs.runtime` | Runtime Documentation | doc | `docs/07-runtime` |
 | `docs.runtime-cli-commands` | Runtime CLI Commands | doc | `docs/18-runtime-foundation/RUNTIME_CLI_COMMANDS.md` |
+| `docs.runtime-overview` | Runtime Overview | doc | `docs/18-runtime-foundation/RUNTIME_OVERVIEW.md` |
 | `docs.runtime-validation-model` | Runtime Validation Model | doc | `docs/18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md` |
 | `docs.sdk` | SDK Documentation | doc | `docs/08-sdk` |
 | `docs.security` | Security Documentation | doc | `docs/13-security` |
 | `docs.specifications` | Specifications Documentation | doc | `docs/03-specifications` |
+| `templates.index` | Templates Index | index | `templates/INDEX.md` |
 
 ### engineering
 
@@ -154,6 +175,20 @@ aegis-runtime report generate domain-report
 | `product.run-discovery-interviews` | Run Discovery Interviews Playbook | playbook | `playbooks/product/run-discovery-interviews` |
 | `product.saas-mvp-scope` | SaaS MVP Scope Pattern | pattern | `patterns/product/saas-mvp-scope` |
 
+### registry
+
+| ID | Name | Type | Path |
+|---|---|---|---|
+| `registry.docs` | Documentation Registry | registry | `registry/docs/docs.registry.yaml` |
+| `registry.domains` | Domains Registry | registry | `registry/domains/domains.registry.yaml` |
+| `registry.framework` | Registry Framework | framework | `registry/_framework` |
+| `registry.patterns` | Patterns Registry | registry | `registry/patterns/patterns.registry.yaml` |
+| `registry.playbooks` | Playbooks Registry | registry | `registry/playbooks/playbooks.registry.yaml` |
+| `registry.releases` | Releases Registry | registry | `registry/releases/releases.registry.yaml` |
+| `registry.skills` | Skills Registry | registry | `registry/skills/skills.registry.yaml` |
+| `registry.tags` | Tags Registry | registry | `registry/tags/tags.registry.yaml` |
+| `registry.templates` | Templates Registry | registry | `registry/templates/templates.registry.yaml` |
+
 ### security
 
 | ID | Name | Type | Path |
@@ -171,8 +206,8 @@ aegis-runtime report generate domain-report
 ## Totals
 
 ```text
-Domains: 10
-Total assets: 95
+Domains: 12
+Total assets: 118
 ```
 
 ## Final Principle

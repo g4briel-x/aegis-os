@@ -10,8 +10,9 @@ aegis-runtime report generate registry-summary
 
 | Registry File | Entry Count |
 |---|---:|
-| `registry/docs/docs.registry.yaml` | 30 |
+| `registry/docs/docs.registry.yaml` | 31 |
 | `registry/domains/domains.registry.yaml` | 13 |
+| `registry/foundation/foundation.registry.yaml` | 22 |
 | `registry/patterns/patterns.registry.yaml` | 14 |
 | `registry/playbooks/playbooks.registry.yaml` | 26 |
 | `registry/releases/releases.registry.yaml` | 6 |
@@ -22,8 +23,8 @@ aegis-runtime report generate registry-summary
 ## Totals
 
 ```text
-Registry files: 8
-Total entries: 161
+Registry files: 9
+Total entries: 184
 ```
 
 ## Final Principle

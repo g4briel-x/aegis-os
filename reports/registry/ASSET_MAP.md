@@ -82,10 +82,22 @@ aegis-runtime report generate asset-map
 | `business.create-go-to-market-plan` | Create Go-To-Market Plan Playbook | playbook | business | `playbooks/business/create-go-to-market-plan` |
 | `business.go-to-market-plan-template` | Go-To-Market Plan Template | template | business | `templates/business/go-to-market-plan-template` |
 | `business.pricing-strategy-template` | Pricing Strategy Template | template | business | `templates/business/pricing-strategy-template` |
+| `core.decision-engine` | Decision Engine | core-component | core | `core/decision-engine.md` |
+| `core.execution-pipeline` | Execution Pipeline | core-component | core | `core/execution-pipeline.md` |
+| `core.identity` | Aegis OS Identity | core-component | core | `core/identity.md` |
+| `core.orchestration` | Orchestration Core | core-component | core | `core/orchestration.md` |
+| `core.quality-gate` | Quality Gate | core-component | core | `core/quality-gate.md` |
+| `core.thinking-engine` | Thinking Engine | core-component | core | `core/thinking-engine.md` |
+| `framework.patterns` | Patterns Framework | framework | core | `patterns/_framework` |
+| `framework.playbooks` | Playbooks Framework | framework | core | `playbooks/_framework` |
+| `framework.skills` | Skills Framework | framework | core | `skills/_framework` |
+| `framework.templates` | Templates Framework | framework | core | `templates/_framework` |
 | `design.design-saas-ux-flow` | Design SaaS UX Flow Playbook | playbook | design | `playbooks/design/design-saas-ux-flow` |
 | `design.saas-onboarding-flow` | SaaS Onboarding Flow Pattern | pattern | design | `patterns/design/saas-onboarding-flow` |
 | `design.ux-flow-template` | UX Flow Template | template | design | `templates/design/ux-flow-template` |
 | `design.ux-ui-designer-saas` | UX/UI Designer SaaS Skill | skill | design | `skills/design/ux-ui-designer-saas` |
+| `cli.execution-commands` | Execution CLI Commands | cli-doc | documentation | `cli/CLI_EXECUTION_COMMANDS.md` |
+| `cli.runtime-commands` | Runtime CLI Commands | cli-doc | documentation | `cli/CLI_RUNTIME_COMMANDS.md` |
 | `docs.adoption` | Adoption Documentation | doc | documentation | `docs/17-adoption` |
 | `docs.ai` | AI Documentation | doc | documentation | `docs/11-ai` |
 | `docs.architecture` | Architecture Documentation | doc | documentation | `docs/02-architecture` |
@@ -112,10 +124,12 @@ aegis-runtime report generate asset-map
 | `docs.roadmap` | Roadmap Documentation | doc | documentation | `docs/15-roadmap` |
 | `docs.runtime` | Runtime Documentation | doc | documentation | `docs/07-runtime` |
 | `docs.runtime-cli-commands` | Runtime CLI Commands | doc | documentation | `docs/18-runtime-foundation/RUNTIME_CLI_COMMANDS.md` |
+| `docs.runtime-overview` | Runtime Overview | doc | documentation | `docs/18-runtime-foundation/RUNTIME_OVERVIEW.md` |
 | `docs.runtime-validation-model` | Runtime Validation Model | doc | documentation | `docs/18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md` |
 | `docs.sdk` | SDK Documentation | doc | documentation | `docs/08-sdk` |
 | `docs.security` | Security Documentation | doc | documentation | `docs/13-security` |
 | `docs.specifications` | Specifications Documentation | doc | documentation | `docs/03-specifications` |
+| `templates.index` | Templates Index | index | documentation | `templates/INDEX.md` |
 | `engineering.api-contract-template` | API Contract Template | template | engineering | `templates/engineering/api-contract-template` |
 | `engineering.api-error-handling` | API Error Handling Pattern | pattern | engineering | `patterns/engineering/api-error-handling` |
 | `engineering.api-versioning-strategy` | API Versioning Strategy Pattern | pattern | engineering | `patterns/engineering/api-versioning-strategy` |
@@ -162,6 +176,15 @@ aegis-runtime report generate asset-map
 | `product.product-manager-saas` | Product Manager SaaS Skill | skill | product | `skills/product/product-manager-saas` |
 | `product.run-discovery-interviews` | Run Discovery Interviews Playbook | playbook | product | `playbooks/product/run-discovery-interviews` |
 | `product.saas-mvp-scope` | SaaS MVP Scope Pattern | pattern | product | `patterns/product/saas-mvp-scope` |
+| `registry.docs` | Documentation Registry | registry | registry | `registry/docs/docs.registry.yaml` |
+| `registry.domains` | Domains Registry | registry | registry | `registry/domains/domains.registry.yaml` |
+| `registry.framework` | Registry Framework | framework | registry | `registry/_framework` |
+| `registry.patterns` | Patterns Registry | registry | registry | `registry/patterns/patterns.registry.yaml` |
+| `registry.playbooks` | Playbooks Registry | registry | registry | `registry/playbooks/playbooks.registry.yaml` |
+| `registry.releases` | Releases Registry | registry | registry | `registry/releases/releases.registry.yaml` |
+| `registry.skills` | Skills Registry | registry | registry | `registry/skills/skills.registry.yaml` |
+| `registry.tags` | Tags Registry | registry | registry | `registry/tags/tags.registry.yaml` |
+| `registry.templates` | Templates Registry | registry | registry | `registry/templates/templates.registry.yaml` |
 | `security.audit-logging-traceability` | Audit Logging Traceability Pattern | pattern | security | `patterns/security/audit-logging-traceability` |
 | `security.design-auth-rbac` | Design Auth RBAC Playbook | playbook | security | `playbooks/security/design-auth-rbac` |
 | `security.harden-production-saas` | Harden Production SaaS Playbook | playbook | security | `playbooks/security/harden-production-saas` |
@@ -175,7 +198,7 @@ aegis-runtime report generate asset-map
 ## Totals
 
 ```text
-Total assets: 161
+Total assets: 184
 ```
 
 ## Final Principle

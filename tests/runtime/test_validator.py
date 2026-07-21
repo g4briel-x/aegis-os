@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from aegis_runtime.models import Asset, RegistryDocument
+from aegis_runtime.registry_loader import RegistryLoader
 from aegis_runtime.validator import RegistryValidator
 
 
@@ -32,3 +33,18 @@ def test_validator_accepts_existing_asset_path(tmp_path: Path) -> None:
     report = RegistryValidator(tmp_path).validate([document])
     assert report.ok
     assert not report.errors
+
+
+def test_repository_registry_passes_strict_validation() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    documents = RegistryLoader(repo_root).load_all()
+    report = RegistryValidator(
+        repo_root,
+        unresolved_related_as_error=True,
+    ).validate(documents)
+
+    issue_summary = "\n".join(
+        f"{issue.code}: {issue.message} ({issue.asset_id or '-'})"
+        for issue in report.issues
+    )
+    assert not report.issues, issue_summary

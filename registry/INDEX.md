@@ -38,6 +38,7 @@ patterns/INDEX.md
 templates/INDEX.md
 
 Machine navigation:
+registry/foundation/foundation.registry.yaml
 registry/skills/skills.registry.yaml
 registry/playbooks/playbooks.registry.yaml
 registry/patterns/patterns.registry.yaml
@@ -81,7 +82,24 @@ registry/_framework/REGISTRY_TEMPLATE.md
 
 ---
 
-# 4. Skills Registry
+# 4. Foundation Assets Registry
+
+```text
+registry/foundation/foundation.registry.yaml
+```
+
+Role:
+
+```text
+Registers the core components, asset frameworks, registry definitions, global indexes and CLI documentation referenced by the rest of Aegis OS.
+```
+
+It prevents foundational relationships from pointing to identifiers that exist
+as repository files but are absent from the machine-readable catalog.
+
+---
+
+# 5. Skills Registry
 
 ```text
 registry/skills/skills.registry.yaml
@@ -122,7 +140,7 @@ future runtime skill routing
 
 ---
 
-# 5. Playbooks Registry
+# 6. Playbooks Registry
 
 ```text
 registry/playbooks/playbooks.registry.yaml
@@ -158,7 +176,7 @@ future runtime procedure execution
 
 ---
 
-# 6. Patterns Registry
+# 7. Patterns Registry
 
 ```text
 registry/patterns/patterns.registry.yaml
@@ -194,7 +212,7 @@ supporting architecture and security review
 
 ---
 
-# 7. Templates Registry
+# 8. Templates Registry
 
 ```text
 registry/templates/templates.registry.yaml
@@ -230,7 +248,7 @@ connecting workflows to deliverables
 
 ---
 
-# 8. Docs Registry
+# 9. Docs Registry
 
 ```text
 registry/docs/docs.registry.yaml
@@ -264,7 +282,7 @@ marketplace documentation packaging
 
 ---
 
-# 9. Domains Registry
+# 10. Domains Registry
 
 ```text
 registry/domains/domains.registry.yaml
@@ -306,7 +324,7 @@ routing tasks to the right domain
 
 ---
 
-# 10. Tags Registry
+# 11. Tags Registry
 
 ```text
 registry/tags/tags.registry.yaml
@@ -347,7 +365,7 @@ avoiding duplicate tag names
 
 ---
 
-# 11. Releases Registry
+# 12. Releases Registry
 
 ```text
 registry/releases/releases.registry.yaml
@@ -386,11 +404,12 @@ future release automation
 
 ---
 
-# 12. Registry Completion Status
+# 13. Registry Completion Status
 
 ```yaml
 registry_layer:
   framework: complete
+  foundation_registry: complete
   skills_registry: complete
   playbooks_registry: complete
   patterns_registry: complete
@@ -404,27 +423,28 @@ registry_layer:
 
 ---
 
-# 13. Recommended Registry Validation Order
+# 14. Recommended Registry Validation Order
 
 When validation scripts are introduced, registries should be checked in this order:
 
 ```text
-1. tags registry
-2. domains registry
-3. docs registry
-4. skills registry
-5. playbooks registry
-6. patterns registry
-7. templates registry
-8. releases registry
-9. cross-registry relationships
-10. repository path existence
+1. foundation assets registry
+2. tags registry
+3. domains registry
+4. docs registry
+5. skills registry
+6. playbooks registry
+7. patterns registry
+8. templates registry
+9. releases registry
+10. cross-registry relationships
+11. repository path existence
 ```
 
 Reason:
 
 ```text
-Tags and domains are foundational.
+Foundation assets, tags and domains are foundational.
 Asset registries depend on tags, domains and paths.
 Release registry depends on all assets.
 Cross-registry checks should run last.
@@ -432,7 +452,7 @@ Cross-registry checks should run last.
 
 ---
 
-# 14. Future CLI Use Cases
+# 15. Future CLI Use Cases
 
 The registry layer should later support commands such as:
 
@@ -451,7 +471,7 @@ aegis release status
 
 ---
 
-# 15. Future Runtime Use Cases
+# 16. Future Runtime Use Cases
 
 The registry layer should later allow runtime systems to:
 
@@ -468,7 +488,7 @@ trace asset relationships
 
 ---
 
-# 16. Registry Governance Rules
+# 17. Registry Governance Rules
 
 Registry entries should be updated when:
 
@@ -485,6 +505,6 @@ a release includes new assets
 
 ---
 
-# 17. Final Principle
+# 18. Final Principle
 
 > The registry layer turns Aegis OS from a folder of documents into a structured system that tools can understand.

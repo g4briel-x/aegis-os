@@ -27,10 +27,19 @@ python -m pip install -e ".\runtime[dev]"
 python -m aegis_runtime version
 python -m aegis_runtime status
 python -m aegis_runtime registry list
+python -m aegis_runtime registry domains
+python -m aegis_runtime registry tags
 python -m aegis_runtime asset show security.review-api-security
 python -m aegis_runtime asset find security
 python -m aegis_runtime asset domain security
 python -m aegis_runtime asset tag api
+python -m aegis_runtime asset type skill
+python -m aegis_runtime asset related security.review-api-security
+python -m aegis_runtime asset path security.review-api-security
+python -m aegis_runtime config check
+python -m aegis_runtime execution plan security.review-api-security
+python -m aegis_runtime doctor
+python -m aegis_runtime report generate all
 python -m aegis_runtime validate
 ```
 

@@ -1,9 +1,7 @@
-## FILE: `.github/workflows/README.md`
-
 # Aegis OS — GitHub Workflows
 
-Version: 0.1.0  
-Status: Draft
+Version: 0.6.0
+Status: Active
 
 ---
 
@@ -38,6 +36,24 @@ duplicate ids
 related asset references
 PowerShell validation scripts
 ```
+
+## Aegis CLI Smoke Tests
+
+```text
+.github/workflows/aegis-cli-smoke-tests.yml
+```
+
+Runs the PowerShell CLI smoke tests, registry validation, and report generation
+on Windows.
+
+## Aegis Python Runtime Tests
+
+```text
+.github/workflows/aegis-runtime-tests.yml
+```
+
+Installs the Python 3.11 runtime, runs the unit test suite, and exercises the
+registry, asset, and validation commands that protect the main runtime path.
 
 ---
 

@@ -1679,6 +1679,7 @@ def main(
 
         return EXIT_OK
 
+    if args.command == "asset":
         if args.asset_command == "show":
             asset = resolver.by_id(args.asset_id)
 

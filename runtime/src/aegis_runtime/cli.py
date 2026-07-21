@@ -88,6 +88,14 @@ def _build_parser() -> argparse.ArgumentParser:
         "list",
         help="List registry files.",
     )
+    registry_commands.add_parser(
+        "domains",
+        help="List the catalog of defined domains (registry/domains).",
+    )
+    registry_commands.add_parser(
+        "tags",
+        help="List the catalog of defined tags (registry/tags).",
+    )
 
     asset = commands.add_parser(
         "asset",
@@ -1632,7 +1640,45 @@ def main(
 
         return EXIT_OK
 
-    if args.command == "asset":
+    if (
+        args.command == "registry"
+        and args.registry_command in ("domains", "tags")
+    ):
+        prefix = "domain." if args.registry_command == "domains" else "tag."
+        catalog = sorted(
+            (asset for asset in resolver.assets if asset.id.startswith(prefix)),
+            key=lambda asset: asset.id,
+        )
+
+        if args.json:
+            payload = [
+                {
+                    "id": asset.id,
+                    "name": asset.name,
+                    "tags": list(asset.tags),
+                    **asset.metadata,
+                }
+                for asset in catalog
+            ]
+            _print_json(payload)
+        else:
+            for asset in catalog:
+                details = [asset.id]
+
+                if asset.name and asset.name != asset.id:
+                    details.append(f"name={asset.name}")
+
+                category = asset.metadata.get("category")
+                if category:
+                    details.append(f"category={category}")
+
+                print(" | ".join(details))
+
+            noun = "domains" if args.registry_command == "domains" else "tags"
+            print(f"Total {noun}: {len(catalog)}")
+
+        return EXIT_OK
+
         if args.asset_command == "show":
             asset = resolver.by_id(args.asset_id)
 

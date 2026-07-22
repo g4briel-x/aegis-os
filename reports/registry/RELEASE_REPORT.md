@@ -13,8 +13,8 @@ aegis report generate release-report
 | `release.0.1.0` | Aegis OS v0.1.0 Documentation Foundation | 0.1.0 | draft | usable |
 | `release.0.2.0` | Aegis OS v0.2.0 Skills and Execution Assets | 0.2.0 | draft | usable |
 | `release.0.3.0` | Aegis OS v0.3.0 Registry Layer | 0.3.0 | draft | experimental |
-| `release.0.4.0` | Aegis OS v0.4.0 Automation and Validation | 0.4.0 | planned | experimental |
-| `release.0.5.0` | Aegis OS v0.5.0 CLI Foundation | 0.5.0 | planned | experimental |
+| `release.0.4.0` | Aegis OS v0.4.0 Automation and Validation | 0.4.0 | draft | experimental |
+| `release.0.5.0` | Aegis OS v0.5.0 CLI Foundation | 0.5.0 | draft | usable |
 | `release.0.7.0` | Aegis OS v0.7.0 Python Runtime Consolidation | 0.7.0 | active | usable |
 | `release.1.0.0` | Aegis OS v1.0.0 Usable Framework | 1.0.0 | planned | stable |
 
@@ -54,21 +54,21 @@ Adds machine-readable registries that allow Aegis OS assets to be discovered, re
 
 ```text
 ID: release.0.4.0
-Status: planned
+Status: draft
 Maturity: experimental
 ```
 
-Planned release for validation scripts, registry checks, asset integrity checks, generation tools and repository automation.
+Delivered validation scripts, registry checks, asset integrity checks, generation tools and repository automation, initially as PowerShell scripts and consolidated into the Python runtime in release.0.7.0.
 
 ### 0.5.0 - Aegis OS v0.5.0 CLI Foundation
 
 ```text
 ID: release.0.5.0
-Status: planned
-Maturity: experimental
+Status: draft
+Maturity: usable
 ```
 
-Planned release for the first CLI foundation that can inspect, validate and query Aegis OS assets from the registry layer.
+Delivered the first CLI foundation that can inspect, validate and query Aegis OS assets from the registry layer, initially as a PowerShell implementation and later consolidated into the Python runtime in release.0.7.0.
 
 ### 0.7.0 - Aegis OS v0.7.0 Python Runtime Consolidation
 

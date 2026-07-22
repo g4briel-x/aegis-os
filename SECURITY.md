@@ -8,7 +8,7 @@ Aegis OS is currently in foundation development.
 
 | Version | Supported |
 |---|---|
-| v0.5.x | Yes |
+| v0.7.x | Yes |
 | Earlier versions | No |
 
 ---
@@ -61,7 +61,7 @@ incomplete future roadmap items
 
 ## Current Security Model
 
-Aegis OS v0.5 focuses on:
+Aegis OS v0.7 focuses on:
 
 ```text
 repository structure

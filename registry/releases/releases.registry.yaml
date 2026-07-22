@@ -155,11 +155,11 @@ releases:
   - id: release.0.4.0
     name: Aegis OS v0.4.0 Automation and Validation
     version: 0.4.0
-    status: planned
+    status: draft
     maturity: experimental
     release_type: automation
     owner: aegis-os
-    summary: Planned release for validation scripts, registry checks, asset integrity checks, generation tools and repository automation.
+    summary: Delivered validation scripts, registry checks, asset integrity checks, generation tools and repository automation, initially as PowerShell scripts and consolidated into the Python runtime in release.0.7.0.
     scope:
       - registry validation scripts
       - asset path validation
@@ -170,22 +170,22 @@ releases:
       - GitHub workflow preparation
     included_assets: []
     completion_status:
-      scripts: planned
-      validation: planned
-      ci: planned
-      automation_docs: planned
+      scripts: complete
+      validation: complete
+      ci: complete
+      automation_docs: complete
     release_notes:
-      - Future release.
-      - Should make registry and asset consistency easier to verify automatically.
+      - Shipped as part of the v0.5.0 CLI + Automation Foundation (see V0_5_CLOSURE_REPORT.md).
+      - Superseded by the Python-only automation layer in release.0.7.0.
 
   - id: release.0.5.0
     name: Aegis OS v0.5.0 CLI Foundation
     version: 0.5.0
-    status: planned
-    maturity: experimental
+    status: draft
+    maturity: usable
     release_type: cli-foundation
     owner: aegis-os
-    summary: Planned release for the first CLI foundation that can inspect, validate and query Aegis OS assets from the registry layer.
+    summary: Delivered the first CLI foundation that can inspect, validate and query Aegis OS assets from the registry layer, initially as a PowerShell implementation and later consolidated into the Python runtime in release.0.7.0.
     scope:
       - CLI project commands
       - registry query commands
@@ -195,13 +195,14 @@ releases:
       - local project checks
     included_assets: []
     completion_status:
-      cli: planned
-      registry_query: planned
-      validation_commands: planned
-      documentation: planned
+      cli: complete
+      registry_query: complete
+      validation_commands: complete
+      documentation: complete
     release_notes:
-      - Future release.
-      - Should allow Aegis OS to become actionable from the terminal.
+      - Tagged v0.5.0, closed in V0_5_CLOSURE_REPORT.md.
+      - Made Aegis OS actionable from the terminal via a PowerShell CLI.
+      - Superseded by the cross-platform Python CLI in release.0.7.0.
 
   - id: release.0.7.0
     name: Aegis OS v0.7.0 Python Runtime Consolidation

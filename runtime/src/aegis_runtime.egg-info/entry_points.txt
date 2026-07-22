@@ -1,2 +1,0 @@
-[console_scripts]
-aegis-runtime = aegis_runtime.cli:main

@@ -23,6 +23,7 @@ aegis --repo-root . status
 aegis --repo-root . registry list
 aegis --repo-root . docs list
 aegis --repo-root . asset find security
+aegis --repo-root . asset search security --domain security --type skill --tag security
 aegis --repo-root . asset show security.review-api-security
 ```
 

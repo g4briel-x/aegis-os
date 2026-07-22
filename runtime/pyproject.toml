@@ -8,12 +8,28 @@ version = "0.7.0"
 description = "Python runtime foundation for Aegis OS"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "LicenseRef-Aegis-OS-BSL-1.1"
+license-files = ["LICENSE"]
 authors = [{ name = "Aegis OS Contributors" }]
+keywords = ["aegis", "registry", "automation", "validation", "cli"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["build>=1.2", "pytest>=8.0"]
+
+[project.urls]
+Homepage = "https://github.com/g4briel-x/aegis-os"
+Repository = "https://github.com/g4briel-x/aegis-os"
+Issues = "https://github.com/g4briel-x/aegis-os/issues"
 
 [project.scripts]
 aegis = "aegis_runtime.cli:main"
@@ -24,6 +40,9 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+aegis_runtime = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["../tests/runtime"]

@@ -28,4 +28,15 @@ python -m pytest tests/runtime
 ```
 
 The package requires Python 3.11+ and PyYAML. Development installs also include
-pytest.
+pytest and the package build tool.
+
+## Build a distributable package
+
+```console
+python -m build runtime --outdir dist
+python scripts/testing/verify-package-artifacts.py dist
+python scripts/testing/verify-package-install.py dist
+```
+
+This creates a wheel and a source distribution locally. It does not publish the
+package to PyPI. See [`BUILDING.md`](BUILDING.md) for the publication boundary.

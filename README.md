@@ -24,6 +24,7 @@ aegis --repo-root . registry list
 aegis --repo-root . docs list
 aegis --repo-root . asset find security
 aegis --repo-root . asset show security.review-api-security
+aegis --repo-root . plugin list
 ```
 
 ## Validate and test
@@ -36,6 +37,23 @@ aegis --repo-root . report generate all
 ```
 
 The GitHub workflow repeats these checks on Linux, Windows and macOS.
+
+## Plugin manifests
+
+Plugins are discovered from `plugins/**/aegis-plugin.yaml`. Their manifests are
+validated but plugin code is never imported or executed by discovery:
+
+```yaml
+id: example.hello
+name: Example Hello
+version: 1.0.0
+entrypoint: "example_plugin:run"
+description: Optional human-readable summary.
+```
+
+```console
+aegis --repo-root . plugin validate
+```
 
 ## Generate a skill
 

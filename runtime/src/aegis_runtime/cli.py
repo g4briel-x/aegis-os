@@ -34,6 +34,7 @@ from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .generators import generate_skill, generate_skills
 from .models import Asset
+from .plugins import discover_plugins
 from .registry_loader import RegistryLoader
 from .reports import REPORT_GENERATORS, generate_all_reports, generate_report
 from .validator import RegistryValidator
@@ -79,6 +80,23 @@ def _build_parser() -> argparse.ArgumentParser:
     commands.add_parser(
         "info",
         help="Show project paths and Python entrypoints.",
+    )
+
+    plugin = commands.add_parser(
+        "plugin",
+        help="Declarative plugin discovery and validation.",
+    )
+    plugin_commands = plugin.add_subparsers(
+        dest="plugin_command",
+        required=True,
+    )
+    plugin_commands.add_parser(
+        "list",
+        help="List discovered plugin manifests without executing them.",
+    )
+    plugin_commands.add_parser(
+        "validate",
+        help="Validate plugin manifests without loading plugin code.",
     )
 
     docs = commands.add_parser(
@@ -1703,6 +1721,24 @@ def main(
             print("Entrypoints: " + ", ".join(payload["entrypoints"]))
 
         return EXIT_OK
+
+    if args.command == "plugin":
+        plugin_report = discover_plugins(config.repo_root)
+        if args.json:
+            _print_json(plugin_report.to_dict())
+        elif args.plugin_command == "list":
+            for plugin in plugin_report.plugins:
+                print(f"{plugin.id} | version={plugin.version} | entrypoint={plugin.entrypoint}")
+            print(f"Total plugins: {len(plugin_report.plugins)}")
+        else:
+            print("Aegis Plugin Validation")
+            print(f"Plugins: {len(plugin_report.plugins)}")
+            print(f"Errors: {len(plugin_report.issues)}")
+            for issue in plugin_report.issues:
+                print(f"[ERROR] {issue.code}: {issue.message} file={issue.path}")
+            print("Validation passed." if plugin_report.ok else "Validation failed.")
+
+        return EXIT_OK if plugin_report.ok else EXIT_VALIDATION
 
     if args.command == "docs" and args.docs_command == "list":
         _print_asset_list(

@@ -1,27 +1,15 @@
-## FILE: `cli/CLI_ASSET_COMMANDS.md`
+# Asset commands
 
-# Aegis OS — CLI Asset Commands
-
-Version: 0.1.0  
-Status: Draft
-
-## Purpose
-
-These CLI commands inspect Aegis OS assets from registry metadata.
-
-They allow maintainers to search, inspect, locate and open assets without manually browsing registry YAML files.
-
-## Commands
-
-```powershell
-.\cli\aegis.ps1 asset:show engineering.senior-developer
-.\cli\aegis.ps1 asset:related security.security-review-template
-.\cli\aegis.ps1 asset:path business.pricing-strategy-template
-.\cli\aegis.ps1 asset:open design.ux-flow-template
-.\cli\aegis.ps1 domain:assets security
-.\cli\aegis.ps1 tag:assets api
+```console
+aegis --repo-root . asset show engineering.senior-developer
+aegis --repo-root . asset find security
+aegis --repo-root . asset related security.security-review-template
+aegis --repo-root . asset path business.pricing-strategy-template
+aegis --repo-root . asset open design.ux-flow-template
+aegis --repo-root . asset domain security
+aegis --repo-root . asset tag api
+aegis --repo-root . asset type skill
 ```
 
-## Final Principle
-
-> Asset commands turn registries into practical repository navigation.
+`show`, `path` and `open` return exit code `5` when the requested asset or path
+does not exist. `open` uses the operating system's default application.

@@ -1,4 +1,4 @@
-"""Repository health checks (Python port of scripts/doctor/*.ps1)."""
+"""Repository health checks for Aegis OS."""
 
 from __future__ import annotations
 
@@ -160,7 +160,7 @@ def check_git_status(repo_root: Path) -> DoctorCheckResult:
 
 
 def run_all_checks(repo_root: Path) -> list[DoctorCheckResult]:
-    """Run every doctor check, in the same order as aegis-doctor.ps1."""
+    """Run every repository health check in a deterministic order."""
 
     return [
         check_repository_structure(repo_root),

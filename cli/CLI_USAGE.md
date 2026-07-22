@@ -1,87 +1,17 @@
-## FILE: `cli/CLI_USAGE.md`
-
-# Aegis OS — CLI Usage Guide
-
-Version: 0.1.0  
-Status: Draft
-
----
-
-# 1. Main Command
-
-Run from the repository root:
-
-```powershell
-.\cli\aegis.ps1 help
-```
-
----
-
-# 2. Available Commands
-
-```powershell
-.\cli\aegis.ps1 help
-.\cli\aegis.ps1 validate
-.\cli\aegis.ps1 doctor
-.\cli\aegis.ps1 report
-.\cli\aegis.ps1 registry:list
-.\cli\aegis.ps1 asset:find security
-```
-
----
-
-# 3. Command Roles
-
-## `help`
+# CLI usage
 
 ```text
-Shows available CLI commands.
+aegis [--repo-root PATH] [--json] COMMAND ...
 ```
 
-## `validate`
+Repository discovery starts at the current directory unless `--repo-root` is
+provided. Global flags appear before the command.
 
-```text
-Runs Aegis OS validation checks.
+```console
+aegis --repo-root . status
+aegis --repo-root . --json asset show security.review-api-security
+python -m aegis_runtime --repo-root . validate --strict-related
 ```
 
-## `doctor`
-
-```text
-Runs repository health checks, validation and report generation.
-```
-
-## `report`
-
-```text
-Generates human-readable registry reports.
-```
-
-## `registry:list`
-
-```text
-Lists available registry YAML files.
-```
-
-## `asset:find`
-
-```text
-Searches registry files for a keyword such as security, api, pricing or ux.
-```
-
----
-
-# 4. Recommended Local Workflow
-
-```powershell
-.\cli\aegis.ps1 doctor
-git status
-git add .
-git commit -m "..."
-git push
-```
-
----
-
-# 5. Final Principle
-
-> A CLI should reduce repeated manual commands without hiding what it does.
+Use `--help` at any level to inspect the current parser rather than relying on a
+copied command list.

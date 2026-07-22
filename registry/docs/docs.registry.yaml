@@ -480,7 +480,7 @@ entries:
     category: runtime-foundation
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: docs/18-runtime-foundation/RUNTIME_OVERVIEW.md
     owner: aegis-os
     summary: Documents the purpose, scope and architecture of the Aegis OS Python runtime foundation.
@@ -488,7 +488,7 @@ entries:
       - runtime
       - python
       - architecture
-      - v0.6
+      - v0.7
     related_assets:
       - id: docs.runtime-cli-commands
         relationship: related_to
@@ -502,15 +502,15 @@ entries:
     category: runtime-foundation
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: docs/18-runtime-foundation/RUNTIME_CLI_COMMANDS.md
     owner: aegis-os
-    summary: Documents the runtime commands available through the PowerShell CLI and the Python runtime CLI.
+    summary: Documents the cross-platform Python runtime command interface.
     tags:
       - runtime
       - cli
       - python
-      - v0.6
+      - v0.7
     related_assets:
       - id: docs.runtime-overview
         relationship: related_to
@@ -524,7 +524,7 @@ entries:
     category: runtime-foundation
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: docs/18-runtime-foundation/RUNTIME_VALIDATION_MODEL.md
     owner: aegis-os
     summary: Defines the validation model used by the Aegis OS Python runtime.
@@ -532,7 +532,7 @@ entries:
       - runtime
       - validation
       - registry
-      - v0.6
+      - v0.7
     related_assets:
       - id: docs.runtime-overview
         relationship: related_to
@@ -546,15 +546,15 @@ entries:
     category: execution-foundation
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: docs/19-execution-foundation/EXECUTION_OVERVIEW.md
     owner: aegis-os
-    summary: Documents the execution planning and dry-run foundation introduced in Aegis OS v0.6.
+    summary: Documents the Python execution planning, session and audit foundation.
     tags:
       - execution
       - runtime
       - planning
-      - v0.6
+      - v0.7
     related_assets:
       - id: docs.execution-cli-commands
         relationship: related_to
@@ -570,15 +570,15 @@ entries:
     category: execution-foundation
     status: draft
     maturity: usable
-    version: 0.6.0
+    version: 0.7.0
     path: docs/19-execution-foundation/EXECUTION_CLI_COMMANDS.md
     owner: aegis-os
-    summary: Documents the Python and PowerShell CLI commands for execution planning and dry-run.
+    summary: Documents the Python CLI commands for controlled execution.
     tags:
       - execution
       - cli
       - runtime
-      - v0.6
+      - v0.7
     related_assets:
       - id: docs.execution-overview
         relationship: related_to

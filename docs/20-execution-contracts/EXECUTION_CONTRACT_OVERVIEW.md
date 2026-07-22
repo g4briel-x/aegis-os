@@ -99,16 +99,10 @@ forbidden action declarations
 
 ## CLI commands
 
-Python runtime:
+Runtime command:
 
-```powershell
-python -m aegis_runtime execution contract security.review-api-security
-```
-
-PowerShell bridge:
-
-```powershell
-.\cli\aegis.ps1 runtime:execution-contract security.review-api-security
+```console
+python -m aegis_runtime --repo-root . execution contract security.review-api-security
 ```
 
 ## Expected result

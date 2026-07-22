@@ -1,74 +1,19 @@
 # Aegis OS — GitHub Workflows
 
-Version: 0.6.0
+Version: 0.7.0
 Status: Active
 
----
-
-# 1. Purpose
-
-This folder contains GitHub Actions workflows for Aegis OS.
-
-The first workflow runs validation checks against the repository registry layer and automation scripts.
-
----
-
-# 2. Workflows
-
-## Aegis Validation
+The repository uses one Python-only workflow:
 
 ```text
-.github/workflows/aegis-validation.yml
+.github/workflows/aegis-ci.yml
 ```
 
-Role:
+It runs on pushes and pull requests to `main`, and can also be started
+manually. The job executes on Linux, Windows and macOS with Python 3.11.
 
-```text
-Runs Aegis OS validation checks automatically when changes are pushed or pull requests are opened.
-```
-
-It validates:
-
-```text
-registry files
-registry paths
-duplicate ids
-related asset references
-PowerShell validation scripts
-```
-
-## Aegis CLI Smoke Tests
-
-```text
-.github/workflows/aegis-cli-smoke-tests.yml
-```
-
-Runs the PowerShell CLI smoke tests, registry validation, and report generation
-on Windows.
-
-## Aegis Python Runtime Tests
-
-```text
-.github/workflows/aegis-runtime-tests.yml
-```
-
-Installs the Python 3.11 runtime, runs the unit test suite, and exercises the
-registry, asset, and validation commands that protect the main runtime path.
-
----
-
-# 3. Execution Context
-
-The workflow is designed to run on:
-
-```text
-push
-pull_request
-manual dispatch
-```
-
----
-
-# 4. Final Principle
+The workflow installs `runtime[dev]`, runs all runtime tests, exercises the
+public CLI, performs strict registry validation, runs repository health checks,
+regenerates reports and verifies that committed reports are current.
 
 > Validation should run before broken metadata reaches the main branch.

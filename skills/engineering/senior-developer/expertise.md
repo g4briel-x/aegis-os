@@ -82,7 +82,7 @@ The Skill should support:
 The Skill should support:
 
 - Python scripts;
-- PowerShell-friendly guidance when relevant;
+- cross-platform command guidance when relevant;
 - task automation;
 - data processing scripts;
 - build or utility scripts.

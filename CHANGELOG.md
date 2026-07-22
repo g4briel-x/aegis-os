@@ -9,6 +9,32 @@ Versioning follows semantic milestone releases.
 
 ---
 
+## [0.7.0] — Python Runtime Consolidation — 2026-07-21
+
+### Added
+
+- installable `aegis` command alongside `aegis-runtime`;
+- `info`, `docs list`, `release status`, `generate skill` and `generate skills`;
+- guarded, deterministic YAML-to-skill generation;
+- one Python CI workflow for Linux, Windows and macOS;
+- release `0.7.0` metadata and regenerated registry reports;
+- six runtime regression tests, bringing the suite to 105 tests.
+
+### Changed
+
+- made Python 3.11+ the single CLI and automation implementation;
+- updated configuration, current documentation and command references;
+- consolidated validation, doctor and report generation behind the runtime;
+- enabled strict related-asset validation in CI.
+
+### Removed
+
+- 71 legacy `.ps1` command, installer, validation, report and test files;
+- three superseded shell-specific GitHub workflows;
+- unsafe shared-content generation that overwrote tracked documentation.
+
+---
+
 ## [0.5.0] — CLI + Automation Foundation
 
 Status: Foundation Complete  

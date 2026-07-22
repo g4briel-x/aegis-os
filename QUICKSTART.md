@@ -1,137 +1,49 @@
-## FILE: `QUICKSTART.md`
+# Aegis OS Quickstart
 
-# Aegis OS — Quickstart
+Run every command from the repository root.
 
-Version: 0.5.0  
-Status: Ready for Local Use
+## 1. Install
 
----
-
-# 1. Open Repository
-
-From PowerShell:
-
-```powershell
-cd "C:\Users\SE Pictures\Desktop\aegis-os"
+```console
+python -m pip install -e "./runtime[dev]"
 ```
 
----
+## 2. Inspect the repository
 
-# 2. Check Project Status
-
-```powershell
-.\cli\aegis.ps1 status
+```console
+aegis --repo-root . info
+aegis --repo-root . status
+aegis --repo-root . --help
 ```
 
----
+## 3. Search assets
 
-# 3. Show Available Commands
-
-```powershell
-.\cli\aegis.ps1 help
+```console
+aegis --repo-root . asset find security
+aegis --repo-root . asset show engineering.senior-developer
+aegis --repo-root . asset path business.pricing-strategy-template
+aegis --repo-root . asset domain security
+aegis --repo-root . asset tag api
 ```
 
----
+## 4. Run quality gates
 
-# 4. Run Full Doctor
-
-```powershell
-.\cli\aegis.ps1 doctor
+```console
+python -m pytest tests/runtime
+aegis --repo-root . validate --strict-related
+aegis --repo-root . doctor --skip-reports
+aegis --repo-root . report generate all
+git diff --exit-code -- reports/registry
 ```
 
-The doctor checks:
+## 5. Commit through a branch
 
-```text
-repository structure
-required indexes
-Git status
-registry validation
-report generation
+```console
+git switch -c refactor/python-only-runtime
+git status --short
+git add -A
+git commit -m "refactor(runtime): consolidate the CLI in Python"
+git push -u origin refactor/python-only-runtime
 ```
 
----
-
-# 5. Run Tests
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
-```
-
----
-
-# 6. Validate Registries
-
-```powershell
-.\cli\aegis.ps1 validate
-```
-
----
-
-# 7. Generate Reports
-
-```powershell
-.\cli\aegis.ps1 report
-```
-
-Generated reports should appear under:
-
-```text
-reports/registry/
-```
-
----
-
-# 8. Find Assets
-
-Search by keyword:
-
-```powershell
-.\cli\aegis.ps1 asset:find security
-```
-
-Show one asset:
-
-```powershell
-.\cli\aegis.ps1 asset:show engineering.senior-developer
-```
-
-Show asset path:
-
-```powershell
-.\cli\aegis.ps1 asset:path business.pricing-strategy-template
-```
-
----
-
-# 9. Install CLI Alias
-
-```powershell
-powershell -ExecutionPolicy Bypass -File install\install-aegis-cli.ps1
-```
-
-Restart PowerShell.
-
-Then run:
-
-```powershell
-aegis help
-aegis doctor
-aegis status
-```
-
----
-
-# 10. Commit Routine
-
-```powershell
-git status
-git add .
-git commit -m "docs: update aegis os foundation"
-git push
-```
-
----
-
-# Final Principle
-
-> Start with status, run doctor, validate, test, then commit.
+Open a pull request into `main` and wait for the multiplatform Python CI.

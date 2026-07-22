@@ -86,12 +86,11 @@ deprecated asset without replacement
 
 # 4. Future Automation
 
-The validation model can later be implemented as:
+The validation model can be implemented as:
 
 ```text
-PowerShell script
-Python script
-Node.js CLI command
+Python module
+Python CLI command
 GitHub Action
 Aegis OS runtime validator
 ```

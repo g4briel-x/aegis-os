@@ -1,44 +1,12 @@
-## FILE: `scripts/README.md`
+# Repository automation
 
-# Aegis OS — Scripts
+Repository automation is implemented by the `aegis_runtime` Python package and
+its pytest suite. This directory retains focused operating guides; executable
+logic lives under `runtime/src/aegis_runtime`.
 
-Version: 0.1.0  
-Status: Draft
-
----
-
-# 1. Purpose
-
-This folder contains automation and validation scripts for Aegis OS.
-
-The first script layer focuses on registry validation.
-
----
-
-# 2. Script Categories
-
-```text
-scripts/validation
+```console
+python -m pytest tests/runtime
+python -m aegis_runtime --repo-root . validate --strict-related
+python -m aegis_runtime --repo-root . doctor --skip-reports
+python -m aegis_runtime --repo-root . report generate all
 ```
-
-Purpose:
-
-```text
-Validates machine-readable registry files, asset paths, ids, duplicate entries and relationships.
-```
-
----
-
-# 3. Recommended Execution
-
-Run from the repository root:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
-```
-
----
-
-# 4. Final Principle
-
-> Scripts should make Aegis OS easier to verify before future automation, CLI and runtime layers are added.

@@ -203,6 +203,42 @@ releases:
       - Future release.
       - Should allow Aegis OS to become actionable from the terminal.
 
+  - id: release.0.7.0
+    name: Aegis OS v0.7.0 Python Runtime Consolidation
+    version: 0.7.0
+    status: active
+    maturity: usable
+    release_type: runtime-consolidation
+    owner: aegis-os
+    summary: Consolidates the CLI, validation, reporting, generation and execution tooling into one cross-platform Python runtime.
+    scope:
+      - Python CLI entrypoint
+      - multiplatform CI
+      - strict registry validation
+      - safe skill generation
+      - execution lifecycle and audit commands
+      - removal of legacy shell-specific command wrappers
+    included_assets:
+      - docs.runtime-overview
+      - docs.runtime-cli-commands
+      - docs.runtime-validation-model
+      - docs.execution-overview
+      - docs.execution-cli-commands
+      - cli.runtime-commands
+      - cli.execution-commands
+    completion_status:
+      runtime: complete
+      cli: complete
+      validation: complete
+      reporting: complete
+      generation: complete
+      multiplatform_ci: complete
+    release_notes:
+      - Adds the installable aegis console command alongside aegis-runtime.
+      - Adds project info, documentation catalog, release status and safe skill generation commands.
+      - Runs the full Python quality gate on Linux, Windows and macOS.
+      - Retires the legacy shell-specific command and automation layer.
+
   - id: release.1.0.0
     name: Aegis OS v1.0.0 Usable Framework
     version: 1.0.0

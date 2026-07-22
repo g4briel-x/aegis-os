@@ -1,0 +1,63 @@
+name: Aegis OS Python CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-runtime:
+    name: Python 3.11 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: runtime/pyproject.toml
+
+      - name: Install runtime and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e "./runtime[dev]"
+
+      - name: Run unit tests
+        run: python -m pytest tests/runtime
+
+      - name: Exercise the Python CLI
+        run: |
+          aegis version
+          aegis-runtime version
+          python -m aegis_runtime --repo-root . info
+          python -m aegis_runtime --repo-root . status
+          python -m aegis_runtime --repo-root . registry domains
+          python -m aegis_runtime --repo-root . registry tags
+          python -m aegis_runtime --repo-root . docs list
+          python -m aegis_runtime --repo-root . release status
+          python -m aegis_runtime --repo-root . asset show security.review-api-security
+          python -m aegis_runtime --repo-root . validate --strict-related
+          python -m aegis_runtime --repo-root . doctor --skip-reports
+
+      - name: Verify generated reports are current
+        run: |
+          python -m aegis_runtime --repo-root . report generate all
+          git diff --exit-code -- reports/registry

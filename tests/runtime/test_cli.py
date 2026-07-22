@@ -23,6 +23,15 @@ entries:
   - id: tag.api
     name: api
     category: engineering
+  - id: docs.runtime-overview
+    name: Runtime overview
+    type: doc
+    path: docs/runtime.md
+  - id: release.0.7.0
+    name: Python-only runtime
+    version: 0.7.0
+    status: active
+    maturity: usable
 """.strip(),
         encoding="utf-8",
     )
@@ -68,3 +77,60 @@ def test_registry_catalog_commands_are_reachable(tmp_path: Path, capsys) -> None
     assert tags_exit_code == EXIT_OK
     assert "tag.api" in tags_output
     assert "Total tags: 1" in tags_output
+
+
+def test_python_only_project_commands_are_reachable(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+
+    info_exit_code = main(["--repo-root", str(repo_root), "info"])
+    info_output = capsys.readouterr().out
+    docs_exit_code = main(["--repo-root", str(repo_root), "docs", "list"])
+    docs_output = capsys.readouterr().out
+    release_exit_code = main(
+        ["--repo-root", str(repo_root), "release", "status"]
+    )
+    release_output = capsys.readouterr().out
+
+    assert info_exit_code == EXIT_OK
+    assert "Runtime: Python" in info_output
+    assert "Entrypoints: aegis, aegis-runtime, python -m aegis_runtime" in info_output
+    assert docs_exit_code == EXIT_OK
+    assert "docs.runtime-overview" in docs_output
+    assert "Total assets: 1" in docs_output
+    assert release_exit_code == EXIT_OK
+    assert "release.0.7.0" in release_output
+    assert "status=active" in release_output
+    assert "Total releases: 1" in release_output
+
+
+def test_generate_skill_command_is_reachable(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+    definition = repo_root / "generators" / "test-engineer.yaml"
+    definition.parent.mkdir(parents=True)
+    definition.write_text(
+        """
+name: Test Engineer
+category: Engineering
+path: engineering/test-engineer
+role: Senior Test Engineer
+mission: Make behavior verifiable.
+responsibilities: Test design and automation.
+expertise: Python and quality engineering.
+""".strip(),
+        encoding="utf-8",
+    )
+
+    exit_code = main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "generate",
+            "skill",
+            "generators/test-engineer.yaml",
+        ]
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == EXIT_OK
+    assert "Generated skill: Test Engineer" in output
+    assert (repo_root / "skills" / "engineering" / "test-engineer" / "SKILL.md").is_file()

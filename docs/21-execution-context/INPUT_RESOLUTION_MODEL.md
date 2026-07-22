@@ -95,8 +95,8 @@ parameter
 
 Example:
 
-```powershell
-python -m aegis_runtime execution context <asset-id> --input scope=public-api
+```console
+python -m aegis_runtime --repo-root . execution context <asset-id> --input scope=public-api
 ```
 
 Result:
@@ -228,10 +228,8 @@ The runtime CLI rejects duplicate input names before the resolver is called.
 
 Example:
 
-```powershell
-python -m aegis_runtime execution context <asset-id> `
-  --input scope=public-api `
-  --input scope=internal-api
+```console
+python -m aegis_runtime --repo-root . execution context <asset-id> --input scope=public-api --input scope=internal-api
 ```
 
 Expected result:
@@ -250,7 +248,7 @@ NAME=VALUE
 
 Invalid example:
 
-```powershell
+```console
 --input scope
 ```
 
@@ -264,7 +262,7 @@ An empty input name is also rejected.
 
 Invalid example:
 
-```powershell
+```console
 --input =value
 ```
 

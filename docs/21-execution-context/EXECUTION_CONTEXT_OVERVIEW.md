@@ -191,31 +191,23 @@ execution_mode_not_allowed
 
 ## CLI commands
 
-Python command:
+Runtime command:
 
-```powershell
-python -m aegis_runtime execution context security.review-api-security
+```console
+python -m aegis_runtime --repo-root . execution context security.review-api-security
 ```
 
 Explicit plan mode:
 
-```powershell
-python -m aegis_runtime execution context security.review-api-security --mode plan
+```console
+python -m aegis_runtime --repo-root . execution context security.review-api-security --mode plan
 ```
 
 Runtime parameters:
 
-```powershell
-python -m aegis_runtime execution context <asset-id> --input scope=public-api
+```console
+python -m aegis_runtime --repo-root . execution context <asset-id> --input scope=public-api
 ```
-
-PowerShell bridge:
-
-```powershell
-.\cli\aegis.ps1 runtime:execution-context security.review-api-security
-```
-
-The current PowerShell bridge passes the asset identifier and uses the default `dry-run` mode.
 
 ## Expected output
 
@@ -254,8 +246,8 @@ result.to_dict()
 
 JSON output may be requested with the global runtime option:
 
-```powershell
-python -m aegis_runtime --json execution context security.review-api-security
+```console
+python -m aegis_runtime --repo-root . --json execution context security.review-api-security
 ```
 
 ## Current safety boundary

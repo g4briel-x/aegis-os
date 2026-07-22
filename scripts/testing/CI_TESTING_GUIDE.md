@@ -1,77 +1,19 @@
-## FILE: `scripts/testing/CI_TESTING_GUIDE.md`
+# CI testing guide
 
-# Aegis OS — CI Testing Guide
+`.github/workflows/aegis-ci.yml` runs the Python runtime on Linux, Windows and
+macOS with Python 3.11.
 
-Version: 0.1.0  
-Status: Draft
+The job installs `runtime[dev]`, runs pytest, exercises public CLI commands,
+performs strict registry validation, runs the doctor and verifies generated
+reports.
 
----
+Local equivalent:
 
-# 1. Purpose
-
-This guide explains how Aegis OS testing is expected to run locally and in continuous integration.
-
----
-
-# 2. CI Test Layers
-
-```text
-CLI smoke tests
-registry validation
-report generation
-GitHub Actions workflow checks
+```console
+python -m pip install -e "./runtime[dev]"
+python -m pytest tests/runtime
+python -m aegis_runtime --repo-root . validate --strict-related
+python -m aegis_runtime --repo-root . doctor --skip-reports
+python -m aegis_runtime --repo-root . report generate all
+git diff --exit-code -- reports/registry
 ```
-
----
-
-# 3. Local Test Commands
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
-powershell -ExecutionPolicy Bypass -File scripts\validation\validate-all.ps1
-powershell -ExecutionPolicy Bypass -File scripts\reports\generate-all-reports.ps1
-```
-
----
-
-# 4. GitHub Actions Workflows
-
-```text
-.github/workflows/aegis-validation.yml
-.github/workflows/aegis-cli-smoke-tests.yml
-```
-
----
-
-# 5. Recommended Pre-Push Routine
-
-```powershell
-.\cli\aegis.ps1 doctor
-powershell -ExecutionPolicy Bypass -File scripts\testing\test-cli-smoke.ps1
-git status
-git add .
-git commit -m "..."
-git push
-```
-
----
-
-# 6. CI Failure Policy
-
-A CI failure should block merging when:
-
-```text
-CLI command routing fails
-registry validation fails
-required repository files are missing
-asset paths are invalid
-duplicate ids exist
-related assets are unknown
-report generation fails
-```
-
----
-
-# 7. Final Principle
-
-> CI should protect the repository from silent structural breakage.

@@ -1,6 +1,6 @@
 """Aegis OS Python runtime."""
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 from .asset_resolver import AssetResolver
 from .config import AegisConfig

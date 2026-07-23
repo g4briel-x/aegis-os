@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 
 @dataclass(slots=True)
@@ -30,8 +30,23 @@ class Asset:
             self.path,
             *self.tags,
             *self.related_assets,
+            *self._metadata_search_values(self.metadata),
         ]
         return " ".join(str(value) for value in values if value).lower()
+
+    @classmethod
+    def _metadata_search_values(cls, value: Any) -> list[str]:
+        """Flatten YAML metadata into stable, searchable text values."""
+
+        if isinstance(value, Mapping):
+            values: list[str] = []
+            for key, item in value.items():
+                values.append(str(key))
+                values.extend(cls._metadata_search_values(item))
+            return values
+        if isinstance(value, list):
+            return [item for nested in value for item in cls._metadata_search_values(nested)]
+        return [str(value)] if value is not None else []
 
     def to_dict(self) -> dict[str, Any]:
         return {

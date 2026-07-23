@@ -16,6 +16,7 @@ entries:
     type: skill
     domain: security
     path: skills/security
+    summary: Practical security review guidance.
     tags:
       - api
   - id: domain.security
@@ -77,6 +78,33 @@ def test_registry_catalog_commands_are_reachable(tmp_path: Path, capsys) -> None
     assert tags_exit_code == EXIT_OK
     assert "tag.api" in tags_output
     assert "Total tags: 1" in tags_output
+
+
+def test_asset_search_combines_query_and_catalog_filters(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+
+    exit_code = main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "--json",
+            "asset",
+            "search",
+            "guidance",
+            "--domain",
+            "security",
+            "--type",
+            "skill",
+            "--tag",
+            "api",
+            "--limit",
+            "1",
+        ]
+    )
+
+    assert exit_code == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert [asset["id"] for asset in payload] == ["security.review-api-security"]
 
 
 def test_python_only_project_commands_are_reachable(tmp_path: Path, capsys) -> None:

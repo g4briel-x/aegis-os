@@ -54,7 +54,7 @@ jobs:
           python -m aegis_runtime --repo-root . docs list
           python -m aegis_runtime --repo-root . release status
           python -m aegis_runtime --repo-root . asset show security.review-api-security
-          python -m aegis_runtime --repo-root . validate --strict-related
+          python -m aegis_runtime --repo-root . validate --strict-related --strict-schema
           python -m aegis_runtime --repo-root . doctor --skip-reports
 
       - name: Verify generated reports are current

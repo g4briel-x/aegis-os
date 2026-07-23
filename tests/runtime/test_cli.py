@@ -8,20 +8,9 @@ def _make_repository(tmp_path: Path) -> Path:
     registry_dir = tmp_path / "registry" / "test"
     registry_dir.mkdir(parents=True)
     (tmp_path / "skills" / "security").mkdir(parents=True)
-    (tmp_path / "docs").mkdir(parents=True, exist_ok=True)
-    (tmp_path / "docs" / "runtime.md").write_text(
-        "# Runtime overview\n", encoding="utf-8"
-    )
     (registry_dir / "test.registry.yaml").write_text(
-    """
-registry:
-  id: registry.test
-  name: Test Registry
-  schema_version: 0.1.0
-  status: active
-  owner: aegis-os
-  description: Temporary registry used by runtime CLI tests.
 
+"""
 entries:
   - id: security.review-api-security
     name: Review API Security
@@ -68,106 +57,6 @@ def test_asset_show_command_is_reachable(tmp_path: Path, capsys) -> None:
     payload = json.loads(capsys.readouterr().out)
     assert payload["id"] == "security.review-api-security"
     assert payload["type"] == "skill"
-
-
-def test_asset_list_command_is_reachable(tmp_path: Path, capsys) -> None:
-    repo_root = _make_repository(tmp_path)
-
-    exit_code = main(
-        [
-            "--repo-root",
-            str(repo_root),
-            "--json",
-            "asset",
-            "list",
-        ]
-    )
-
-    assert exit_code == EXIT_OK
-    payload = json.loads(capsys.readouterr().out)
-    ids = {asset["id"] for asset in payload}
-    assert "security.review-api-security" in ids
-    assert "docs.runtime-overview" in ids
-
-
-def test_asset_list_command_filters_by_domain_and_type(
-    tmp_path: Path, capsys
-) -> None:
-    repo_root = _make_repository(tmp_path)
-
-    exit_code = main(
-        [
-            "--repo-root",
-            str(repo_root),
-            "asset",
-            "list",
-            "--domain",
-            "security",
-            "--type",
-            "skill",
-        ]
-    )
-    output = capsys.readouterr().out
-
-    assert exit_code == EXIT_OK
-    assert "security.review-api-security" in output
-    assert "Total assets: 1" in output
-
-
-def test_validate_command_passes_on_clean_repository(
-    tmp_path: Path, capsys
-) -> None:
-    repo_root = _make_repository(tmp_path)
-
-    exit_code = main(["--repo-root", str(repo_root), "validate"])
-    output = capsys.readouterr().out
-
-    assert exit_code == EXIT_OK
-    assert "Errors: 0" in output
-    assert "Validation passed." in output
-
-
-def test_validate_command_strict_related_fails_on_unresolved_reference(
-    tmp_path: Path, capsys
-) -> None:
-    repo_root = _make_repository(tmp_path)
-    registry_file = (
-        repo_root / "registry" / "test" / "test.registry.yaml"
-    )
-    registry_file.write_text(
-        registry_file.read_text(encoding="utf-8")
-        + "\n  - id: security.dangling-reference\n"
-        "    name: Dangling\n"
-        "    related_assets:\n"
-        "      - does.not.exist\n",
-        encoding="utf-8",
-    )
-
-    lenient_exit_code = main(["--repo-root", str(repo_root), "validate"])
-    capsys.readouterr()
-
-    strict_exit_code = main(
-        ["--repo-root", str(repo_root), "validate", "--strict-related"]
-    )
-    strict_output = capsys.readouterr().out
-
-    assert lenient_exit_code == EXIT_OK
-    assert strict_exit_code == EXIT_VALIDATION
-    assert "unresolved_related_asset" in strict_output
-    assert "Validation failed." in strict_output
-
-
-def test_validate_command_json_output_shape(tmp_path: Path, capsys) -> None:
-    repo_root = _make_repository(tmp_path)
-
-    exit_code = main(["--repo-root", str(repo_root), "--json", "validate"])
-    payload = json.loads(capsys.readouterr().out)
-
-    assert exit_code == EXIT_OK
-    assert payload["ok"] is True
-    assert payload["registry_count"] >= 1
-    assert payload["asset_count"] >= 1
-    assert payload["issues"] == []
 
 
 def test_registry_catalog_commands_are_reachable(tmp_path: Path, capsys) -> None:

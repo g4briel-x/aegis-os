@@ -43,6 +43,13 @@ jobs:
       - name: Run unit tests
         run: python -m pytest tests/runtime
 
+      - name: Build distributable package
+        run: |
+          python -m pip install build
+          python -m build runtime --outdir dist
+          python scripts/testing/verify-package-artifacts.py dist
+          python scripts/testing/verify-package-install.py dist
+
       - name: Exercise the Python CLI
         run: |
           aegis version

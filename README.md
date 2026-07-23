@@ -39,6 +39,20 @@ aegis --repo-root . report generate all
 
 The GitHub workflow repeats these checks on Linux, Windows and macOS.
 
+## Build a distributable package
+
+The runtime is prepared for future PyPI publication, but it is not published
+automatically. Build and verify local artifacts with:
+
+```console
+python -m pip install "./runtime[dev]"
+python -m build runtime --outdir dist
+python scripts/testing/verify-package-artifacts.py dist
+python scripts/testing/verify-package-install.py dist
+```
+
+See [`runtime/BUILDING.md`](runtime/BUILDING.md) for the release boundary.
+
 `--strict-schema` validates registry metadata and YAML entry collections. It
 also detects paths that resolve outside the repository.
 

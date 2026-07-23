@@ -457,6 +457,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Treat unresolved related assets as errors.",
     )
+    validate.add_argument(
+        "--strict-schema",
+        action="store_true",
+        help="Treat registry schema diagnostics as errors.",
+    )
 
     doctor = commands.add_parser(
         "doctor",
@@ -2082,6 +2087,7 @@ def main(
             unresolved_related_as_error=(
                 args.strict_related
             ),
+            strict_schema=args.strict_schema,
         )
         report = validator.validate(
             documents

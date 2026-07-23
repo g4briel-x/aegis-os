@@ -1,6 +1,6 @@
 # Aegis OS
 
-Aegis OS is a registry-driven knowledge and execution framework. Version 0.7
+Aegis OS is a registry-driven knowledge and execution framework. Version 0.8
 uses one cross-platform Python CLI for discovery, validation, reporting,
 generation and execution lifecycle operations.
 

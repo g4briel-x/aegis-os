@@ -91,7 +91,6 @@ class ExecutionWorkspaceStore:
     def __init__(
         self,
         repo_root: Path | str,
-        *,
         audit_protection: ExecutionAuditProtection | None = None,
     ) -> None:
         """Initialize persistent workspace storage."""
@@ -113,12 +112,11 @@ class ExecutionWorkspaceStore:
             )
 
         self._audit_protection = (
-            audit_protection
-            if audit_protection is not None
-            else ExecutionAuditProtection.from_environment(
-                required=False,
+            ExecutionAuditProtection.from_environment(
                 working_directory=self.repo_root,
             )
+            if audit_protection is None
+            else audit_protection
         )
 
     def persist(
@@ -129,12 +127,14 @@ class ExecutionWorkspaceStore:
 
         if not result.ok:
             raise ValueError(
-                "Only a successful execution session can be persisted."
+                "Only a successful execution session "
+                "can be persisted."
             )
 
         if result.session.context is None:
             raise ValueError(
-                "Execution session has no resolved context to persist."
+                "Execution session has no resolved "
+                "context to persist."
             )
 
         workspace_path = self._resolve_workspace_path(
@@ -186,8 +186,12 @@ class ExecutionWorkspaceStore:
                 "workspace": result.workspace.to_dict(),
                 "build": {
                     "ok": result.ok,
-                    "errors": len(result.errors),
-                    "warnings": len(result.warnings),
+                    "errors": len(
+                        result.errors
+                    ),
+                    "warnings": len(
+                        result.warnings
+                    ),
                 },
             },
         )
@@ -203,11 +207,21 @@ class ExecutionWorkspaceStore:
         )
 
         audit_payload = {
-            "session_id": result.session.session_id,
-            "workspace_id": result.workspace.workspace_id,
-            "target_asset_id": result.session.target_asset_id,
-            "mode": result.session.mode.value,
-            "state": result.session.state.value,
+            "session_id": (
+                result.session.session_id
+            ),
+            "workspace_id": (
+                result.workspace.workspace_id
+            ),
+            "target_asset_id": (
+                result.session.target_asset_id
+            ),
+            "mode": (
+                result.session.mode.value
+            ),
+            "state": (
+                result.session.state.value
+            ),
             "created_at": (
                 result.session.created_at.isoformat()
             ),
@@ -257,21 +271,25 @@ class ExecutionWorkspaceStore:
     ) -> StoredExecutionSession:
         """Load a stored session by workspace ID or session ID."""
 
-        normalized_identifier = identifier.strip()
+        normalized_identifier = (
+            identifier.strip()
+        )
 
         if not normalized_identifier:
             raise ValueError(
-                "Session or workspace identifier cannot be empty."
+                "Session or workspace identifier "
+                "cannot be empty."
             )
 
         if (
-            normalized_identifier in {".", ".."}
+            normalized_identifier
+            in {".", ".."}
             or "/" in normalized_identifier
             or "\\" in normalized_identifier
         ):
             raise ValueError(
-                "Session or workspace identifier cannot contain "
-                "path separators."
+                "Session or workspace identifier cannot "
+                "contain path separators."
             )
 
         workspace_root = (
@@ -324,8 +342,8 @@ class ExecutionWorkspaceStore:
 
         if relative_path.is_absolute():
             raise ValueError(
-                "Execution workspace path must be "
-                "repository-relative."
+                "Execution workspace path must "
+                "be repository-relative."
             )
 
         if ".." in relative_path.parts:
@@ -340,13 +358,14 @@ class ExecutionWorkspaceStore:
         ).resolve()
 
         if (
-            workspace_path != self.repo_root
+            workspace_path
+            != self.repo_root
             and self.repo_root
             not in workspace_path.parents
         ):
             raise ValueError(
-                "Execution workspace resolves outside "
-                "the repository."
+                "Execution workspace resolves "
+                "outside the repository."
             )
 
         return workspace_path
@@ -356,7 +375,7 @@ class ExecutionWorkspaceStore:
         workspace_path: Path,
         result: ExecutionSessionBuildResult,
     ) -> None:
-        """Create all directories required by declared locations."""
+        """Create directories required by declared locations."""
 
         for location in result.workspace.locations:
             target = self._safe_location_path(
@@ -407,7 +426,9 @@ class ExecutionWorkspaceStore:
 
         target = (
             workspace_path
-            / Path(relative_path)
+            / Path(
+                relative_path
+            )
         ).resolve()
 
         resolved_workspace = (
@@ -415,7 +436,8 @@ class ExecutionWorkspaceStore:
         )
 
         if (
-            target != resolved_workspace
+            target
+            != resolved_workspace
             and resolved_workspace
             not in target.parents
         ):
@@ -440,43 +462,60 @@ class ExecutionWorkspaceStore:
             )
         except json.JSONDecodeError as exc:
             raise ValueError(
-                "Stored execution session contains invalid JSON: "
+                "Stored execution session contains "
+                "invalid JSON: "
                 f"{session_manifest}"
             ) from exc
 
-        if not isinstance(payload, dict):
+        if not isinstance(
+            payload,
+            dict,
+        ):
             raise ValueError(
-                "Stored execution session must contain "
-                "a JSON object."
+                "Stored execution session must "
+                "contain a JSON object."
             )
 
         session = payload.get(
             "session"
         )
+
         workspace = payload.get(
             "workspace"
         )
 
         if (
-            not isinstance(session, dict)
-            or not session.get("session_id")
+            not isinstance(
+                session,
+                dict,
+            )
+            or not session.get(
+                "session_id"
+            )
         ):
             raise ValueError(
-                "Stored execution session has no valid "
-                "session ID."
+                "Stored execution session has "
+                "no valid session ID."
             )
 
         if (
-            not isinstance(workspace, dict)
-            or not workspace.get("workspace_id")
+            not isinstance(
+                workspace,
+                dict,
+            )
+            or not workspace.get(
+                "workspace_id"
+            )
         ):
             raise ValueError(
-                "Stored execution session has no valid "
-                "workspace ID."
+                "Stored execution session has "
+                "no valid workspace ID."
             )
 
         return StoredExecutionSession(
-            workspace_path=session_manifest.parent,
+            workspace_path=(
+                session_manifest.parent
+            ),
             session_manifest=session_manifest,
             payload=payload,
         )

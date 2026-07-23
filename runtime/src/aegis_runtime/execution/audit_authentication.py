@@ -6,13 +6,10 @@ import copy
 import hashlib
 import hmac
 import json
-import re
 from dataclasses import dataclass
 from typing import Any
 
-from .audit_integrity import (
-    ExecutionAuditIntegrity,
-)
+from .audit_integrity import ExecutionAuditIntegrity
 
 AUDIT_AUTHENTICATION_VERSION = 1
 AUDIT_AUTHENTICATION_ALGORITHM = "hmac-sha256"
@@ -22,30 +19,25 @@ AUDIT_AUTHENTICATION_CONTEXT = (
 AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES = 32
 
 _AUTHENTICATION_FIELD = "authentication"
+_INTEGRITY_FIELD = "integrity"
 
-_AUTHENTICATION_KEYS = {
+_AUTHENTICATION_FIELDS = {
     "version",
     "algorithm",
+    "context",
     "key_id",
     "journal_hash",
     "signature",
 }
 
-_KEY_ID_PATTERN = re.compile(
-    r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
-)
-
-_SHA256_PATTERN = re.compile(
-    r"^[0-9a-f]{64}$"
-)
-
 
 @dataclass(slots=True, frozen=True)
 class ExecutionAuditAuthenticationVerification:
-    """Successful authentication result for one audit journal."""
+    """Successful HMAC verification result."""
 
     version: int
     algorithm: str
+    context: str
     key_id: str
     journal_hash: str
     signature: str
@@ -63,6 +55,7 @@ class ExecutionAuditAuthenticationVerification:
             "ok": self.ok,
             "version": self.version,
             "algorithm": self.algorithm,
+            "context": self.context,
             "key_id": self.key_id,
             "journal_hash": self.journal_hash,
             "signature": self.signature,
@@ -70,27 +63,51 @@ class ExecutionAuditAuthenticationVerification:
 
 
 class ExecutionAuditAuthenticator:
-    """Authenticate execution audit journals with HMAC-SHA256."""
+    """Authenticate integrity-sealed journals with HMAC-SHA256."""
+
+    __slots__ = (
+        "_secret",
+        "_key_id",
+        "_integrity",
+    )
 
     def __init__(
         self,
         secret: str | bytes,
         *,
-        key_id: str = "default",
+        key_id: str,
     ) -> None:
-        """Initialize one authenticator with secret key material."""
+        """Initialize the authenticator with secret key material."""
 
-        self._secret = self._normalize_secret(
+        secret_bytes = self._normalize_secret(
             secret
         )
-        self._key_id = self._normalize_key_id(
-            key_id
-        )
+        normalized_key_id = key_id.strip()
+
+        if (
+            len(secret_bytes)
+            < AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES
+        ):
+            raise ValueError(
+                "Execution audit HMAC secret must contain "
+                f"at least "
+                f"{AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES} "
+                "bytes."
+            )
+
+        if not normalized_key_id:
+            raise ValueError(
+                "Execution audit HMAC key ID "
+                "cannot be empty."
+            )
+
+        self._secret = secret_bytes
+        self._key_id = normalized_key_id
         self._integrity = ExecutionAuditIntegrity()
 
     @property
     def key_id(self) -> str:
-        """Return the non-secret key identifier."""
+        """Return the public identifier of the configured key."""
 
         return self._key_id
 
@@ -98,30 +115,36 @@ class ExecutionAuditAuthenticator:
         self,
         payload: dict[str, Any],
     ) -> dict[str, Any]:
-        """Return an authenticated copy of one sealed journal."""
+        """Return an authenticated copy of an integrity-sealed journal."""
 
-        protected_payload = self._protected_payload(
+        unsigned_payload = self._unsigned_payload(
             payload
         )
 
-        integrity = self._integrity.verify(
-            protected_payload
+        self._verify_integrity(
+            unsigned_payload
+        )
+
+        journal_hash = self._journal_hash(
+            unsigned_payload
         )
 
         signature = self._signature(
-            protected_payload,
-            key_id=self._key_id,
-            journal_hash=integrity.journal_hash,
+            unsigned_payload
         )
 
         authenticated_payload = copy.deepcopy(
-            protected_payload
+            unsigned_payload
         )
-        authenticated_payload[_AUTHENTICATION_FIELD] = {
+
+        authenticated_payload[
+            _AUTHENTICATION_FIELD
+        ] = {
             "version": AUDIT_AUTHENTICATION_VERSION,
             "algorithm": AUDIT_AUTHENTICATION_ALGORITHM,
+            "context": AUDIT_AUTHENTICATION_CONTEXT,
             "key_id": self._key_id,
-            "journal_hash": integrity.journal_hash,
+            "journal_hash": journal_hash,
             "signature": signature,
         }
 
@@ -131,59 +154,55 @@ class ExecutionAuditAuthenticator:
         self,
         payload: dict[str, Any],
     ) -> ExecutionAuditAuthenticationVerification:
-        """Verify one authenticated execution audit journal."""
+        """Verify journal integrity and its HMAC signature."""
 
         if not isinstance(payload, dict):
             raise ValueError(
-                "Execution audit payload must be a JSON object."
+                "Execution audit payload must be "
+                "a JSON object."
             )
 
         authentication = payload.get(
             _AUTHENTICATION_FIELD
         )
 
-        if not isinstance(authentication, dict):
+        if not isinstance(
+            authentication,
+            dict,
+        ):
             raise ValueError(
-                "Execution audit manifest has no valid "
-                "authentication signature."
+                "Execution audit authentication "
+                "metadata is missing."
             )
 
-        missing_keys = (
-            _AUTHENTICATION_KEYS
-            - set(authentication)
-        )
-        unexpected_keys = (
-            set(authentication)
-            - _AUTHENTICATION_KEYS
-        )
-
-        if missing_keys:
-            names = ", ".join(
-                sorted(missing_keys)
-            )
-
+        if set(authentication) != _AUTHENTICATION_FIELDS:
             raise ValueError(
-                "Execution audit authentication is missing "
-                f"required fields: {names}"
-            )
-
-        if unexpected_keys:
-            names = ", ".join(
-                sorted(unexpected_keys)
-            )
-
-            raise ValueError(
-                "Execution audit authentication contains "
-                f"unsupported fields: {names}"
+                "Execution audit authentication metadata "
+                "contains an invalid field set."
             )
 
         version = authentication.get(
             "version"
         )
+        algorithm = authentication.get(
+            "algorithm"
+        )
+        context = authentication.get(
+            "context"
+        )
+        key_id = authentication.get(
+            "key_id"
+        )
+        declared_journal_hash = authentication.get(
+            "journal_hash"
+        )
+        declared_signature = authentication.get(
+            "signature"
+        )
 
         if (
-            isinstance(version, bool)
-            or not isinstance(version, int)
+            not isinstance(version, int)
+            or isinstance(version, bool)
             or version != AUDIT_AUTHENTICATION_VERSION
         ):
             raise ValueError(
@@ -191,256 +210,230 @@ class ExecutionAuditAuthenticator:
                 "authentication version."
             )
 
-        algorithm = authentication.get(
-            "algorithm"
-        )
-
         if algorithm != AUDIT_AUTHENTICATION_ALGORITHM:
             raise ValueError(
                 "Unsupported execution audit "
                 "authentication algorithm."
             )
 
-        key_id = self._required_key_id(
-            authentication
-        )
-
-        if not hmac.compare_digest(
-            key_id,
-            self._key_id,
-        ):
+        if context != AUDIT_AUTHENTICATION_CONTEXT:
             raise ValueError(
-                "Execution audit authentication key ID "
-                "does not match the configured key."
+                "Execution audit authentication "
+                "context does not match."
             )
 
-        stored_journal_hash = self._required_sha256(
-            authentication,
-            "journal_hash",
-            "execution audit authentication",
-        )
-        stored_signature = self._required_sha256(
-            authentication,
-            "signature",
-            "execution audit authentication",
+        if key_id != self._key_id:
+            raise ValueError(
+                "Execution audit authentication "
+                "key ID does not match."
+            )
+
+        self._require_sha256_hex(
+            declared_journal_hash,
+            field_name="journal hash",
         )
 
-        protected_payload = self._protected_payload(
+        self._require_sha256_hex(
+            declared_signature,
+            field_name="signature",
+        )
+
+        unsigned_payload = self._unsigned_payload(
             payload
         )
 
-        integrity = self._integrity.verify(
-            protected_payload
+        self._verify_integrity(
+            unsigned_payload
+        )
+
+        actual_journal_hash = self._journal_hash(
+            unsigned_payload
         )
 
         if not hmac.compare_digest(
-            stored_journal_hash,
-            integrity.journal_hash,
+            declared_journal_hash,
+            actual_journal_hash,
         ):
             raise ValueError(
-                "Execution audit authentication journal hash "
-                "does not match the integrity seal."
+                "Execution audit authentication "
+                "journal hash does not match."
             )
 
         expected_signature = self._signature(
-            protected_payload,
-            key_id=key_id,
-            journal_hash=stored_journal_hash,
+            unsigned_payload
         )
 
         if not hmac.compare_digest(
-            stored_signature,
+            declared_signature,
             expected_signature,
         ):
             raise ValueError(
-                "Execution audit authentication signature "
-                "is invalid."
+                "Execution audit HMAC signature "
+                "does not match."
             )
 
         return ExecutionAuditAuthenticationVerification(
             version=version,
             algorithm=algorithm,
+            context=context,
             key_id=key_id,
-            journal_hash=stored_journal_hash,
-            signature=stored_signature,
+            journal_hash=declared_journal_hash,
+            signature=declared_signature,
         )
 
     def is_authenticated(
         self,
         payload: dict[str, Any],
     ) -> bool:
-        """Return whether a payload declares authentication."""
+        """Return whether a journal declares authentication."""
 
         return (
             isinstance(payload, dict)
             and isinstance(
-                payload.get(_AUTHENTICATION_FIELD),
+                payload.get(
+                    _AUTHENTICATION_FIELD
+                ),
                 dict,
             )
         )
 
+    def _verify_integrity(
+        self,
+        payload: dict[str, Any],
+    ) -> None:
+        """Require a valid SHA-256 integrity seal."""
+
+        verification = self._integrity.verify(
+            payload
+        )
+
+        if not verification.ok:
+            raise ValueError(
+                "Execution audit integrity "
+                "verification failed."
+            )
+
+    def _journal_hash(
+        self,
+        payload: dict[str, Any],
+    ) -> str:
+        """Read the verified journal hash."""
+
+        integrity = payload.get(
+            _INTEGRITY_FIELD
+        )
+
+        if not isinstance(
+            integrity,
+            dict,
+        ):
+            raise ValueError(
+                "Execution audit integrity metadata "
+                "is missing."
+            )
+
+        journal_hash = integrity.get(
+            "journal_hash"
+        )
+
+        self._require_sha256_hex(
+            journal_hash,
+            field_name="integrity journal hash",
+        )
+
+        return journal_hash
+
     def _signature(
         self,
         payload: dict[str, Any],
-        *,
-        key_id: str,
-        journal_hash: str,
     ) -> str:
-        """Calculate one deterministic HMAC signature."""
+        """Calculate the deterministic HMAC signature."""
 
         material = {
-            "context": AUDIT_AUTHENTICATION_CONTEXT,
             "version": AUDIT_AUTHENTICATION_VERSION,
             "algorithm": AUDIT_AUTHENTICATION_ALGORITHM,
-            "key_id": key_id,
-            "journal_hash": journal_hash,
+            "context": AUDIT_AUTHENTICATION_CONTEXT,
+            "key_id": self._key_id,
             "journal": payload,
         }
 
+        serialized = json.dumps(
+            material,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode(
+            "utf-8"
+        )
+
         return hmac.new(
             self._secret,
-            self._canonical_bytes(material),
+            serialized,
             hashlib.sha256,
         ).hexdigest()
 
-    @staticmethod
-    def _protected_payload(
+    def _unsigned_payload(
+        self,
         payload: dict[str, Any],
     ) -> dict[str, Any]:
-        """Return a copy without an authentication signature."""
+        """Return a copy without authentication metadata."""
 
         if not isinstance(payload, dict):
             raise ValueError(
-                "Execution audit payload must be a JSON object."
+                "Execution audit payload must be "
+                "a JSON object."
             )
 
-        protected_payload = copy.deepcopy(
+        unsigned_payload = copy.deepcopy(
             payload
         )
-        protected_payload.pop(
+
+        unsigned_payload.pop(
             _AUTHENTICATION_FIELD,
             None,
         )
 
-        return protected_payload
+        return unsigned_payload
 
-    @staticmethod
-    def _canonical_bytes(
-        value: Any,
-    ) -> bytes:
-        """Serialize JSON material deterministically."""
-
-        try:
-            serialized = json.dumps(
-                value,
-                sort_keys=True,
-                separators=(",", ":"),
-                ensure_ascii=False,
-                allow_nan=False,
-            )
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                "Execution audit authentication material "
-                "must be valid deterministic JSON."
-            ) from exc
-
-        return serialized.encode(
-            "utf-8"
-        )
-
-    @staticmethod
     def _normalize_secret(
+        self,
         secret: str | bytes,
     ) -> bytes:
-        """Validate and normalize secret key material."""
+        """Normalize secret material into bytes."""
 
         if isinstance(secret, str):
-            secret_bytes = secret.encode(
+            return secret.encode(
                 "utf-8"
             )
-        elif isinstance(secret, bytes):
-            secret_bytes = secret
-        else:
-            raise ValueError(
-                "Execution audit authentication secret "
-                "must be text or bytes."
+
+        if isinstance(secret, bytes):
+            return bytes(
+                secret
             )
 
-        if (
-            len(secret_bytes)
-            < AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES
-        ):
-            raise ValueError(
-                "Execution audit authentication secret "
-                "must contain at least "
-                f"{AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES} bytes."
-            )
-
-        return secret_bytes
-
-    @staticmethod
-    def _normalize_key_id(
-        key_id: str,
-    ) -> str:
-        """Validate one public key identifier."""
-
-        if not isinstance(key_id, str):
-            raise ValueError(
-                "Execution audit authentication key ID "
-                "must be text."
-            )
-
-        if not _KEY_ID_PATTERN.fullmatch(
-            key_id
-        ):
-            raise ValueError(
-                "Execution audit authentication key ID must "
-                "contain 1 to 128 letters, digits, dots, "
-                "underscores, colons, or hyphens."
-            )
-
-        return key_id
-
-    @staticmethod
-    def _required_key_id(
-        payload: dict[str, Any],
-    ) -> str:
-        """Read and validate one stored key identifier."""
-
-        key_id = payload.get(
-            "key_id"
+        raise ValueError(
+            "Execution audit HMAC secret must "
+            "be text or bytes."
         )
 
-        if (
-            not isinstance(key_id, str)
-            or not _KEY_ID_PATTERN.fullmatch(key_id)
-        ):
-            raise ValueError(
-                "Execution audit authentication key ID "
-                "is invalid."
-            )
-
-        return key_id
-
-    @staticmethod
-    def _required_sha256(
-        payload: dict[str, Any],
-        field: str,
-        context: str,
-    ) -> str:
-        """Read one strict lowercase SHA-256 hexadecimal value."""
-
-        value = payload.get(
-            field
-        )
+    def _require_sha256_hex(
+        self,
+        value: Any,
+        *,
+        field_name: str,
+    ) -> None:
+        """Require one lowercase 64-character SHA-256 value."""
 
         if (
             not isinstance(value, str)
-            or not _SHA256_PATTERN.fullmatch(value)
+            or len(value) != 64
+            or any(
+                character
+                not in "0123456789abcdef"
+                for character in value
+            )
         ):
             raise ValueError(
-                f"{context} field '{field}' must be a "
-                "lowercase SHA-256 hexadecimal value."
+                "Execution audit authentication "
+                f"{field_name} is invalid."
             )
-
-        return value

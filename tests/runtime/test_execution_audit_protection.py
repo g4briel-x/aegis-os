@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import copy
 from typing import Any
 
 import pytest
 
 from aegis_runtime.execution.audit_authentication import (
     ExecutionAuditAuthenticator,
+)
+from aegis_runtime.execution.audit_integrity import (
+    ExecutionAuditIntegrity,
 )
 from aegis_runtime.execution.audit_protection import (
     ExecutionAuditProtection,
@@ -17,6 +21,7 @@ _SECRET = (
     "0123456789abcdef"
     "0123456789abcdef"
 )
+
 _KEY_ID = "test-protection-key-v1"
 
 
@@ -24,21 +29,22 @@ def _audit_payload() -> dict[str, Any]:
     """Build one representative execution audit journal."""
 
     return {
-        "session_id": "session-test-protection",
-        "workspace_id": "workspace-test-protection",
+        "session_id": "session-protection-test",
+        "workspace_id": "workspace-protection-test",
         "target_asset_id": "security.review-api-security",
         "mode": "dry-run",
         "state": "completed",
-        "created_at": "2026-07-18T01:00:00+00:00",
-        "updated_at": "2026-07-18T01:02:00+00:00",
+        "created_at": "2026-07-23T02:00:00+00:00",
+        "updated_at": "2026-07-23T02:02:00+00:00",
         "event_count": 2,
+        "last_event_at": "2026-07-23T02:02:00+00:00",
         "events": [
             {
                 "event_id": "event-protection-0001",
                 "event_type": "session-loaded",
-                "session_id": "session-test-protection",
-                "workspace_id": "workspace-test-protection",
-                "timestamp": "2026-07-18T01:00:30+00:00",
+                "session_id": "session-protection-test",
+                "workspace_id": "workspace-protection-test",
+                "timestamp": "2026-07-23T02:00:30+00:00",
                 "actor": "test:protection",
                 "message": "Execution session loaded.",
                 "previous_state": None,
@@ -50,9 +56,9 @@ def _audit_payload() -> dict[str, Any]:
             {
                 "event_id": "event-protection-0002",
                 "event_type": "session-completed",
-                "session_id": "session-test-protection",
-                "workspace_id": "workspace-test-protection",
-                "timestamp": "2026-07-18T01:02:00+00:00",
+                "session_id": "session-protection-test",
+                "workspace_id": "workspace-protection-test",
+                "timestamp": "2026-07-23T02:02:00+00:00",
                 "actor": "test:protection",
                 "message": "Execution session completed.",
                 "previous_state": "plan-ready",
@@ -75,8 +81,30 @@ def _authenticated_protection() -> ExecutionAuditProtection:
     )
 
     return ExecutionAuditProtection(
-        authenticator=authenticator
+        authenticator=authenticator,
     )
+
+
+def test_seals_and_verifies_integrity_only_journal() -> None:
+    """Protection without a key applies SHA-256 only."""
+
+    protection = ExecutionAuditProtection()
+
+    protected = protection.seal(
+        _audit_payload()
+    )
+
+    verification = protection.verify(
+        protected
+    )
+
+    assert "integrity" in protected
+    assert "authentication" not in protected
+
+    assert verification.ok
+    assert not verification.authenticated
+    assert verification.authentication is None
+    assert verification.integrity.ok
 
 
 def test_seals_and_verifies_authenticated_journal() -> None:
@@ -87,6 +115,7 @@ def test_seals_and_verifies_authenticated_journal() -> None:
     protected = protection.seal(
         _audit_payload()
     )
+
     verification = protection.verify(
         protected
     )
@@ -101,89 +130,12 @@ def test_seals_and_verifies_authenticated_journal() -> None:
     assert verification.authentication.ok
     assert verification.authentication.key_id == _KEY_ID
 
-    payload = verification.to_dict()
+    serialized = verification.to_dict()
 
-    assert payload["ok"] is True
-    assert payload["authenticated"] is True
-    assert payload["integrity"]["ok"] is True
-    assert payload["authentication"]["ok"] is True
-
-
-def test_seals_and_verifies_integrity_only_journal() -> None:
-    """Protection without a key preserves SHA-256 compatibility."""
-
-    protection = ExecutionAuditProtection()
-
-    protected = protection.seal(
-        _audit_payload()
-    )
-    verification = protection.verify(
-        protected
-    )
-
-    assert "integrity" in protected
-    assert "authentication" not in protected
-
-    assert verification.ok
-    assert not verification.authenticated
-    assert verification.authentication is None
-
-
-def test_verify_requires_authentication_when_requested() -> None:
-    """An unsigned journal is rejected in mandatory HMAC mode."""
-
-    integrity_only = ExecutionAuditProtection()
-
-    protected = integrity_only.seal(
-        _audit_payload()
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="authentication is required",
-    ):
-        integrity_only.verify(
-            protected,
-            require_authentication=True,
-        )
-
-
-def test_verify_rejects_signed_journal_without_key() -> None:
-    """A signed journal cannot be authenticated without its key."""
-
-    signer = _authenticated_protection()
-    verifier = ExecutionAuditProtection()
-
-    protected = signer.seal(
-        _audit_payload()
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="no HMAC key is configured",
-    ):
-        verifier.verify(
-            protected
-        )
-
-
-def test_seal_rejects_authenticated_journal_without_key() -> None:
-    """An existing HMAC signature cannot be silently removed."""
-
-    signer = _authenticated_protection()
-    unsigned_protection = ExecutionAuditProtection()
-
-    protected = signer.seal(
-        _audit_payload()
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="cannot be replaced or removed",
-    ):
-        unsigned_protection.seal(
-            protected
-        )
+    assert serialized["ok"] is True
+    assert serialized["authenticated"] is True
+    assert serialized["integrity"]["ok"] is True
+    assert serialized["authentication"]["ok"] is True
 
 
 def test_authenticated_seal_is_deterministic() -> None:
@@ -195,12 +147,125 @@ def test_authenticated_seal_is_deterministic() -> None:
     first = protection.seal(
         payload
     )
+
     second = protection.seal(
         payload
     )
-    resealed = protection.seal(
+
+    repeated = protection.seal(
         first
     )
 
     assert first == second
-    assert resealed == first
+    assert repeated == first
+
+
+def test_configured_key_requires_authentication_by_default() -> None:
+    """Configured HMAC mode rejects an unsigned journal by default."""
+
+    integrity_only = ExecutionAuditIntegrity().seal(
+        _audit_payload()
+    )
+
+    protection = _authenticated_protection()
+
+    with pytest.raises(
+        ValueError,
+        match="authentication is required",
+    ):
+        protection.verify(
+            integrity_only
+        )
+
+
+def test_explicit_legacy_mode_allows_unsigned_journal() -> None:
+    """A valid legacy journal may be verified explicitly."""
+
+    integrity_only = ExecutionAuditIntegrity().seal(
+        _audit_payload()
+    )
+
+    protection = _authenticated_protection()
+
+    verification = protection.verify(
+        integrity_only,
+        require_authentication=False,
+    )
+
+    assert verification.ok
+    assert not verification.authenticated
+    assert verification.authentication is None
+
+
+def test_signed_journal_cannot_be_verified_without_key() -> None:
+    """A signed journal requires its HMAC key for verification."""
+
+    signed = _authenticated_protection().seal(
+        _audit_payload()
+    )
+
+    protection_without_key = ExecutionAuditProtection()
+
+    with pytest.raises(
+        ValueError,
+        match="no HMAC key is configured",
+    ):
+        protection_without_key.verify(
+            signed
+        )
+
+
+def test_signed_journal_cannot_be_resealed_without_key() -> None:
+    """Existing authentication cannot be silently removed."""
+
+    signed = _authenticated_protection().seal(
+        _audit_payload()
+    )
+
+    protection_without_key = ExecutionAuditProtection()
+
+    with pytest.raises(
+        ValueError,
+        match="cannot be replaced or removed",
+    ):
+        protection_without_key.seal(
+            signed
+        )
+
+
+def test_rejects_resealed_forged_authenticated_journal() -> None:
+    """Recalculated SHA-256 seals cannot recreate a valid HMAC."""
+
+    protection = _authenticated_protection()
+
+    authenticated = protection.seal(
+        _audit_payload()
+    )
+
+    forged = copy.deepcopy(
+        authenticated
+    )
+
+    original_authentication = forged.pop(
+        "authentication"
+    )
+
+    forged["events"][0]["message"] = (
+        "Forged execution event."
+    )
+
+    forged = ExecutionAuditIntegrity().seal(
+        forged
+    )
+
+    forged["authentication"] = (
+        original_authentication
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="journal hash does not match",
+    ):
+        protection.verify(
+            forged
+        )

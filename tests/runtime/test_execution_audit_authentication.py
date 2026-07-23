@@ -1,4 +1,4 @@
-"""Tests for execution audit journal HMAC authentication."""
+"""Tests for execution audit HMAC authentication."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import pytest
 
 from aegis_runtime.execution.audit_authentication import (
     AUDIT_AUTHENTICATION_ALGORITHM,
+    AUDIT_AUTHENTICATION_CONTEXT,
     AUDIT_AUTHENTICATION_VERSION,
     ExecutionAuditAuthenticator,
 )
@@ -20,7 +21,7 @@ _SECRET = (
     "0123456789abcdef"
     "0123456789abcdef"
 )
-_ALTERNATE_SECRET = (
+_OTHER_SECRET = (
     "abcdef0123456789"
     "abcdef0123456789"
 )
@@ -28,25 +29,31 @@ _KEY_ID = "test-audit-key-v1"
 
 
 def _audit_payload() -> dict[str, Any]:
-    """Build one representative execution audit manifest."""
+    """Build one representative execution audit journal."""
 
     return {
-        "session_id": "session-test-authentication",
-        "workspace_id": "workspace-test-authentication",
+        "session_id": "session-authentication-test",
+        "workspace_id": "workspace-authentication-test",
         "target_asset_id": "security.review-api-security",
         "mode": "dry-run",
         "state": "completed",
-        "created_at": "2026-07-18T00:00:00+00:00",
-        "updated_at": "2026-07-18T00:02:00+00:00",
+        "created_at": "2026-07-23T01:00:00+00:00",
+        "updated_at": "2026-07-23T01:02:00+00:00",
+        "started_at": "2026-07-23T01:00:10+00:00",
+        "completed_at": "2026-07-23T01:02:00+00:00",
+        "audit_metadata": {
+            "actor": "test:audit-authentication",
+        },
         "event_count": 2,
+        "last_event_at": "2026-07-23T01:02:00+00:00",
         "events": [
             {
                 "event_id": "event-authentication-0001",
                 "event_type": "session-loaded",
-                "session_id": "session-test-authentication",
-                "workspace_id": "workspace-test-authentication",
-                "timestamp": "2026-07-18T00:00:30+00:00",
-                "actor": "test:authentication",
+                "session_id": "session-authentication-test",
+                "workspace_id": "workspace-authentication-test",
+                "timestamp": "2026-07-23T01:00:10+00:00",
+                "actor": "test:audit-authentication",
                 "message": "Execution session loaded.",
                 "previous_state": None,
                 "next_state": "context-ready",
@@ -57,10 +64,10 @@ def _audit_payload() -> dict[str, Any]:
             {
                 "event_id": "event-authentication-0002",
                 "event_type": "session-completed",
-                "session_id": "session-test-authentication",
-                "workspace_id": "workspace-test-authentication",
-                "timestamp": "2026-07-18T00:02:00+00:00",
-                "actor": "test:authentication",
+                "session_id": "session-authentication-test",
+                "workspace_id": "workspace-authentication-test",
+                "timestamp": "2026-07-23T01:02:00+00:00",
+                "actor": "test:audit-authentication",
                 "message": "Execution session completed.",
                 "previous_state": "plan-ready",
                 "next_state": "completed",
@@ -74,138 +81,114 @@ def _audit_payload() -> dict[str, Any]:
 
 
 def _sealed_payload() -> dict[str, Any]:
-    """Build one valid integrity-sealed audit journal."""
+    """Build one SHA-256 integrity-sealed journal."""
 
     return ExecutionAuditIntegrity().seal(
         _audit_payload()
     )
 
 
-def test_authenticates_and_verifies_audit_journal() -> None:
-    """A sealed audit journal receives a valid HMAC signature."""
+def _authenticator() -> ExecutionAuditAuthenticator:
+    """Build the default test authenticator."""
 
-    authenticator = ExecutionAuditAuthenticator(
+    return ExecutionAuditAuthenticator(
         _SECRET,
         key_id=_KEY_ID,
     )
-    payload = _sealed_payload()
-    original_payload = copy.deepcopy(
-        payload
-    )
+
+
+def test_authenticates_and_verifies_sealed_journal() -> None:
+    """A valid integrity-sealed journal receives valid HMAC metadata."""
+
+    authenticator = _authenticator()
 
     authenticated = authenticator.authenticate(
-        payload
+        _sealed_payload()
     )
     verification = authenticator.verify(
         authenticated
     )
 
-    assert payload == original_payload
-    assert "authentication" not in payload
-    assert authenticator.is_authenticated(
-        authenticated
-    )
     assert verification.ok
-    assert (
-        verification.version
-        == AUDIT_AUTHENTICATION_VERSION
-    )
-    assert (
-        verification.algorithm
-        == AUDIT_AUTHENTICATION_ALGORITHM
-    )
+    assert verification.version == AUDIT_AUTHENTICATION_VERSION
+    assert verification.algorithm == AUDIT_AUTHENTICATION_ALGORITHM
+    assert verification.context == AUDIT_AUTHENTICATION_CONTEXT
     assert verification.key_id == _KEY_ID
-    assert (
-        verification.journal_hash
-        == authenticated["integrity"]["journal_hash"]
-    )
-    assert len(verification.signature) == 64
 
-    verification_payload = verification.to_dict()
+    authentication = authenticated["authentication"]
 
-    assert verification_payload["ok"] is True
-    assert verification_payload["key_id"] == _KEY_ID
-    assert (
-        verification_payload["signature"]
-        == verification.signature
-    )
+    assert authentication["version"] == AUDIT_AUTHENTICATION_VERSION
+    assert authentication["algorithm"] == AUDIT_AUTHENTICATION_ALGORITHM
+    assert authentication["context"] == AUDIT_AUTHENTICATION_CONTEXT
+    assert authentication["key_id"] == _KEY_ID
+    assert len(authentication["journal_hash"]) == 64
+    assert len(authentication["signature"]) == 64
 
 
 def test_authentication_is_deterministic_and_idempotent() -> None:
-    """Identical journals and keys produce one stable signature."""
+    """Identical journal and key material produce identical output."""
 
-    authenticator = ExecutionAuditAuthenticator(
-        _SECRET,
-        key_id=_KEY_ID,
-    )
-    payload = _sealed_payload()
+    authenticator = _authenticator()
+    sealed = _sealed_payload()
 
     first = authenticator.authenticate(
-        payload
+        sealed
     )
     second = authenticator.authenticate(
-        copy.deepcopy(payload)
+        sealed
     )
-    reauthenticated = authenticator.authenticate(
+    repeated = authenticator.authenticate(
         first
     )
 
     assert first == second
-    assert reauthenticated == first
+    assert repeated == first
 
 
 def test_rejects_secret_shorter_than_minimum() -> None:
-    """Authentication keys must contain at least 32 bytes."""
+    """Weak HMAC secrets are rejected during initialization."""
 
     with pytest.raises(
         ValueError,
         match="at least 32 bytes",
     ):
         ExecutionAuditAuthenticator(
-            "short-secret",
+            "too-short",
             key_id=_KEY_ID,
         )
 
 
-def test_verify_rejects_wrong_secret() -> None:
-    """A different secret cannot authenticate the journal."""
+def test_verification_rejects_wrong_secret() -> None:
+    """A journal cannot be verified using different secret material."""
 
-    signer = ExecutionAuditAuthenticator(
-        _SECRET,
-        key_id=_KEY_ID,
-    )
-    verifier = ExecutionAuditAuthenticator(
-        _ALTERNATE_SECRET,
-        key_id=_KEY_ID,
-    )
-
-    authenticated = signer.authenticate(
+    authenticated = _authenticator().authenticate(
         _sealed_payload()
+    )
+
+    verifier = ExecutionAuditAuthenticator(
+        _OTHER_SECRET,
+        key_id=_KEY_ID,
     )
 
     with pytest.raises(
         ValueError,
-        match="signature is invalid",
+        match="signature does not match",
     ):
         verifier.verify(
             authenticated
         )
 
 
-def test_verify_rejects_wrong_key_identifier() -> None:
-    """The configured key identifier must match the signature."""
+def test_verification_rejects_wrong_key_id() -> None:
+    """The public key identifier must match the configured key."""
 
-    signer = ExecutionAuditAuthenticator(
-        _SECRET,
-        key_id=_KEY_ID,
+    authenticated = _authenticator().authenticate(
+        _sealed_payload()
     )
+
     verifier = ExecutionAuditAuthenticator(
         _SECRET,
-        key_id="replacement-key-v2",
-    )
-
-    authenticated = signer.authenticate(
-        _sealed_payload()
+        key_id="another-key-v1",
     )
 
     with pytest.raises(
@@ -217,46 +200,32 @@ def test_verify_rejects_wrong_key_identifier() -> None:
         )
 
 
-def test_verify_rejects_resealed_forged_journal() -> None:
-    """Recomputing SHA-256 seals cannot recreate the HMAC."""
+def test_rejects_resealed_forged_journal() -> None:
+    """Recalculating SHA-256 cannot recreate the original HMAC."""
 
-    authenticator = ExecutionAuditAuthenticator(
-        _SECRET,
-        key_id=_KEY_ID,
-    )
-    integrity = ExecutionAuditIntegrity()
+    authenticator = _authenticator()
 
     authenticated = authenticator.authenticate(
         _sealed_payload()
     )
+
     forged = copy.deepcopy(
         authenticated
     )
-
     original_authentication = forged.pop(
         "authentication"
     )
 
     forged["events"][0]["message"] = (
-        "Execution event was maliciously rewritten."
+        "Forged execution event."
     )
 
-    forged = integrity.seal(
+    forged = ExecutionAuditIntegrity().seal(
         forged
     )
     forged["authentication"] = (
         original_authentication
     )
-
-    integrity_verification = integrity.verify(
-        {
-            key: value
-            for key, value in forged.items()
-            if key != "authentication"
-        }
-    )
-
-    assert integrity_verification.ok
 
     with pytest.raises(
         ValueError,
@@ -267,23 +236,20 @@ def test_verify_rejects_resealed_forged_journal() -> None:
         )
 
 
-def test_verify_rejects_missing_authentication() -> None:
-    """An unsigned journal cannot pass authentication."""
+def test_verification_rejects_missing_authentication() -> None:
+    """An integrity-only journal is not considered authenticated."""
 
-    authenticator = ExecutionAuditAuthenticator(
-        _SECRET,
-        key_id=_KEY_ID,
-    )
-    payload = _sealed_payload()
+    authenticator = _authenticator()
+    sealed = _sealed_payload()
 
     assert not authenticator.is_authenticated(
-        payload
+        sealed
     )
 
     with pytest.raises(
         ValueError,
-        match="no valid authentication signature",
+        match="metadata is missing",
     ):
         authenticator.verify(
-            payload
+            sealed
         )

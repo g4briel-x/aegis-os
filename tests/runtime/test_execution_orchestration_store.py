@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 
 from aegis_runtime.execution import (
+    ExecutionAuditAuthenticator,
+    ExecutionAuditProtection,
     ExecutionContract,
     ExecutionContractType,
     ExecutionInput,
@@ -27,6 +29,14 @@ from aegis_runtime.execution.orchestrator import (
 from aegis_runtime.execution.session_loader import (
     ExecutionSessionLoader,
 )
+
+
+_AUDIT_HMAC_SECRET = (
+    "0123456789abcdef"
+    "0123456789abcdef"
+)
+
+_AUDIT_HMAC_KEY_ID = "test-orchestration-store-key-v1"
 
 
 def build_contract() -> ExecutionContract:
@@ -259,6 +269,128 @@ def test_store_persists_dry_run_orchestration(
         integrity["root_hash"]
         == integrity["entries"][-1]["event_hash"]
     )
+
+def test_store_resigns_authenticated_audit_manifest(
+    tmp_path: Path,
+) -> None:
+    """Orchestration must verify and resign an authenticated journal."""
+
+    build_result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.PLAN,
+        parameters={
+            "scope": "authenticated-api",
+        },
+    )
+
+    assert build_result.ok
+
+    authenticator = ExecutionAuditAuthenticator(
+        _AUDIT_HMAC_SECRET,
+        key_id=_AUDIT_HMAC_KEY_ID,
+    )
+
+    protection = ExecutionAuditProtection(
+        authenticator=authenticator,
+    )
+
+    workspace_store = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+        audit_protection=protection,
+    )
+
+    persisted_workspace = workspace_store.persist(
+        build_result
+    )
+
+    initial_serialized_audit = (
+        persisted_workspace.audit_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    initial_audit = json.loads(
+        initial_serialized_audit
+    )
+
+    initial_verification = protection.verify(
+        initial_audit
+    )
+
+    assert initial_verification.ok
+    assert initial_verification.authenticated
+
+    initial_signature = initial_audit[
+        "authentication"
+    ]["signature"]
+
+    initial_journal_hash = initial_audit[
+        "authentication"
+    ]["journal_hash"]
+
+    record = workspace_store.load(
+        build_result.workspace.workspace_id
+    )
+
+    session = ExecutionSessionLoader().load(
+        record
+    )
+
+    orchestration_result = (
+        ExecutionOrchestrator().orchestrate(
+            session
+        )
+    )
+
+    persisted = ExecutionOrchestrationStore(
+        audit_protection=protection,
+    ).persist(
+        record=record,
+        result=orchestration_result,
+    )
+
+    final_serialized_audit = (
+        persisted.audit_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    final_audit = json.loads(
+        final_serialized_audit
+    )
+
+    final_verification = protection.verify(
+        final_audit
+    )
+
+    assert final_verification.ok
+    assert final_verification.authenticated
+    assert final_verification.authentication is not None
+
+    assert (
+        final_verification.authentication.key_id
+        == _AUDIT_HMAC_KEY_ID
+    )
+
+    assert final_audit["event_count"] == 3
+    assert len(final_audit["events"]) == 3
+
+    assert (
+        final_audit["authentication"]["journal_hash"]
+        == final_audit["integrity"]["journal_hash"]
+    )
+
+    assert (
+        final_audit["authentication"]["journal_hash"]
+        != initial_journal_hash
+    )
+
+    assert (
+        final_audit["authentication"]["signature"]
+        != initial_signature
+    )
+
+    assert _AUDIT_HMAC_SECRET not in final_serialized_audit
 
 
 def test_store_rejects_tampered_existing_audit_manifest(

@@ -176,13 +176,17 @@ class ExecutionAuditProtection:
         declares_authentication = (
             _AUTHENTICATION_FIELD in payload
         )
+
         authentication_payload = payload.get(
             _AUTHENTICATION_FIELD
         )
 
         if (
             declares_authentication
-            and not isinstance(authentication_payload, dict)
+            and not isinstance(
+                authentication_payload,
+                dict,
+            )
         ):
             raise ValueError(
                 "Execution audit authentication metadata "

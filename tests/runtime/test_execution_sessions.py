@@ -5,12 +5,20 @@ from pathlib import Path
 import json
 import pytest
 
+_AUDIT_HMAC_SECRET = (
+    "0123456789abcdef"
+    "0123456789abcdef"
+)
+
+_AUDIT_HMAC_KEY_ID = "test-workspace-store-key-v1"
 
 from aegis_runtime.execution.workspace_store import (
     ExecutionWorkspaceStore,
 )
 
 from aegis_runtime.execution import (
+    ExecutionAuditAuthenticator,
+    ExecutionAuditProtection,
     ExecutionContext,
     ExecutionContract,
     ExecutionContractType,
@@ -405,6 +413,72 @@ def test_workspace_store_persists_session_manifests(
         == result.session.session_id
     )
     assert audit_payload["state"] == "context-ready"
+
+def test_workspace_store_authenticates_initial_audit_manifest(
+    tmp_path: Path,
+) -> None:
+    """A configured HMAC key must authenticate the initial journal."""
+
+    result = ExecutionSessionBuilder().build(
+        contract=build_contract(),
+        mode=ExecutionMode.DRY_RUN,
+        parameters={
+            "scope": "authenticated-api",
+        },
+    )
+
+    authenticator = ExecutionAuditAuthenticator(
+        _AUDIT_HMAC_SECRET,
+        key_id=_AUDIT_HMAC_KEY_ID,
+    )
+
+    protection = ExecutionAuditProtection(
+        authenticator=authenticator,
+    )
+
+    persisted = ExecutionWorkspaceStore(
+        repo_root=tmp_path,
+        audit_protection=protection,
+    ).persist(
+        result
+    )
+
+    serialized_audit = (
+        persisted.audit_manifest.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    audit_payload = json.loads(
+        serialized_audit
+    )
+
+    verification = protection.verify(
+        audit_payload
+    )
+
+    assert verification.ok
+    assert verification.authenticated
+    assert verification.authentication is not None
+    assert (
+        verification.authentication.key_id
+        == _AUDIT_HMAC_KEY_ID
+    )
+
+    assert "integrity" in audit_payload
+    assert "authentication" in audit_payload
+
+    assert (
+        audit_payload["authentication"]["key_id"]
+        == _AUDIT_HMAC_KEY_ID
+    )
+
+    assert (
+        audit_payload["authentication"]["journal_hash"]
+        == audit_payload["integrity"]["journal_hash"]
+    )
+
+    assert _AUDIT_HMAC_SECRET not in serialized_audit
 
 def test_workspace_store_rejects_duplicate_persistence(
     tmp_path: Path,

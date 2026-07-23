@@ -1,4 +1,4 @@
-"""Tests for execution audit authentication configuration."""
+"""Tests for execution audit HMAC configuration."""
 
 from __future__ import annotations
 
@@ -6,9 +6,6 @@ from pathlib import Path
 
 import pytest
 
-from aegis_runtime.execution.audit_authentication import (
-    AUDIT_AUTHENTICATION_ALGORITHM,
-)
 from aegis_runtime.execution.audit_authentication_config import (
     AUDIT_HMAC_DEFAULT_KEY_ID,
     AUDIT_HMAC_KEY_ID_ENV,
@@ -22,91 +19,76 @@ _SECRET = (
     "0123456789abcdef"
 )
 
+_KEY_ID = "test-configuration-key-v1"
 
-def test_resolves_secret_from_environment() -> None:
-    """A direct environment secret produces valid configuration."""
 
-    environment = {
-        AUDIT_HMAC_SECRET_ENV: _SECRET,
-        AUDIT_HMAC_KEY_ID_ENV: "environment-key-v1",
-    }
+def test_loads_secret_from_environment() -> None:
+    """Direct environment configuration builds an authenticator."""
 
     config = (
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
+            environ={
+                AUDIT_HMAC_SECRET_ENV: _SECRET,
+                AUDIT_HMAC_KEY_ID_ENV: _KEY_ID,
+            },
         )
     )
 
     assert config is not None
     assert config.secret == _SECRET.encode("utf-8")
-    assert config.key_id == "environment-key-v1"
-    assert config.source == AUDIT_HMAC_SECRET_ENV
+    assert config.key_id == _KEY_ID
+    assert config.source == (
+        f"environment:{AUDIT_HMAC_SECRET_ENV}"
+    )
 
-    metadata = config.to_dict()
+    authenticator = config.build_authenticator()
 
-    assert metadata == {
-        "enabled": True,
-        "algorithm": AUDIT_AUTHENTICATION_ALGORITHM,
-        "key_id": "environment-key-v1",
-        "source": AUDIT_HMAC_SECRET_ENV,
-    }
-    assert "secret" not in metadata
-    assert _SECRET not in repr(config)
+    assert authenticator.key_id == _KEY_ID
 
 
-def test_resolves_secret_from_relative_file(
+def test_loads_secret_from_relative_file(
     tmp_path: Path,
 ) -> None:
-    """A relative secret file is resolved from the working directory."""
+    """A relative secret-file path resolves from the working directory."""
 
-    secret_path = (
-        tmp_path
-        / "secrets"
-        / "audit-hmac.key"
-    )
-    secret_path.parent.mkdir(
-        parents=True
-    )
-    secret_path.write_bytes(
-        _SECRET.encode("utf-8")
-        + b"\r\n"
-    )
+    secret_file = tmp_path / "secrets" / "audit.key"
+    secret_file.parent.mkdir(parents=True)
 
-    environment = {
-        AUDIT_HMAC_SECRET_FILE_ENV: (
-            "secrets/audit-hmac.key"
-        ),
-        AUDIT_HMAC_KEY_ID_ENV: "file-key-v1",
-    }
+    secret_file.write_bytes(
+        _SECRET.encode("utf-8") + b"\r\n"
+    )
 
     config = (
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
+            environ={
+                AUDIT_HMAC_SECRET_FILE_ENV: (
+                    "secrets/audit.key"
+                ),
+                AUDIT_HMAC_KEY_ID_ENV: _KEY_ID,
+            },
             working_directory=tmp_path,
         )
     )
 
     assert config is not None
     assert config.secret == _SECRET.encode("utf-8")
-    assert config.key_id == "file-key-v1"
-    assert config.source == str(
-        secret_path.resolve()
+    assert config.key_id == _KEY_ID
+    assert config.source == (
+        f"file:{secret_file.resolve()}"
     )
 
 
-def test_uses_default_key_identifier() -> None:
-    """The default key identifier is used when none is supplied."""
-
-    environment = {
-        AUDIT_HMAC_SECRET_ENV: _SECRET,
-    }
+def test_uses_default_key_id() -> None:
+    """Missing public key ID uses the documented default."""
 
     config = (
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
+            environ={
+                AUDIT_HMAC_SECRET_ENV: _SECRET,
+            },
         )
     )
 
@@ -114,8 +96,8 @@ def test_uses_default_key_identifier() -> None:
     assert config.key_id == AUDIT_HMAC_DEFAULT_KEY_ID
 
 
-def test_returns_none_when_authentication_is_optional() -> None:
-    """Missing configuration is accepted in optional mode."""
+def test_optional_configuration_returns_none() -> None:
+    """No configured secret is allowed in optional mode."""
 
     config = (
         ExecutionAuditAuthenticationConfig.from_environment(
@@ -127,12 +109,12 @@ def test_returns_none_when_authentication_is_optional() -> None:
     assert config is None
 
 
-def test_rejects_missing_required_configuration() -> None:
-    """Required authentication needs an environment or file secret."""
+def test_required_configuration_rejects_missing_secret() -> None:
+    """Mandatory HMAC mode requires secret material."""
 
     with pytest.raises(
         ValueError,
-        match="authentication is required",
+        match="no secret is configured",
     ):
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
@@ -143,28 +125,26 @@ def test_rejects_missing_required_configuration() -> None:
 def test_rejects_ambiguous_secret_sources(
     tmp_path: Path,
 ) -> None:
-    """Direct and file-based secrets cannot be enabled together."""
+    """Direct and file-based secrets cannot be configured together."""
 
-    secret_path = tmp_path / "audit-hmac.key"
-    secret_path.write_text(
+    secret_file = tmp_path / "audit.key"
+    secret_file.write_text(
         _SECRET,
         encoding="utf-8",
     )
 
-    environment = {
-        AUDIT_HMAC_SECRET_ENV: _SECRET,
-        AUDIT_HMAC_SECRET_FILE_ENV: str(
-            secret_path
-        ),
-    }
-
     with pytest.raises(
         ValueError,
-        match="not both",
+        match="configured from both",
     ):
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
+            environ={
+                AUDIT_HMAC_SECRET_ENV: _SECRET,
+                AUDIT_HMAC_SECRET_FILE_ENV: str(
+                    secret_file
+                ),
+            },
         )
 
 
@@ -173,29 +153,24 @@ def test_rejects_missing_secret_file(
 ) -> None:
     """A configured secret file must exist."""
 
-    environment = {
-        AUDIT_HMAC_SECRET_FILE_ENV: (
-            "missing-audit-hmac.key"
-        ),
-    }
+    missing_file = tmp_path / "missing.key"
 
     with pytest.raises(
         FileNotFoundError,
-        match="secret file does not exist",
+        match="does not exist",
     ):
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
-            working_directory=tmp_path,
+            environ={
+                AUDIT_HMAC_SECRET_FILE_ENV: str(
+                    missing_file
+                ),
+            },
         )
 
 
-def test_rejects_short_secret_from_environment() -> None:
-    """Environment secrets must satisfy the minimum key length."""
-
-    environment = {
-        AUDIT_HMAC_SECRET_ENV: "short-secret",
-    }
+def test_rejects_short_secret() -> None:
+    """Configuration preserves minimum HMAC key-length enforcement."""
 
     with pytest.raises(
         ValueError,
@@ -203,5 +178,38 @@ def test_rejects_short_secret_from_environment() -> None:
     ):
         ExecutionAuditAuthenticationConfig.from_environment(
             required=True,
-            environ=environment,
+            environ={
+                AUDIT_HMAC_SECRET_ENV: "too-short",
+            },
         )
+
+
+def test_public_serialization_does_not_expose_secret() -> None:
+    """Serialized configuration contains no secret material."""
+
+    config = (
+        ExecutionAuditAuthenticationConfig.from_environment(
+            required=True,
+            environ={
+                AUDIT_HMAC_SECRET_ENV: _SECRET,
+                AUDIT_HMAC_KEY_ID_ENV: _KEY_ID,
+            },
+        )
+    )
+
+    assert config is not None
+
+    payload = config.to_dict()
+    representation = repr(config)
+
+    assert payload == {
+        "configured": True,
+        "key_id": _KEY_ID,
+        "source": (
+            f"environment:{AUDIT_HMAC_SECRET_ENV}"
+        ),
+    }
+
+    assert "secret" not in payload
+    assert _SECRET not in representation
+    assert _SECRET not in str(payload)

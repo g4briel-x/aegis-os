@@ -1,4 +1,4 @@
-"""Configuration discovery for execution audit authentication."""
+"""Configuration for execution audit HMAC authentication."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any, Self
 
 from .audit_authentication import (
-    AUDIT_AUTHENTICATION_ALGORITHM,
     ExecutionAuditAuthenticator,
 )
 
@@ -21,7 +20,7 @@ AUDIT_HMAC_DEFAULT_KEY_ID = "default"
 
 @dataclass(slots=True, frozen=True)
 class ExecutionAuditAuthenticationConfig:
-    """Resolved non-persistent audit authentication settings."""
+    """Resolved non-persistent HMAC authentication configuration."""
 
     secret: bytes = field(
         repr=False
@@ -30,26 +29,54 @@ class ExecutionAuditAuthenticationConfig:
     source: str
 
     def __post_init__(self) -> None:
-        """Validate resolved authentication settings."""
+        """Normalize and validate the resolved configuration."""
 
-        if not isinstance(self.secret, bytes):
+        if not isinstance(
+            self.secret,
+            bytes,
+        ):
             raise ValueError(
-                "Execution audit authentication secret "
+                "Execution audit HMAC secret "
                 "must be bytes."
             )
 
-        if (
-            not isinstance(self.source, str)
-            or not self.source.strip()
-        ):
+        normalized_secret = bytes(
+            self.secret
+        )
+        normalized_key_id = (
+            self.key_id.strip()
+        )
+        normalized_source = (
+            self.source.strip()
+        )
+
+        if not normalized_source:
             raise ValueError(
-                "Execution audit authentication source "
-                "must be non-empty text."
+                "Execution audit HMAC configuration "
+                "source cannot be empty."
             )
 
+        # Construction performs the minimum secret-length
+        # and key-ID validation in one central location.
         ExecutionAuditAuthenticator(
-            self.secret,
-            key_id=self.key_id,
+            normalized_secret,
+            key_id=normalized_key_id,
+        )
+
+        object.__setattr__(
+            self,
+            "secret",
+            normalized_secret,
+        )
+        object.__setattr__(
+            self,
+            "key_id",
+            normalized_key_id,
+        )
+        object.__setattr__(
+            self,
+            "source",
+            normalized_source,
         )
 
     @classmethod
@@ -60,7 +87,7 @@ class ExecutionAuditAuthenticationConfig:
         environ: Mapping[str, str] | None = None,
         working_directory: Path | str | None = None,
     ) -> Self | None:
-        """Resolve authentication configuration from environment."""
+        """Resolve HMAC configuration from environment settings."""
 
         environment = (
             os.environ
@@ -74,47 +101,53 @@ class ExecutionAuditAuthenticationConfig:
         secret_file_value = environment.get(
             AUDIT_HMAC_SECRET_FILE_ENV
         )
-        key_id_value = environment.get(
-            AUDIT_HMAC_KEY_ID_ENV,
-            AUDIT_HMAC_DEFAULT_KEY_ID,
-        )
 
-        has_direct_secret = (
+        direct_secret_configured = (
             direct_secret is not None
             and direct_secret != ""
         )
-        has_secret_file = (
+
+        secret_file_configured = (
             secret_file_value is not None
-            and bool(secret_file_value.strip())
+            and bool(
+                secret_file_value.strip()
+            )
         )
 
-        if has_direct_secret and has_secret_file:
+        if (
+            direct_secret_configured
+            and secret_file_configured
+        ):
             raise ValueError(
-                "Execution audit authentication must use "
-                f"either {AUDIT_HMAC_SECRET_ENV} or "
-                f"{AUDIT_HMAC_SECRET_FILE_ENV}, not both."
+                "Execution audit HMAC secret cannot be "
+                "configured from both "
+                f"{AUDIT_HMAC_SECRET_ENV} and "
+                f"{AUDIT_HMAC_SECRET_FILE_ENV}."
             )
 
-        if not has_direct_secret and not has_secret_file:
+        if (
+            not direct_secret_configured
+            and not secret_file_configured
+        ):
             if required:
                 raise ValueError(
-                    "Execution audit authentication is required. "
-                    f"Set {AUDIT_HMAC_SECRET_ENV} or "
-                    f"{AUDIT_HMAC_SECRET_FILE_ENV}."
+                    "Execution audit HMAC authentication "
+                    "is required, but no secret is configured."
                 )
 
             return None
 
-        key_id = (
-            key_id_value.strip()
-            if isinstance(key_id_value, str)
-            else ""
+        raw_key_id = environment.get(
+            AUDIT_HMAC_KEY_ID_ENV
         )
 
-        if not key_id:
-            key_id = AUDIT_HMAC_DEFAULT_KEY_ID
+        key_id = (
+            AUDIT_HMAC_DEFAULT_KEY_ID
+            if raw_key_id is None
+            else raw_key_id
+        )
 
-        if has_direct_secret:
+        if direct_secret_configured:
             assert direct_secret is not None
 
             return cls(
@@ -122,29 +155,56 @@ class ExecutionAuditAuthenticationConfig:
                     "utf-8"
                 ),
                 key_id=key_id,
-                source=AUDIT_HMAC_SECRET_ENV,
+                source=(
+                    "environment:"
+                    f"{AUDIT_HMAC_SECRET_ENV}"
+                ),
             )
 
         assert secret_file_value is not None
 
-        secret_path = cls._resolve_secret_path(
-            secret_file_value,
-            working_directory=working_directory,
-        )
-        secret = cls._read_secret_file(
-            secret_path
+        base_directory = (
+            Path.cwd()
+            if working_directory is None
+            else Path(
+                working_directory
+            )
+        ).resolve()
+
+        secret_file = Path(
+            secret_file_value.strip()
+        ).expanduser()
+
+        if not secret_file.is_absolute():
+            secret_file = (
+                base_directory
+                / secret_file
+            )
+
+        secret_file = secret_file.resolve()
+
+        if not secret_file.is_file():
+            raise FileNotFoundError(
+                "Execution audit HMAC secret file "
+                f"does not exist: {secret_file}"
+            )
+
+        # Only trailing line endings are removed.
+        # Other bytes remain part of the secret.
+        secret = secret_file.read_bytes().rstrip(
+            b"\r\n"
         )
 
         return cls(
             secret=secret,
             key_id=key_id,
-            source=str(secret_path),
+            source=f"file:{secret_file}",
         )
 
     def build_authenticator(
         self,
     ) -> ExecutionAuditAuthenticator:
-        """Build an authenticator from the resolved secret."""
+        """Build an authenticator from the resolved configuration."""
 
         return ExecutionAuditAuthenticator(
             self.secret,
@@ -155,63 +215,7 @@ class ExecutionAuditAuthenticationConfig:
         """Serialize only non-secret configuration metadata."""
 
         return {
-            "enabled": True,
-            "algorithm": AUDIT_AUTHENTICATION_ALGORITHM,
+            "configured": True,
             "key_id": self.key_id,
             "source": self.source,
         }
-
-    @staticmethod
-    def _resolve_secret_path(
-        value: str,
-        *,
-        working_directory: Path | str | None,
-    ) -> Path:
-        """Resolve one secret file path safely."""
-
-        path = Path(
-            value.strip()
-        ).expanduser()
-
-        if not path.is_absolute():
-            base = (
-                Path(working_directory)
-                if working_directory is not None
-                else Path.cwd()
-            )
-
-            path = base / path
-
-        path = path.resolve()
-
-        if not path.exists():
-            raise FileNotFoundError(
-                "Execution audit authentication secret "
-                f"file does not exist: {path}"
-            )
-
-        if not path.is_file():
-            raise ValueError(
-                "Execution audit authentication secret "
-                f"path is not a file: {path}"
-            )
-
-        return path
-
-    @staticmethod
-    def _read_secret_file(
-        path: Path,
-    ) -> bytes:
-        """Read secret bytes without retaining a trailing newline."""
-
-        try:
-            secret = path.read_bytes()
-        except OSError as exc:
-            raise OSError(
-                "Unable to read execution audit "
-                f"authentication secret file: {path}"
-            ) from exc
-
-        return secret.rstrip(
-            b"\r\n"
-        )

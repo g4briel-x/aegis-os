@@ -8,7 +8,8 @@ Aegis OS is currently in foundation development.
 
 | Version | Supported |
 |---|---|
-| v0.7.x | Yes |
+| v0.8.x | Yes |
+| v0.7.x | No |
 | Earlier versions | No |
 
 ---
@@ -61,15 +62,18 @@ incomplete future roadmap items
 
 ## Current Security Model
 
-Aegis OS v0.7 focuses on:
+Aegis OS v0.8 focuses on:
 
 ```text
 repository structure
-validation
+strict registry validation
 traceability
-manual review
+authenticated audit records
+audit tamper detection and protection
+safe plugin manifest discovery
+package verification
 CLI transparency
-GitHub workflow checks
+multiplatform GitHub workflow checks
 ```
 
 Future versions should include stronger controls for:
@@ -79,7 +83,6 @@ signed packages
 asset verification
 permission policies
 runtime sandboxing
-audit logs
 role-based access
 ```
 

@@ -207,7 +207,7 @@ releases:
   - id: release.0.7.0
     name: Aegis OS v0.7.0 Python Runtime Consolidation
     version: 0.7.0
-    status: active
+    status: superseded
     maturity: usable
     release_type: runtime-consolidation
     owner: aegis-os
@@ -239,6 +239,50 @@ releases:
       - Adds project info, documentation catalog, release status and safe skill generation commands.
       - Runs the full Python quality gate on Linux, Windows and macOS.
       - Retires the legacy shell-specific command and automation layer.
+
+  - id: release.0.8.0
+    name: Aegis OS v0.8.0 Runtime Trust and Distribution
+    version: 0.8.0
+    status: active
+    maturity: usable
+    release_type: runtime-trust-distribution
+    owner: aegis-os
+    summary: Strengthens runtime trust, registry operations, plugin discovery and cross-platform package distribution.
+    scope:
+      - authenticated audit records
+      - audit integrity and protection
+      - strict registry schema validation
+      - advanced asset search
+      - deterministic registry exports
+      - declarative plugin manifests
+      - verified Python package distribution
+    included_assets:
+      - docs.runtime-overview
+      - docs.runtime-cli-commands
+      - docs.runtime-validation-model
+      - docs.execution-overview
+      - docs.execution-cli-commands
+      - cli.runtime-commands
+      - cli.execution-commands
+      - registry.releases
+    completion_status:
+      audit_authentication: complete
+      audit_protection: complete
+      schema_validation: complete
+      asset_search: complete
+      registry_exports: complete
+      plugin_foundation: complete
+      package_distribution: complete
+      multiplatform_ci: complete
+      regression_tests: complete
+    release_notes:
+      - Adds configurable HMAC authentication and verification for audit records.
+      - Adds strict schema and repository path-safety validation.
+      - Adds advanced filtered asset search.
+      - Adds deterministic JSON and Markdown registry exports.
+      - Adds safe declarative plugin manifest discovery.
+      - Adds verified wheel and source-distribution build workflows.
+      - Passes 143 runtime and repository regression tests.
 
   - id: release.1.0.0
     name: Aegis OS v1.0.0 Usable Framework

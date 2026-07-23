@@ -11,12 +11,30 @@ Versioning follows semantic milestone releases.
 
 ## [Unreleased]
 
+No unreleased changes.
+
+---
+
+## [0.8.0] — Runtime Trust & Distribution — 2026-07-23
+
 ### Added
 
-- deterministic JSON and Markdown registry exports through
-  `aegis export registry`;
+- configurable HMAC authentication, verification and protection for audit records;
+- advanced asset search with query, domain, type, tag and result-limit filters;
+- deterministic JSON and Markdown registry exports;
 - selectable exports for assets, domains, tags and releases;
-- protected file output that requires `--force` before overwriting an export.
+- protected export output requiring `--force` before overwriting files;
+- declarative discovery and validation of `aegis-plugin.yaml` manifests without
+  importing or executing plugin code;
+- verified wheel and source-distribution build workflows.
+
+### Changed
+
+- added strict registry schema validation and repository path-safety checks;
+- strengthened audit integrity, workspace persistence and orchestration storage;
+- normalized exported source paths across Windows, Linux and macOS;
+- expanded multiplatform CI and package verification;
+- expanded the runtime regression suite to 143 tests.
 
 ---
 

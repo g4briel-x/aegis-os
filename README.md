@@ -23,6 +23,7 @@ aegis --repo-root . status
 aegis --repo-root . registry list
 aegis --repo-root . docs list
 aegis --repo-root . asset find security
+aegis --repo-root . asset search security --domain security --type skill --tag security
 aegis --repo-root . asset show security.review-api-security
 aegis --repo-root . plugin list
 ```
@@ -31,12 +32,15 @@ aegis --repo-root . plugin list
 
 ```console
 python -m pytest tests/runtime
-aegis --repo-root . validate --strict-related
+aegis --repo-root . validate --strict-related --strict-schema
 aegis --repo-root . doctor --skip-reports
 aegis --repo-root . report generate all
 ```
 
 The GitHub workflow repeats these checks on Linux, Windows and macOS.
+
+`--strict-schema` validates registry metadata and YAML entry collections. It
+also detects paths that resolve outside the repository.
 
 ## Plugin manifests
 
@@ -64,6 +68,19 @@ aegis --repo-root . generate skills --definitions path/to/new-definitions
 
 Generation refuses to overwrite tracked files. Pass `--force` only after
 reviewing the target skill.
+
+## Export the registry
+
+```console
+# Print every catalog section as deterministic JSON.
+aegis --repo-root . export registry
+
+# Write a Markdown catalog. Existing files require --force to overwrite.
+aegis --repo-root . export registry --format markdown --output exports/catalog.md
+
+# Export selected sections only.
+aegis --repo-root . export registry --section assets --section releases
+```
 
 ## Execute an asset
 

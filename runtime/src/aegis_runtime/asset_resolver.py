@@ -28,13 +28,37 @@ class AssetResolver:
         return asset
 
     def find(self, query: str) -> list[Asset]:
-        normalized = query.strip().lower()
-        if not normalized:
-            return []
-        return sorted(
-            (asset for asset in self.assets if normalized in asset.searchable_text()),
-            key=lambda asset: asset.id,
+        return self.search(query=query)
+
+    def search(
+        self,
+        *,
+        query: str = "",
+        domain: str | None = None,
+        type_name: str | None = None,
+        tags: Iterable[str] = (),
+        limit: int | None = None,
+    ) -> list[Asset]:
+        """Search assets with optional exact domain, type and tag filters."""
+
+        normalized_query = query.strip().lower()
+        normalized_domain = domain.strip().lower() if domain else ""
+        normalized_type = type_name.strip().lower() if type_name else ""
+        normalized_tags = {tag.strip().lower() for tag in tags if tag.strip()}
+
+        matches = (
+            asset
+            for asset in self.assets
+            if (not normalized_query or normalized_query in asset.searchable_text())
+            and (not normalized_domain or asset.domain.lower() == normalized_domain)
+            and (not normalized_type or asset.type.lower() == normalized_type)
+            and (
+                not normalized_tags
+                or normalized_tags.issubset({tag.lower() for tag in asset.tags})
+            )
         )
+        results = sorted(matches, key=lambda asset: asset.id)
+        return results[:limit] if limit is not None else results
 
     def by_domain(self, domain: str) -> list[Asset]:
         normalized = domain.strip().lower()

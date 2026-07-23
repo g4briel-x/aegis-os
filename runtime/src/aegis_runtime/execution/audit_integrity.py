@@ -15,6 +15,7 @@ AUDIT_INTEGRITY_ALGORITHM = "sha256"
 AUDIT_GENESIS_HASH = "0" * 64
 
 _INTEGRITY_FIELD = "integrity"
+_AUTHENTICATION_FIELD = "authentication"
 
 _INTEGRITY_KEYS = {
     "version",
@@ -81,8 +82,16 @@ class ExecutionAuditIntegrity:
             )
 
         sealed_payload = copy.deepcopy(payload)
+
         sealed_payload.pop(
             _INTEGRITY_FIELD,
+            None,
+        )
+
+        # HMAC authentication is calculated after the SHA-256
+        # integrity seal and must not affect its deterministic hashes.
+        sealed_payload.pop(
+            _AUTHENTICATION_FIELD,
             None,
         )
 
@@ -119,6 +128,7 @@ class ExecutionAuditIntegrity:
             set(integrity)
             - _INTEGRITY_KEYS
         )
+
         missing_keys = (
             _INTEGRITY_KEYS
             - set(integrity)
@@ -185,16 +195,19 @@ class ExecutionAuditIntegrity:
             "genesis_hash",
             "execution audit integrity seal",
         )
+
         stored_root_hash = self._required_hash(
             integrity,
             "root_hash",
             "execution audit integrity seal",
         )
+
         stored_manifest_hash = self._required_hash(
             integrity,
             "manifest_hash",
             "execution audit integrity seal",
         )
+
         stored_journal_hash = self._required_hash(
             integrity,
             "journal_hash",
@@ -223,6 +236,7 @@ class ExecutionAuditIntegrity:
         protected_payload = self._protected_payload(
             payload
         )
+
         expected_integrity = self._build_integrity(
             protected_payload
         )
@@ -239,7 +253,9 @@ class ExecutionAuditIntegrity:
 
         self._verify_entries(
             stored_entries=stored_entries,
-            expected_entries=expected_integrity["entries"],
+            expected_entries=expected_integrity[
+                "entries"
+            ],
         )
 
         self._compare_hash(
@@ -247,11 +263,13 @@ class ExecutionAuditIntegrity:
             expected_integrity["root_hash"],
             "root hash",
         )
+
         self._compare_hash(
             stored_manifest_hash,
             expected_integrity["manifest_hash"],
             "manifest hash",
         )
+
         self._compare_hash(
             stored_journal_hash,
             expected_integrity["journal_hash"],
@@ -274,7 +292,9 @@ class ExecutionAuditIntegrity:
         """Return whether a payload declares an integrity seal."""
 
         return isinstance(
-            payload.get(_INTEGRITY_FIELD),
+            payload.get(
+                _INTEGRITY_FIELD
+            ),
             dict,
         )
 
@@ -289,11 +309,13 @@ class ExecutionAuditIntegrity:
             "session_id",
             "execution audit manifest",
         )
+
         workspace_id = self._required_string(
             payload,
             "workspace_id",
             "execution audit manifest",
         )
+
         events = self._events(
             payload
         )
@@ -318,7 +340,9 @@ class ExecutionAuditIntegrity:
                     "must be unique."
                 )
 
-            event_ids.add(event_id)
+            event_ids.add(
+                event_id
+            )
 
             event_material = {
                 "index": index,
@@ -346,6 +370,7 @@ class ExecutionAuditIntegrity:
         protected_payload = self._protected_payload(
             payload
         )
+
         manifest_hash = self._hash_value(
             protected_payload
         )
@@ -410,6 +435,7 @@ class ExecutionAuditIntegrity:
                 set(stored_entry)
                 - _ENTRY_KEYS
             )
+
             missing_keys = (
                 _ENTRY_KEYS
                 - set(stored_entry)
@@ -473,6 +499,7 @@ class ExecutionAuditIntegrity:
                     f"at index {index}"
                 ),
             )
+
             stored_event_hash = self._required_hash(
                 stored_entry,
                 "event_hash",
@@ -490,6 +517,7 @@ class ExecutionAuditIntegrity:
                     f"at index {index}"
                 ),
             )
+
             self._compare_hash(
                 stored_event_hash,
                 expected_entry["event_hash"],
@@ -537,13 +565,19 @@ class ExecutionAuditIntegrity:
         self,
         payload: dict[str, Any],
     ) -> dict[str, Any]:
-        """Return the complete manifest excluding its seal."""
+        """Return the complete manifest excluding protection metadata."""
 
         protected_payload = copy.deepcopy(
             payload
         )
+
         protected_payload.pop(
             _INTEGRITY_FIELD,
+            None,
+        )
+
+        protected_payload.pop(
+            _AUTHENTICATION_FIELD,
             None,
         )
 
@@ -560,7 +594,9 @@ class ExecutionAuditIntegrity:
         )
 
         return hashlib.sha256(
-            canonical.encode("utf-8")
+            canonical.encode(
+                "utf-8"
+            )
         ).hexdigest()
 
     def _canonical_json(
@@ -620,7 +656,8 @@ class ExecutionAuditIntegrity:
             or len(value) != 64
             or value.lower() != value
             or any(
-                character not in "0123456789abcdef"
+                character
+                not in "0123456789abcdef"
                 for character in value
             )
         ):

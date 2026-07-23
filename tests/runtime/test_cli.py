@@ -1,7 +1,8 @@
 import json
+import textwrap
 from pathlib import Path
 
-from aegis_runtime.cli import EXIT_OK, main
+from aegis_runtime.cli import EXIT_OK, EXIT_VALIDATION, main
 
 
 def _make_repository(tmp_path: Path) -> Path:
@@ -16,6 +17,7 @@ entries:
     type: skill
     domain: security
     path: skills/security
+    summary: Practical security review guidance.
     tags:
       - api
   - id: domain.security
@@ -36,6 +38,61 @@ entries:
         encoding="utf-8",
     )
     return tmp_path
+
+
+def _write_plugin(repo_root: Path, folder: str, content: str) -> None:
+    manifest = repo_root / "plugins" / folder / "aegis-plugin.yaml"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(textwrap.dedent(content).strip(), encoding="utf-8")
+
+
+def test_plugin_commands_discover_manifests_without_executing_code(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+    _write_plugin(
+        repo_root,
+        "example",
+        """
+        id: example.hello
+        name: Example Hello
+        version: 1.0.0
+        description: A safe example manifest.
+        entrypoint: "example_plugin:run"
+        """,
+    )
+
+    list_exit_code = main(["--repo-root", str(repo_root), "plugin", "list"])
+    list_output = capsys.readouterr().out
+    validate_exit_code = main(["--repo-root", str(repo_root), "--json", "plugin", "validate"])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert list_exit_code == EXIT_OK
+    assert "example.hello" in list_output
+    assert "Total plugins: 1" in list_output
+    assert validate_exit_code == EXIT_OK
+    assert payload["plugin_count"] == 1
+    assert payload["errors"] == []
+
+
+def test_plugin_validate_rejects_invalid_manifests(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+    _write_plugin(
+        repo_root,
+        "invalid",
+        """
+        id: Invalid ID
+        name: Invalid
+        version: one
+        entrypoint: "missing-separator"
+        """,
+    )
+
+    exit_code = main(["--repo-root", str(repo_root), "plugin", "validate"])
+    output = capsys.readouterr().out
+
+    assert exit_code == EXIT_VALIDATION
+    assert "invalid_plugin_id" in output
+    assert "invalid_version" in output
+    assert "invalid_entrypoint" in output
 
 
 def test_asset_show_command_is_reachable(tmp_path: Path, capsys) -> None:
@@ -78,6 +135,83 @@ def test_registry_catalog_commands_are_reachable(tmp_path: Path, capsys) -> None
     assert "tag.api" in tags_output
     assert "Total tags: 1" in tags_output
 
+
+def test_registry_export_is_deterministic_and_selectable(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+
+    exit_code = main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "export",
+            "registry",
+            "--section",
+            "assets",
+            "--section",
+            "releases",
+        ]
+    )
+
+    assert exit_code == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert list(payload["sections"]) == ["assets", "releases"]
+    assert payload["counts"] == {"assets": 2, "releases": 1}
+    assert payload["sections"]["assets"][0]["id"] == "docs.runtime-overview"
+    assert payload["sections"]["assets"][1]["source_file"] == "registry/test/test.registry.yaml"
+
+
+def test_registry_export_writes_markdown_without_overwriting(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+    output = repo_root / "exports" / "catalog.md"
+    args = [
+        "--repo-root",
+        str(repo_root),
+        "export",
+        "registry",
+        "--format",
+        "markdown",
+        "--output",
+        "exports/catalog.md",
+    ]
+
+    assert main(args) == EXIT_OK
+    assert "Exported registry (markdown)" in capsys.readouterr().out
+    content = output.read_text(encoding="utf-8")
+    assert "# Aegis OS Registry Export" in content
+    assert "## Assets (2)" in content
+    assert "## Releases (1)" in content
+
+    assert main(args) != EXIT_OK
+    assert "Export refused:" in capsys.readouterr().err
+
+    assert main([*args, "--force"]) == EXIT_OK
+
+
+def test_asset_search_combines_query_and_catalog_filters(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+
+    exit_code = main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "--json",
+            "asset",
+            "search",
+            "guidance",
+            "--domain",
+            "security",
+            "--type",
+            "skill",
+            "--tag",
+            "api",
+            "--limit",
+            "1",
+        ]
+    )
+
+    assert exit_code == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert [asset["id"] for asset in payload] == ["security.review-api-security"]
 
 def test_python_only_project_commands_are_reachable(tmp_path: Path, capsys) -> None:
     repo_root = _make_repository(tmp_path)

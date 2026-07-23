@@ -23,14 +23,16 @@ aegis --repo-root . status
 aegis --repo-root . registry list
 aegis --repo-root . docs list
 aegis --repo-root . asset find security
+aegis --repo-root . asset search security --domain security --type skill --tag security
 aegis --repo-root . asset show security.review-api-security
+aegis --repo-root . plugin list
 ```
 
 ## Validate and test
 
 ```console
 python -m pytest tests/runtime
-aegis --repo-root . validate --strict-related
+aegis --repo-root . validate --strict-related --strict-schema
 aegis --repo-root . doctor --skip-reports
 aegis --repo-root . report generate all
 ```
@@ -51,6 +53,26 @@ python scripts/testing/verify-package-install.py dist
 
 See [`runtime/BUILDING.md`](runtime/BUILDING.md) for the release boundary.
 
+`--strict-schema` validates registry metadata and YAML entry collections. It
+also detects paths that resolve outside the repository.
+
+## Plugin manifests
+
+Plugins are discovered from `plugins/**/aegis-plugin.yaml`. Their manifests are
+validated but plugin code is never imported or executed by discovery:
+
+```yaml
+id: example.hello
+name: Example Hello
+version: 1.0.0
+entrypoint: "example_plugin:run"
+description: Optional human-readable summary.
+```
+
+```console
+aegis --repo-root . plugin validate
+```
+
 ## Generate a skill
 
 ```console
@@ -60,6 +82,19 @@ aegis --repo-root . generate skills --definitions path/to/new-definitions
 
 Generation refuses to overwrite tracked files. Pass `--force` only after
 reviewing the target skill.
+
+## Export the registry
+
+```console
+# Print every catalog section as deterministic JSON.
+aegis --repo-root . export registry
+
+# Write a Markdown catalog. Existing files require --force to overwrite.
+aegis --repo-root . export registry --format markdown --output exports/catalog.md
+
+# Export selected sections only.
+aegis --repo-root . export registry --section assets --section releases
+```
 
 ## Execute an asset
 

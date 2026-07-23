@@ -33,7 +33,14 @@ from .execution.contract_validator import ExecutionContractValidator
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .generators import generate_skill, generate_skills
+from .exports import (
+    EXPORT_SECTIONS,
+    build_registry_export,
+    render_registry_export,
+    write_export,
+)
 from .models import Asset
+from .plugins import discover_plugins
 from .registry_loader import RegistryLoader
 from .reports import REPORT_GENERATORS, generate_all_reports, generate_report
 from .validator import RegistryValidator
@@ -79,6 +86,23 @@ def _build_parser() -> argparse.ArgumentParser:
     commands.add_parser(
         "info",
         help="Show project paths and Python entrypoints.",
+    )
+
+    plugin = commands.add_parser(
+        "plugin",
+        help="Declarative plugin discovery and validation.",
+    )
+    plugin_commands = plugin.add_subparsers(
+        dest="plugin_command",
+        required=True,
+    )
+    plugin_commands.add_parser(
+        "list",
+        help="List discovered plugin manifests without executing them.",
+    )
+    plugin_commands.add_parser(
+        "validate",
+        help="Validate plugin manifests without loading plugin code.",
     )
 
     docs = commands.add_parser(
@@ -166,6 +190,41 @@ def _build_parser() -> argparse.ArgumentParser:
         help="List the catalog of defined tags (registry/tags).",
     )
 
+    export = commands.add_parser(
+        "export",
+        help="Export registry catalogs in portable formats.",
+    )
+    export_commands = export.add_subparsers(
+        dest="export_command",
+        required=True,
+    )
+    export_registry = export_commands.add_parser(
+        "registry",
+        help="Export registry assets, domains, tags and releases.",
+    )
+    export_registry.add_argument(
+        "--format",
+        choices=("json", "markdown"),
+        default="json",
+        help="Export format (default: json).",
+    )
+    export_registry.add_argument(
+        "--section",
+        action="append",
+        choices=EXPORT_SECTIONS,
+        help="Section to include; repeat to select multiple sections (default: all).",
+    )
+    export_registry.add_argument(
+        "--output",
+        type=Path,
+        help="Write the export to this path instead of standard output.",
+    )
+    export_registry.add_argument(
+        "--force",
+        action="store_true",
+        help="Allow an existing export file to be overwritten.",
+    )
+
     asset = commands.add_parser(
         "asset",
         help="Asset operations.",
@@ -186,6 +245,30 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Search assets.",
     )
     asset_find.add_argument("query")
+
+    asset_search = asset_commands.add_parser(
+        "search",
+        help="Search assets with combinable text and catalog filters.",
+    )
+    asset_search.add_argument(
+        "query",
+        nargs="?",
+        default="",
+        help="Optional text to search across asset fields and metadata.",
+    )
+    asset_search.add_argument("--domain", help="Require an exact asset domain.")
+    asset_search.add_argument("--type", help="Require an exact asset type.")
+    asset_search.add_argument(
+        "--tag",
+        action="append",
+        default=[],
+        help="Require a tag; repeat to require multiple tags.",
+    )
+    asset_search.add_argument(
+        "--limit",
+        type=int,
+        help="Limit the number of sorted results.",
+    )
 
     asset_domain = asset_commands.add_parser(
         "domain",
@@ -432,6 +515,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--strict-related",
         action="store_true",
         help="Treat unresolved related assets as errors.",
+    )
+    validate.add_argument(
+        "--strict-schema",
+        action="store_true",
+        help="Treat registry schema diagnostics as errors.",
     )
 
     doctor = commands.add_parser(
@@ -1704,6 +1792,24 @@ def main(
 
         return EXIT_OK
 
+    if args.command == "plugin":
+        plugin_report = discover_plugins(config.repo_root)
+        if args.json:
+            _print_json(plugin_report.to_dict())
+        elif args.plugin_command == "list":
+            for plugin in plugin_report.plugins:
+                print(f"{plugin.id} | version={plugin.version} | entrypoint={plugin.entrypoint}")
+            print(f"Total plugins: {len(plugin_report.plugins)}")
+        else:
+            print("Aegis Plugin Validation")
+            print(f"Plugins: {len(plugin_report.plugins)}")
+            print(f"Errors: {len(plugin_report.issues)}")
+            for issue in plugin_report.issues:
+                print(f"[ERROR] {issue.code}: {issue.message} file={issue.path}")
+            print("Validation passed." if plugin_report.ok else "Validation failed.")
+
+        return EXIT_OK if plugin_report.ok else EXIT_VALIDATION
+
     if args.command == "docs" and args.docs_command == "list":
         _print_asset_list(
             resolver.by_type("doc"),
@@ -1766,6 +1872,44 @@ def main(
                 print(f"Generated skill: {item.name} -> {item.output_path}")
             print(f"Total skills generated: {len(generated)}")
 
+        return EXIT_OK
+
+    if args.command == "export" and args.export_command == "registry":
+        payload = build_registry_export(
+            resolver,
+            config.repo_root,
+            args.section or EXPORT_SECTIONS,
+        )
+        content = render_registry_export(payload, args.format)
+
+        if args.output is None:
+            print(content, end="")
+            return EXIT_OK
+
+        try:
+            destination = write_export(
+                config.repo_root,
+                args.output,
+                content,
+                force=args.force,
+            )
+        except (FileExistsError, IsADirectoryError) as exc:
+            print(f"Export refused: {exc}", file=sys.stderr)
+            return EXIT_VALIDATION
+        except OSError as exc:
+            print(f"Export error: {exc}", file=sys.stderr)
+            return EXIT_REPOSITORY
+
+        if args.json:
+            _print_json(
+                {
+                    "format": args.format,
+                    "path": str(destination),
+                    "sections": list(payload["sections"]),
+                }
+            )
+        else:
+            print(f"Exported registry ({args.format}) -> {destination}")
         return EXIT_OK
 
     if (
@@ -1856,6 +2000,22 @@ def main(
         if args.asset_command == "find":
             _print_asset_list(
                 resolver.find(args.query),
+                as_json=args.json,
+            )
+            return EXIT_OK
+
+        if args.asset_command == "search":
+            if args.limit is not None and args.limit <= 0:
+                print("Search limit must be greater than zero.", file=sys.stderr)
+                return EXIT_USAGE
+            _print_asset_list(
+                resolver.search(
+                    query=args.query,
+                    domain=args.domain,
+                    type_name=args.type,
+                    tags=args.tag,
+                    limit=args.limit,
+                ),
                 as_json=args.json,
             )
             return EXIT_OK
@@ -2042,6 +2202,7 @@ def main(
             unresolved_related_as_error=(
                 args.strict_related
             ),
+            strict_schema=args.strict_schema,
         )
         report = validator.validate(
             documents

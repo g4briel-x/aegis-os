@@ -9,6 +9,17 @@ Versioning follows semantic milestone releases.
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- deterministic JSON and Markdown registry exports through
+  `aegis export registry`;
+- selectable exports for assets, domains, tags and releases;
+- protected file output that requires `--force` before overwriting an export.
+
+---
+
 ## [0.7.0] — Python Runtime Consolidation — 2026-07-21
 
 ### Added

@@ -80,6 +80,57 @@ def test_registry_catalog_commands_are_reachable(tmp_path: Path, capsys) -> None
     assert "Total tags: 1" in tags_output
 
 
+def test_registry_export_is_deterministic_and_selectable(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+
+    exit_code = main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "export",
+            "registry",
+            "--section",
+            "assets",
+            "--section",
+            "releases",
+        ]
+    )
+
+    assert exit_code == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert list(payload["sections"]) == ["assets", "releases"]
+    assert payload["counts"] == {"assets": 2, "releases": 1}
+    assert payload["sections"]["assets"][0]["id"] == "docs.runtime-overview"
+    assert payload["sections"]["assets"][1]["source_file"] == "registry/test/test.registry.yaml"
+
+
+def test_registry_export_writes_markdown_without_overwriting(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repository(tmp_path)
+    output = repo_root / "exports" / "catalog.md"
+    args = [
+        "--repo-root",
+        str(repo_root),
+        "export",
+        "registry",
+        "--format",
+        "markdown",
+        "--output",
+        "exports/catalog.md",
+    ]
+
+    assert main(args) == EXIT_OK
+    assert "Exported registry (markdown)" in capsys.readouterr().out
+    content = output.read_text(encoding="utf-8")
+    assert "# Aegis OS Registry Export" in content
+    assert "## Assets (2)" in content
+    assert "## Releases (1)" in content
+
+    assert main(args) != EXIT_OK
+    assert "Export refused:" in capsys.readouterr().err
+
+    assert main([*args, "--force"]) == EXIT_OK
+
+
 def test_asset_search_combines_query_and_catalog_filters(tmp_path: Path, capsys) -> None:
     repo_root = _make_repository(tmp_path)
 
@@ -105,7 +156,6 @@ def test_asset_search_combines_query_and_catalog_filters(tmp_path: Path, capsys)
     assert exit_code == EXIT_OK
     payload = json.loads(capsys.readouterr().out)
     assert [asset["id"] for asset in payload] == ["security.review-api-security"]
-
 
 def test_python_only_project_commands_are_reachable(tmp_path: Path, capsys) -> None:
     repo_root = _make_repository(tmp_path)

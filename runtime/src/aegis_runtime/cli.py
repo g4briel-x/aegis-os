@@ -33,6 +33,12 @@ from .execution.contract_validator import ExecutionContractValidator
 from .execution.planner import ExecutionPlanner
 from .execution.runner import ExecutionRunner
 from .generators import generate_skill, generate_skills
+from .exports import (
+    EXPORT_SECTIONS,
+    build_registry_export,
+    render_registry_export,
+    write_export,
+)
 from .models import Asset
 from .registry_loader import RegistryLoader
 from .reports import REPORT_GENERATORS, generate_all_reports, generate_report
@@ -164,6 +170,41 @@ def _build_parser() -> argparse.ArgumentParser:
     registry_commands.add_parser(
         "tags",
         help="List the catalog of defined tags (registry/tags).",
+    )
+
+    export = commands.add_parser(
+        "export",
+        help="Export registry catalogs in portable formats.",
+    )
+    export_commands = export.add_subparsers(
+        dest="export_command",
+        required=True,
+    )
+    export_registry = export_commands.add_parser(
+        "registry",
+        help="Export registry assets, domains, tags and releases.",
+    )
+    export_registry.add_argument(
+        "--format",
+        choices=("json", "markdown"),
+        default="json",
+        help="Export format (default: json).",
+    )
+    export_registry.add_argument(
+        "--section",
+        action="append",
+        choices=EXPORT_SECTIONS,
+        help="Section to include; repeat to select multiple sections (default: all).",
+    )
+    export_registry.add_argument(
+        "--output",
+        type=Path,
+        help="Write the export to this path instead of standard output.",
+    )
+    export_registry.add_argument(
+        "--force",
+        action="store_true",
+        help="Allow an existing export file to be overwritten.",
     )
 
     asset = commands.add_parser(
@@ -1795,6 +1836,44 @@ def main(
                 print(f"Generated skill: {item.name} -> {item.output_path}")
             print(f"Total skills generated: {len(generated)}")
 
+        return EXIT_OK
+
+    if args.command == "export" and args.export_command == "registry":
+        payload = build_registry_export(
+            resolver,
+            config.repo_root,
+            args.section or EXPORT_SECTIONS,
+        )
+        content = render_registry_export(payload, args.format)
+
+        if args.output is None:
+            print(content, end="")
+            return EXIT_OK
+
+        try:
+            destination = write_export(
+                config.repo_root,
+                args.output,
+                content,
+                force=args.force,
+            )
+        except (FileExistsError, IsADirectoryError) as exc:
+            print(f"Export refused: {exc}", file=sys.stderr)
+            return EXIT_VALIDATION
+        except OSError as exc:
+            print(f"Export error: {exc}", file=sys.stderr)
+            return EXIT_REPOSITORY
+
+        if args.json:
+            _print_json(
+                {
+                    "format": args.format,
+                    "path": str(destination),
+                    "sections": list(payload["sections"]),
+                }
+            )
+        else:
+            print(f"Exported registry ({args.format}) -> {destination}")
         return EXIT_OK
 
     if (

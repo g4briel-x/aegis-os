@@ -51,6 +51,19 @@ aegis --repo-root . generate skills --definitions path/to/new-definitions
 Generation refuses to overwrite tracked files. Pass `--force` only after
 reviewing the target skill.
 
+## Export the registry
+
+```console
+# Print every catalog section as deterministic JSON.
+aegis --repo-root . export registry
+
+# Write a Markdown catalog. Existing files require --force to overwrite.
+aegis --repo-root . export registry --format markdown --output exports/catalog.md
+
+# Export selected sections only.
+aegis --repo-root . export registry --section assets --section releases
+```
+
 ## Execute an asset
 
 ```console

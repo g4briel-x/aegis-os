@@ -107,7 +107,7 @@ def _asset_to_dict(asset: Asset, repo_root: Path) -> dict[str, Any]:
     source_file = ""
     if asset.source_file:
         try:
-            source_file = str(asset.source_file.relative_to(repo_root))
+            source_file = asset.source_file.relative_to(repo_root).as_posix()
         except ValueError:
             source_file = str(asset.source_file)
 

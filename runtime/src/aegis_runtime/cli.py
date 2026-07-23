@@ -228,6 +228,30 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     asset_find.add_argument("query")
 
+    asset_search = asset_commands.add_parser(
+        "search",
+        help="Search assets with combinable text and catalog filters.",
+    )
+    asset_search.add_argument(
+        "query",
+        nargs="?",
+        default="",
+        help="Optional text to search across asset fields and metadata.",
+    )
+    asset_search.add_argument("--domain", help="Require an exact asset domain.")
+    asset_search.add_argument("--type", help="Require an exact asset type.")
+    asset_search.add_argument(
+        "--tag",
+        action="append",
+        default=[],
+        help="Require a tag; repeat to require multiple tags.",
+    )
+    asset_search.add_argument(
+        "--limit",
+        type=int,
+        help="Limit the number of sorted results.",
+    )
+
     asset_domain = asset_commands.add_parser(
         "domain",
         help="List assets in a domain.",
@@ -473,6 +497,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--strict-related",
         action="store_true",
         help="Treat unresolved related assets as errors.",
+    )
+    validate.add_argument(
+        "--strict-schema",
+        action="store_true",
+        help="Treat registry schema diagnostics as errors.",
     )
 
     doctor = commands.add_parser(
@@ -1939,6 +1968,22 @@ def main(
             )
             return EXIT_OK
 
+        if args.asset_command == "search":
+            if args.limit is not None and args.limit <= 0:
+                print("Search limit must be greater than zero.", file=sys.stderr)
+                return EXIT_USAGE
+            _print_asset_list(
+                resolver.search(
+                    query=args.query,
+                    domain=args.domain,
+                    type_name=args.type,
+                    tags=args.tag,
+                    limit=args.limit,
+                ),
+                as_json=args.json,
+            )
+            return EXIT_OK
+
         if args.asset_command == "domain":
             _print_asset_list(
                 resolver.by_domain(args.domain),
@@ -2121,6 +2166,7 @@ def main(
             unresolved_related_as_error=(
                 args.strict_related
             ),
+            strict_schema=args.strict_schema,
         )
         report = validator.validate(
             documents

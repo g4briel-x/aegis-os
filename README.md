@@ -23,6 +23,7 @@ aegis --repo-root . status
 aegis --repo-root . registry list
 aegis --repo-root . docs list
 aegis --repo-root . asset find security
+aegis --repo-root . asset search security --domain security --type skill --tag security
 aegis --repo-root . asset show security.review-api-security
 ```
 
@@ -30,12 +31,15 @@ aegis --repo-root . asset show security.review-api-security
 
 ```console
 python -m pytest tests/runtime
-aegis --repo-root . validate --strict-related
+aegis --repo-root . validate --strict-related --strict-schema
 aegis --repo-root . doctor --skip-reports
 aegis --repo-root . report generate all
 ```
 
 The GitHub workflow repeats these checks on Linux, Windows and macOS.
+
+`--strict-schema` validates registry metadata and YAML entry collections. It
+also detects paths that resolve outside the repository.
 
 ## Generate a skill
 

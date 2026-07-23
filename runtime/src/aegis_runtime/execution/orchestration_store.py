@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from .audit_integrity import ExecutionAuditIntegrity
+from .audit_protection import ExecutionAuditProtection
 from .orchestrator import ExecutionOrchestrationResult
 from .workspace_store import StoredExecutionSession
 
@@ -36,10 +36,17 @@ class PersistedExecutionOrchestration:
 class ExecutionOrchestrationStore:
     """Persist controlled orchestration states and audit events."""
 
-    def __init__(self) -> None:
-        """Initialize persistent audit integrity protection."""
+    def __init__(
+        self,
+        audit_protection: ExecutionAuditProtection | None = None,
+    ) -> None:
+        """Initialize persistent cryptographic audit protection."""
 
-        self._audit_integrity = ExecutionAuditIntegrity()
+        self._audit_protection = (
+            ExecutionAuditProtection.from_environment()
+            if audit_protection is None
+            else audit_protection
+        )
 
     def persist(
         self,
@@ -86,16 +93,18 @@ class ExecutionOrchestrationStore:
                 f"{audit_manifest}"
             )
 
-        session_payload = dict(record.payload)
+        session_payload = dict(
+            record.payload
+        )
 
         audit_payload = self._read_json_object(
             audit_manifest,
             "execution audit manifest",
         )
 
-        # Refuse to append events to an audit journal
-        # whose existing integrity seal is invalid.
-        self._audit_integrity.verify(
+        # Refuse to append events to a journal whose
+        # existing integrity or authentication is invalid.
+        self._audit_protection.verify(
             audit_payload
         )
 
@@ -109,7 +118,10 @@ class ExecutionOrchestrationStore:
             [],
         )
 
-        if not isinstance(existing_events, list):
+        if not isinstance(
+            existing_events,
+            list,
+        ):
             raise ValueError(
                 "Stored execution audit events "
                 "must be a JSON array."
@@ -132,7 +144,9 @@ class ExecutionOrchestrationStore:
 
         session_payload["orchestration"] = {
             "ok": result.ok,
-            "event_count": len(serialized_events),
+            "event_count": len(
+                serialized_events
+            ),
             "event_ids": [
                 event.event_id
                 for event in result.events
@@ -142,15 +156,21 @@ class ExecutionOrchestrationStore:
 
         audit_payload.update(
             {
-                "session_id": result.session.session_id,
+                "session_id": (
+                    result.session.session_id
+                ),
                 "workspace_id": (
                     result.session.workspace_id
                 ),
                 "target_asset_id": (
                     result.session.target_asset_id
                 ),
-                "mode": result.session.mode.value,
-                "state": result.session.state.value,
+                "mode": (
+                    result.session.mode.value
+                ),
+                "state": (
+                    result.session.state.value
+                ),
                 "created_at": (
                     result.session.created_at.isoformat()
                 ),
@@ -170,23 +190,27 @@ class ExecutionOrchestrationStore:
                 "audit_metadata": dict(
                     result.session.audit_metadata
                 ),
-                "event_count": len(all_events),
+                "event_count": len(
+                    all_events
+                ),
                 "last_event_at": last_event_at,
                 "events": all_events,
             }
         )
 
-        # The seal must be calculated only after every
-        # protected audit field has been updated.
-        sealed_audit_payload = self._audit_integrity.seal(
-            audit_payload
+        # Protection is recalculated only after every
+        # journal field and event has been updated.
+        protected_audit_payload = (
+            self._audit_protection.seal(
+                audit_payload
+            )
         )
 
         # Audit is written first. The session manifest is
-        # replaced last and acts as the committed session state.
+        # replaced last and acts as the committed state.
         self._write_json_atomic(
             path=audit_manifest,
-            payload=sealed_audit_payload,
+            payload=protected_audit_payload,
         )
 
         self._write_json_atomic(
@@ -198,7 +222,9 @@ class ExecutionOrchestrationStore:
             workspace_path=workspace_path,
             session_manifest=session_manifest,
             audit_manifest=audit_manifest,
-            event_count=len(serialized_events),
+            event_count=len(
+                serialized_events
+            ),
         )
 
     def _validate_result(
@@ -267,7 +293,10 @@ class ExecutionOrchestrationStore:
             "workspace"
         )
 
-        if not isinstance(workspace_payload, dict):
+        if not isinstance(
+            workspace_payload,
+            dict,
+        ):
             raise ValueError(
                 "Stored workspace must be a JSON object."
             )
@@ -276,7 +305,10 @@ class ExecutionOrchestrationStore:
             "locations"
         )
 
-        if not isinstance(locations, list):
+        if not isinstance(
+            locations,
+            list,
+        ):
             raise ValueError(
                 "Stored workspace locations must "
                 "be a JSON array."
@@ -285,14 +317,19 @@ class ExecutionOrchestrationStore:
         relative_path = ""
 
         for location in locations:
-            if not isinstance(location, dict):
+            if not isinstance(
+                location,
+                dict,
+            ):
                 raise ValueError(
                     "Stored workspace location must "
                     "be a JSON object."
                 )
 
             if location.get("name") == "session-audit":
-                value = location.get("relative_path")
+                value = location.get(
+                    "relative_path"
+                )
 
                 if (
                     not isinstance(value, str)
@@ -312,7 +349,9 @@ class ExecutionOrchestrationStore:
                 "a session-audit location."
             )
 
-        relative = Path(relative_path)
+        relative = Path(
+            relative_path
+        )
 
         if (
             relative.is_absolute()
@@ -344,11 +383,17 @@ class ExecutionOrchestrationStore:
     ) -> None:
         """Require a path to remain inside its workspace."""
 
-        resolved_workspace = workspace_path.resolve()
-        resolved_target = target.resolve()
+        resolved_workspace = (
+            workspace_path.resolve()
+        )
+
+        resolved_target = (
+            target.resolve()
+        )
 
         if (
-            resolved_target != resolved_workspace
+            resolved_target
+            != resolved_workspace
             and resolved_workspace
             not in resolved_target.parents
         ):
@@ -376,13 +421,18 @@ class ExecutionOrchestrationStore:
                 f"{path}"
             ) from exc
 
-        if not isinstance(payload, dict):
+        if not isinstance(
+            payload,
+            dict,
+        ):
             raise ValueError(
                 f"Stored {description} must "
                 "contain a JSON object."
             )
 
-        return dict(payload)
+        return dict(
+            payload
+        )
 
     def _write_json_atomic(
         self,
@@ -412,7 +462,9 @@ class ExecutionOrchestrationStore:
                 encoding="utf-8",
             )
 
-            temporary_path.replace(path)
+            temporary_path.replace(
+                path
+            )
         finally:
             if temporary_path.exists():
                 temporary_path.unlink()

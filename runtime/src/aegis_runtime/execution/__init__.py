@@ -1,6 +1,24 @@
 """Execution foundation for Aegis OS runtime."""
 
-
+from .audit_authentication import (
+    AUDIT_AUTHENTICATION_ALGORITHM,
+    AUDIT_AUTHENTICATION_CONTEXT,
+    AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES,
+    AUDIT_AUTHENTICATION_VERSION,
+    ExecutionAuditAuthenticationVerification,
+    ExecutionAuditAuthenticator,
+)
+from .audit_authentication_config import (
+    AUDIT_HMAC_DEFAULT_KEY_ID,
+    AUDIT_HMAC_KEY_ID_ENV,
+    AUDIT_HMAC_SECRET_ENV,
+    AUDIT_HMAC_SECRET_FILE_ENV,
+    ExecutionAuditAuthenticationConfig,
+)
+from .audit_protection import (
+    ExecutionAuditProtection,
+    ExecutionAuditProtectionVerification,
+)
 from .audit import (
     ExecutionAuditEvent,
     ExecutionAuditEventType,
@@ -149,4 +167,17 @@ __all__ = [
     "ExecutionSessionLoader",
     "PersistedExecutionOrchestration",
     "StoredExecutionSession",
+    "AUDIT_AUTHENTICATION_ALGORITHM",
+    "AUDIT_AUTHENTICATION_CONTEXT",
+    "AUDIT_AUTHENTICATION_MINIMUM_KEY_BYTES",
+    "AUDIT_AUTHENTICATION_VERSION",
+    "AUDIT_HMAC_DEFAULT_KEY_ID",
+    "AUDIT_HMAC_KEY_ID_ENV",
+    "AUDIT_HMAC_SECRET_ENV",
+    "AUDIT_HMAC_SECRET_FILE_ENV",
+    "ExecutionAuditAuthenticationConfig",
+    "ExecutionAuditAuthenticationVerification",
+    "ExecutionAuditAuthenticator",
+    "ExecutionAuditProtection",
+    "ExecutionAuditProtectionVerification",
 ]
